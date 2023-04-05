@@ -1,0 +1,160 @@
+.themdonhang {
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+    color: white;
+}
+
+.add-top {
+    min-width: 100%;
+}
+
+.add-bottom {
+    display: flex;
+    justify-content: center;
+}
+
+.add-bottom-1 {
+    display: flex;
+}
+
+.add-bottom-2 {
+    display: flex;
+}
+
+.add-bottom-3 {
+    display: flex;
+}
+
+.txtTen1 {
+    margin-left: 50px;
+    width: 400px;
+    height: 35px;
+    border-radius: 10px;
+    border: 1px ridge rgb(255, 255, 255);
+    text-align: center;
+}
+
+.txtTen2 {
+    margin-left: 50px;
+    width: 450px;
+    height: 35px;
+    border-radius: 10px;
+    border: 1px ridge black;
+    text-align: center;
+}
+
+.txtTen3 {
+    margin-left: 50px;
+    width: 250px;
+    height: 35px;
+    border-radius: 10px;
+    border: 1px ridge black;
+    text-align: center;
+}
+
+.add-body {
+    width: 2000px;
+}
+
+.addp {
+    margin-top: 20px;
+    padding-left: 50px;
+}
+
+.nhapten {
+    display: flex;
+    flex-direction: column;
+}
+.input-nhap{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+.input-submit{
+    padding: 10px 0px 10px 0px;
+    margin-top: 35px;
+    width: 350px;
+    border-radius: 25px;
+    border-width: 0px;
+    background-color: #45cdff;
+    color: white;
+}
+.input-submit:hover{
+    background-color: rgb(14, 134, 255);
+}
+.addp1 {
+    padding-top: 10px;
+    margin-left: 50px;
+}
+
+.addp2 {
+    padding-top: 10px;
+    margin-left: 50px;
+}
+
+.add-p {
+    margin-left: 50px;
+    width: 300px;
+    height: 35px;
+    border-radius: 5px;
+    border: 1px ridge black;
+}
+
+.p1 {
+    margin-top: 10px;
+}
+
+.them {
+    margin-top: 40px;
+    width: 100px;
+    height: 50px;
+    margin-left: 150px;
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(20, 1, 127);
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.card-header {
+    max-width: 100%;
+    color: white;
+    background-color: rgb(97, 62, 148);
+    font-size: 30px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.h1_themsp {
+    text-align: center;
+}
+
+.card1 {
+    width: 100%;
+}
+
+.lids {
+    font-size: 16px;
+}
+
+.lids1 {
+    font-size: 16px;
+}
+.category{
+    width: 1000px;
+    display: flex;
+    justify-content: center;
+}
+.category_top{
+    display: flex;
+    justify-content: center;
+}
+.add_category{
+    font-size: 50px;
+}
+.category_padding{
+    margin-top: 50px;
+}
