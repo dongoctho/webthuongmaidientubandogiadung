@@ -12,26 +12,25 @@ class StorageController extends Controller
     protected $storageRepository;
     protected $productRepository;
 
-    public function __construct(StorageRepositoryInterface $storageRepositoryInterface,
-    ProductRepositoryInterface $productRepositoryInterface)
-    {
+    public function __construct(
+        StorageRepositoryInterface $storageRepositoryInterface,
+        ProductRepositoryInterface $productRepositoryInterface
+    ) {
         $this->storageRepository = $storageRepositoryInterface;
         $this->productRepository = $productRepositoryInterface;
     }
 
+    // show storage page
     public function index()
     {
         $products = $this->productRepository->getAll();
 
-        return view('admin.storage.add_storage', [
-            'products' => $products
-        ]);
+        return view('admin.storage.add_storage', compact('products'));
     }
 
+    // create storage to database
     public function create(CreateStorageFormRequest $request)
     {
-        $products = $this->productRepository->getAll();
-
         $data = [
             'code' => $request->code,
             'quantity' => $request->quantity,
@@ -41,20 +40,28 @@ class StorageController extends Controller
 
         $this->storageRepository->create($data);
 
-        return view('admin.storage.add_storage', [
-            'products' => $products
-        ])->with('msg', 'Created');
+        return redirect()->route('list_storage')->with('msg', 'Created');
     }
 
-    public function list()
+    // show list storage
+    public function list(Request $request)
     {
-        $storages = $this->storageRepository->getAll();
+        $data = [
+            'key' => $request->key,
+        ];
+        $column = [
+            'storages.quantity',
+            'storages.id as id',
+            'storages.description',
+            'products.name',
+            'storages.created_at'
+        ];
+        $storages = $this->storageRepository->getStorageByCondition($data, $column);
 
-        return view('admin.storage.list_storage', [
-            'storages' => $storages
-        ]);
+        return view('admin.storage.list_storage', compact('storages'));
     }
 
+    // delete storage
     public function destroy(int $id)
     {
         $this->storageRepository->delete($id);
@@ -62,17 +69,16 @@ class StorageController extends Controller
         return redirect()->back();
     }
 
+    // show information storage
     public function show(int $id)
     {
         $products = $this->productRepository->getAll();
         $storages = $this->storageRepository->find($id);
 
-        return view('admin.storage.show_storage', [
-            'storages' => $storages,
-            'products' => $products
-        ]);
+        return view('admin.storage.show_storage', compact('storages', 'products'));
     }
 
+    // update information storage
     public function update(int $id, CreateStorageFormRequest $request)
     {
         $data = [

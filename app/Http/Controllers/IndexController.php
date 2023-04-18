@@ -10,7 +10,7 @@ use App\Repositories\Contracts\RepositoryInterface\CartDetailRepositoryInterface
 use App\Repositories\Contracts\RepositoryInterface\UserRepositoryInterface;
 use App\Http\Requests\EditInforFormRequest;
 use Illuminate\Http\Request;
-use PHPUnit\Framework\Constraint\Count;
+use App\Services\ImageService;
 
 class IndexController extends Controller
 {
@@ -21,16 +21,18 @@ class IndexController extends Controller
     protected $manufactureRepository;
     protected $cartRepository;
     protected $cartDetailRepository;
+    protected $image_service;
 
-    public function __construct(
+    public function __construct (
         ProductRepositoryInterface $productRepositoryInterface,
         StorageRepositoryInterface $storageRepositoryInterface,
         CategoryRepositoryInterface $categoryRepositoryInterface,
         ManufactureRepositoryInterface $manufactureRepositoryInterface,
         CartRepositoryInterface $cartRepositoryInterface,
         CartDetailRepositoryInterface $cartDetailRepositoryInterface,
-        UserRepositoryInterface $userRepositoryInterface
-    ){
+        UserRepositoryInterface $userRepositoryInterface,
+        ImageService $imageService
+    ) {
         $this->productRepository = $productRepositoryInterface;
         $this->storageRepository = $storageRepositoryInterface;
         $this->categoryRepository = $categoryRepositoryInterface;
@@ -38,30 +40,28 @@ class IndexController extends Controller
         $this->cartRepository = $cartRepositoryInterface;
         $this->cartDetailRepository = $cartDetailRepositoryInterface;
         $this->userRepository = $userRepositoryInterface;
+        $this->image_service = $imageService;
     }
 
+    // show information user page
     public function information()
     {
         $user = auth()->user();
         $count = $this->cartRepository->countProductInCart($user->id);
 
-        return view('client.information', [
-            'count' => $count,
-            'user' => $user
-        ]);
+        return view('client.information', compact('count', 'user'));
     }
 
+    // show edit information user page
     public function editInformation()
     {
         $user = auth()->user();
         $count = $this->cartRepository->countProductInCart($user->id);
 
-        return view('client.edit_information', [
-            'count' => $count,
-            'user' => $user
-        ]);
+        return view('client.edit_information', compact('count', 'user'));
     }
 
+    // edit information user
     public function editInfor(EditInforFormRequest $request)
     {
         $user = auth()->user();
@@ -74,15 +74,12 @@ class IndexController extends Controller
                 'birthday' => $request->birthday,
                 'address' => $request->address
             ];
+
             $this->userRepository->update($user->id, $data);
 
             return redirect()->route('infor_index');
-        }
-        else {
-            $file = $request->avatar;
-            $ext = $request->avatar->extension();
-            $file_name = time().'-'.'information.'.$ext;
-            $file->move(public_path('uploads'), $file_name);
+        } else {
+            $image = $this->image_service->image($request->avatar);
 
             $data = [
                 'name' => $request->name,
@@ -90,8 +87,9 @@ class IndexController extends Controller
                 'phone' => $request->phone,
                 'birthday' => $request->birthday,
                 'address' => $request->address,
-                'avatar' => $file_name
+                'avatar' => $image
             ];
+
             $this->userRepository->update($user->id, $data);
 
             return redirect()->route('infor_index');
@@ -102,24 +100,19 @@ class IndexController extends Controller
     public function indexClient(Request $request)
     {
         $data = [
-            'seachByPrice' => $request->seachByPrice,
             'seachByCategory' => $request->seachByCategory,
             'findProductByName' => $request->findProductByName
         ];
-        $condition = $data;
+
         $user = auth()->user();
         $count = 0;
-        $products = $this->storageRepository->getProductSale($condition);
+        $products = $this->storageRepository->getProductSale($data);
 
-        if (isset($user)) {
+        if ( isset($user) ) {
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.index', [
-            'products' => $products,
-            'user' => $user,
-            'count' => $count,
-        ]);
+        return view('client.index', compact('products', 'user', 'count'));
     }
 
     // show index contact
@@ -129,15 +122,11 @@ class IndexController extends Controller
         $products = $this->productRepository->getAll();
         $count = 0;
 
-        if (isset($user)) {
+        if ( isset($user) ) {
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.contact', [
-            'products' => $products,
-            'user' => $user,
-            'count' => $count
-        ]);
+        return view('client.contact', compact('products', 'user', 'count'));
     }
 
 }

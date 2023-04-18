@@ -1231,3 +1231,13 @@ h6 {
   font-size: 13px;
   color: #012970;
 }
+.description {
+    width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 25px;
+    -webkit-line-clamp: 3;
+    height: auto;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}

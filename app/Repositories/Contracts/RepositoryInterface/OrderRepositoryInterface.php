@@ -7,4 +7,6 @@ use App\Repositories\BaseRepositoryInterface;
 interface OrderRepositoryInterface extends BaseRepositoryInterface
 {
     public function findUser($id);
+    public function getOrderByCondition($condition, array $column = ['*']);
+    public function getAllOrder($userId);
 }

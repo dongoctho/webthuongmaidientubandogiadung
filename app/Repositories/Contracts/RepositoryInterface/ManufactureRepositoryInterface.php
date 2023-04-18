@@ -6,4 +6,5 @@ use App\Repositories\BaseRepositoryInterface;
 
 interface ManufactureRepositoryInterface extends BaseRepositoryInterface
 {
+    public function getManufactureByCondition($condition, array $column = ['*']);
 }

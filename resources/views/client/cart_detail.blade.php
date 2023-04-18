@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>EShopper - Bootstrap Shop Template</title>
+    <title>Shop Bán Đồ Gia Dụng</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -11,7 +11,8 @@
     <!-- Favicon -->
     <link href="https://cdn-icons-png.flaticon.com/512/3771/3771009.png" rel="icon">
 
-    <!-- Google Web Fonts -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
@@ -27,28 +28,33 @@
 
 <body>
    <!-- Topbar Start -->
-   <div class="container-fluid">
-
-    <div class="row align-items-center py-3 px-xl-5">
+   <div class="container-fluid" style="position: fixed; z-index: 1000; background-color:rgb(255, 250, 250);">
+    <form action="{{route('show_product_index')}}" method="GET">
+    <div class="row align-items-center py-3 px-xl-5" style="display: flex; justify-content:space-between">
         <div class="col-lg-4.5 d-none d-lg-block">
-            <a href="" class="text-decoration-none">
-                <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">Shop</span>Đồ Gia Dụng</h1>
+            <a href="{{route('client_index')}}" class="text-decoration-none">
+                <h1 class="m-0 display-5 font-weight-semi-bold"><span style=" background-color:rgb(255, 255, 255);"  class="text-primary font-weight-bold border px-3 mr-1">Shop</span>Đồ Gia Dụng</h1>
             </a>
         </div>
         <div class="col-lg-4 text-left">
-            <form action="">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm Kiếm Sản Phẩm">
-                    <div class="input-group-append">
-                        <span class="input-group-text bg-transparent text-primary">
-                            <i class="fa fa-search"></i>
-                        </span>
-                    </div>
+                    <input type="text" name="findProductByName" class="form-control" placeholder="Tìm Kiếm Sản Phẩm">
+                        <div class="input-group-append" style="background-color:rgb(255, 255, 255);">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <button style="border:0; height:24px; background-color:rgb(255, 255, 255);" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
                 </div>
-            </form>
         </div>
         <div class="col-lg-1.5 text-left">
+            <?php
+                if (Auth::check())
+                {
+            ?>
             <a href="{{route('infor_index')}}" class="nav-item nav-link">{{Auth::user()->name}}</a>
+            <?php
+                }
+            ?>
         </div>
         <div class="col-lg-1.5 text-left">
             <?php
@@ -65,7 +71,12 @@
             ?>
         </div>
         <div class="col-lg-1 text-right">
-            <a href="{{route('show_cart')}}"class="btn border">
+            <a  style=" background-color:rgb(255, 255, 255);" @if (Auth::check())
+                    href={{route('show_cart')}}
+                @else
+                    onclick="alertCart()"
+                @endif
+            class="btn border" >
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge">
                     {{$count}}
@@ -78,7 +89,7 @@
 
 
     <!-- Navbar Start -->
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-top: 80px">
         <div class="row border-top px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
@@ -87,12 +98,14 @@
                 </a>
                 <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light" id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
                     <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+                        <button style="background-color:rgb(255, 219, 219); border-top: 0; border-right:0; border-left:0; border-bottom: 1px rgb(193, 122, 122) solid " type="submit" name="seachByCategory" value="" class="nav-item nav-link">Tất Cả Danh Mục</button>
                         @foreach ($categories as $category)
-                            <a href="" class="nav-item nav-link">{{$category->name}}</a>
+                        <button style="border: 0; background-color:rgb(254, 223, 223)" type="submit" name="seachByCategory" value="{{$category->id}}" class="nav-item nav-link">{{$category->name}}</button>
                         @endforeach
                     </div>
-                </nav>
+              </nav>
             </div>
+            </form>
             <div class="col-lg-9">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                     <a href="" class="text-decoration-none d-block d-lg-none">
@@ -167,7 +180,7 @@
                                 </div>
                             </td>
                             <td class="align-middle" id="cart-item-{{$cartDetail->id}}">{{number_format($cartDetail->quantity * $cartDetail->price,0, ",", ".")}} VND</td>
-                            <td class="align-middle"><a href="{{route('deleted_cart_detail', ['id' => $cartDetail->id])}}" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td>
+                            <td class="align-middle"><a onclick="deleteCategory({{$cartDetail->id}})" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -250,6 +263,26 @@
     <script src="{{asset('js/main.js')}}"></script>
 
     <script>
+        function deleteCategory(id) {
+            swal({
+            title: "Bạn muốn xóa?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                var url = 'cartDetail/deleted/' + id;
+                window.location = url;
+                swal("Xóa thành công!", {
+                icon: "success",
+                });
+            } else {
+                swal("Xóa Thất bại!");
+            }
+            });
+        }
        function changePrice(id, pruductId, storageQuantity, btnType) {
         var oldValue = $('#cart-quantity-'+id).val();
         var newValue = 0;

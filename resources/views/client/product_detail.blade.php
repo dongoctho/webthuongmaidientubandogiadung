@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>EShopper - Bootstrap Shop Template</title>
+    <title>Shop Bán Đồ Gia Dụng</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -31,25 +31,23 @@
 
 <body>
    <!-- Topbar Start -->
-   <div class="container-fluid">
-
-    <div class="row align-items-center py-3 px-xl-5">
+   <div class="container-fluid" style="position: fixed; z-index: 1000; background-color:rgb(255, 250, 250);">
+    <form action="{{route('show_product_index')}}" method="GET">
+    <div class="row align-items-center py-3 px-xl-5" style="display: flex; justify-content:space-between">
         <div class="col-lg-4.5 d-none d-lg-block">
-            <a href="" class="text-decoration-none">
-                <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">Shop</span>Đồ Gia Dụng</h1>
+            <a href="{{route('client_index')}}" class="text-decoration-none">
+                <h1 class="m-0 display-5 font-weight-semi-bold"><span style=" background-color:rgb(255, 255, 255);"  class="text-primary font-weight-bold border px-3 mr-1">Shop</span>Đồ Gia Dụng</h1>
             </a>
         </div>
         <div class="col-lg-4 text-left">
-            <form action="">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm Kiếm Sản Phẩm">
-                    <div class="input-group-append">
-                        <span class="input-group-text bg-transparent text-primary">
-                            <i class="fa fa-search"></i>
-                        </span>
-                    </div>
+                    <input type="text" name="findProductByName" class="form-control" placeholder="Tìm Kiếm Sản Phẩm">
+                        <div class="input-group-append" style="background-color:rgb(255, 255, 255);">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <button style="border:0; height:24px; background-color:rgb(255, 255, 255);" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
                 </div>
-            </form>
         </div>
         <div class="col-lg-1.5 text-left">
             <?php
@@ -76,12 +74,12 @@
             ?>
         </div>
         <div class="col-lg-1 text-right">
-            <a  @if (Auth::check())
+            <a  style=" background-color:rgb(255, 255, 255);" @if (Auth::check())
                     href={{route('show_cart')}}
                 @else
                     onclick="alertCart()"
                 @endif
-                class="btn border" >
+            class="btn border" >
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge">
                     {{$count}}
@@ -93,7 +91,7 @@
 <!-- Topbar End -->
 
     <!-- Navbar Start -->
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-top: 80px">
         <div class="row border-top px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
@@ -108,6 +106,7 @@
                     </div>
                 </nav>
             </div>
+            </form>
             <div class="col-lg-9">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                     <a href="" class="text-decoration-none d-block d-lg-none">
@@ -119,13 +118,11 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a href="{{route('client_index')}}" class="nav-item nav-link">Trang Chủ</a>
-                            <a href="{{route('show_product_index')}}" class="nav-item nav-link">Mua Sắm</a>
+                            <a href="{{route('show_product_index')}}" class="nav-item nav-link active">Mua Sắm</a>
                             <a href="{{route('client_contact')}}" class="nav-item nav-link">Liên Hệ</a>
                             <a
                                 @if (Auth::check())
                                     href="{{route('infor_order')}}"
-                                @else
-                                    onclick="alertCart()"
                                     class="nav-item nav-link">Lịch Sử Mua Hàng</a>
                                 @endif
                         </div>
@@ -165,21 +162,21 @@
             <div class="col-lg-7 pb-5">
                 <form action="" method="post">
                     @csrf
-                    <h3 class="font-weight-semi-bold">Tên sản phẩm: {{$product_detail->name}}</h3>
+                    <h1 class="font-weight-semi-bold">{{$product_detail->name}}</h1>
                     <div class="" style="display: flex;">
                             @if ($product_detail->discount == 0)
-                                <h3 class="font-weight-semi-bold">Giá: {{number_format($product_detail->price)}} VND
+                            <h5 style="color: rgb(78, 78, 78)">Giá:</h5><h5 class="font-weight-semi-bold" style="margin-left: 10px; color: red;">₫{{number_format($product_detail->price, 0, ",", ".")}}</h5>
                             @elseif ($product_detail->product_type == 0)
-                                <h3 class="font-weight-semi-bold">Giá: {{number_format($product_detail->price)}} VND</h3>
-                                <h3 class="font-weight-semi-bold"> -> {{number_format($product_detail->price * (1 - ($product_detail->discount / 100)))}} VND</h3>
+                            <h5 style="color: rgb(78, 78, 78)">Giá:</h5><h5 style=" color:gray; font-size:15px; margin-left: 10px"><i style="text-decoration: line-through;" >₫{{number_format($product_detail->price, 0, ",", ".")}}</i></h5>
+                                <h5 style="color: red; margin-left: 10px" class="font-weight-semi-bold"> ₫{{number_format($product_detail->price * (1 - ($product_detail->discount / 100)), 0, ",", ".")}}</h5>
                             @elseif ($product_detail->product_type == 1)
-
-                                    <h3 class="font-weight-semi-bold">Giá: <i style="text-decoration: line-through;" >{{number_format($product_detail->price)}}</i> VND</h3>
-                                    <h3 class="font-weight-semi-bold">-> {{number_format($product_detail->price - $product_detail->discount)}} VND</h3>
-
+                                <h5 style="color: rgb(78, 78, 78)">Giá:</h5><h5 style=" color:gray; font-size:15px; margin-left: 10px"><i style="text-decoration: line-through;" > ₫{{number_format($product_detail->price, 0, ",", ".")}}</i></h5>
+                                <div class="">
+                                    <h5 style="color: red; margin-left: 10px" class="font-weight-semi-bold"> ₫{{number_format($product_detail->price - $product_detail->discount, 0, ",", ".")}}</h5>
+                                </div>
                             @endif
                     </div>
-                    <h3 class="font-weight-semi-bold mb-4">Số lượng trong kho: {{$storages->quantity}}</h3>
+                    <h5  style="color: rgb(78, 78, 78)" class="font-weight-semi mb-4">Số lượng trong kho: {{$storages->quantity}}</h5>
                     <p class="mb-4">Nhà sản xuất: {{$product_detail->manufacture->name}}</p>
                     <p class="mb-4">Mô tả: {{$product_detail->description}}</p>
                     <div class="d-flex align-items-center mb-4 pt-2">
@@ -204,20 +201,21 @@
                                     onclick="alertCart()"
                                 @endif
                          class="btn btn-primary px-3"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
-                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1h5a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                         </svg></button>
-                        <button  @if (Auth::check())
+                        <a  @if (Auth::check())
                                     type="submit"
-                                    href={{route('cart_detail', ['id'=>$product_detail->id])}}
+                                    href={{route('checkout_index') . '?productId=' . $product_detail->id}}
                                 @else
                                     type="button"
                                     onclick="alertCart()"
                                 @endif
+                                id='btn_buy'
                              style="margin-left: 15px" class="btn btn-primary px-3"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-coin" viewBox="0 0 16 16">
                             <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518l.087.02z"/>
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                             <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/>
-                        </svg> Mua Ngay</button>
+                        </svg> Mua Ngay</a>
                     </div>
                     <div class="">
                         @if ($errors->all())
@@ -238,7 +236,7 @@
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
-                        <h4 class="mb-3">Mô Tả Sản Phẩm</h4>
+                        <h5 class="mb-3">Mô Tả Sản Phẩm</h5>
                         <p>{{$product_detail->description}}</p>
                     </div>
                 </div>
@@ -264,7 +262,17 @@
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                 <a href="{{route('product_detail', ['id'=>$product->id])}}"><h6 class="text-truncate mb-3">{{$product->name}}</h6></a>
                                 <div class="d-flex justify-content-center">
-                                <a href="{{route('product_detail', ['id'=>$product->id])}}"><h6>{{number_format($product->price)}} Đ</h6></a>
+                                    @if ($product->discount == 0)
+                                    <h5 class="font-weight-semi-bold" style=" color: red;">₫{{number_format($product->price, 0, ",", ".")}}</h5>
+                                    @elseif ($product->product_type == 0)
+                                        <h5 style=" color:gray; font-size: 15px; margin-left: 10px"><i style="text-decoration: line-through;" >₫{{number_format($product->price, 0, ",", ".")}}</i></h5>
+                                        <h5 style=" color:red; margin-left: 10px" class="font-weight-semi-bold">₫{{number_format($product->price * (1 - ($product->discount / 100)), 0, ",", ".")}}</h5>
+                                    @else
+                                        <h5 style=" color:gray; font-size: 15px; margin-left: 10px"><i style="text-decoration: line-through;" > ₫{{number_format($product->price, 0, ",", ".")}}</i></h5>
+                                        <div class="">
+                                        <h5 style="color: red; margin-left: 10px" class="font-weight-semi-bold">₫{{number_format($product->price - $product->discount, 0, ",", ".")}}</h5>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-center bg-light border">
@@ -335,6 +343,7 @@
     <script>
         $(document).ready(function () {
             var quantity = @json($storages->quantity);
+            var url = $('#btn_buy').attr('href');
             $('.quantity button').on('click', function () {
                 var button = $(this);
                 var oldValue = button.parent().parent().find('input').val();
@@ -347,6 +356,7 @@
                         newVal = 1;
                     }
                 }
+                $('#btn_buy').attr('href', url + '&&quantity=' + newVal);
                 button.parent().parent().find('input').val(newVal);
                 if (newVal >= quantity) {
                     $('.btn-plus').attr("disabled", true);

@@ -25,22 +25,25 @@ class OrderDetailRepository extends BaseRepository implements OrderDetailReposit
             ->where('orders_detail.deleted_at', null)
             ->orderByDesc('orders_detail.id')
             ->join('orders', 'orders.id', '=', 'orders_detail.order_id')
-            ->join('products', 'orders_detail.product_id', '=', 'products.id')
             ->get();
 
         return $query;
     }
 
-    public function getOrderDetail($userId, $id)
+    public function getOrderDetail($userId, $id, $condition, array $column = ['*'])
     {
         $query = $this->model
+            ->select($column)
             ->where('user_id', $userId)
             ->where('orders_detail.deleted_at', null)
             ->where('orders_detail.order_id', '=', $id)
-            ->orderByDesc('orders_detail.id')
-            ->join('orders', 'orders.id', '=', 'orders_detail.order_id')
-            ->join('products', 'orders_detail.product_id', '=', 'products.id')
+            ->leftjoin('orders', 'orders.id', '=', 'orders_detail.order_id')
+            ->leftjoin('products', 'orders_detail.product_id', '=', 'products.id')->get();
+
+        if (isset($condition['key'])) {
+            $query->where('name', 'like', '%'.$condition['key'].'%')
             ->get();
+        }
 
         return $query;
     }

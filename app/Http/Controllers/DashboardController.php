@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 use App\Repositories\Contracts\RepositoryInterface\CategoryRepositoryInterface;
 
-use Illuminate\Http\Request;
-
 class DashboardController extends Controller
 {
     protected $categoryRepository;
@@ -14,20 +12,9 @@ class DashboardController extends Controller
         $this->categoryRepository = $categoryRepositoryInterface;
     }
 
+    // show dashboard page
     public function dashboard()
     {
-        $categories = $this->categoryRepository->getAll();
-
-        $user = auth()->user();
-
-        if ($user) {
-            return view('admin.category.list_category',[
-                'user' => $user,
-                'categories' => $categories
-            ]);
-        }
-        else {
-            return redirect()->route('login_page');
-        }
+        return redirect()->route('list_category');
     }
 }

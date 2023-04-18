@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\RepositoryInterface\ManufactureRepositoryInterface;
 use App\Http\Requests\CreateManufactureFormRequest;
+use App\Http\Requests\EditManufactureFormRequest;
 use Illuminate\Http\Request;
 
 class ManufactureController extends Controller
@@ -15,11 +16,13 @@ class ManufactureController extends Controller
         $this->manufactureRepository = $manufactureRepositoryInterface;
     }
 
+    // show manufacture page
     public function index()
     {
         return view('admin.manufacture.add_manufacture');
     }
 
+    // create manufacture to database
     public function create(CreateManufactureFormRequest $request)
     {
         $data = [
@@ -30,18 +33,21 @@ class ManufactureController extends Controller
 
         $this->manufactureRepository->create($data);
 
-        return view('admin.manufacture.add_manufacture')->with('msg', 'Created');
+        return redirect()->route('list_manufacture')->with('msg', 'Created');
     }
 
-    public function list()
+    // show list manufacture
+    public function list(Request $request)
     {
-        $manufactures = $this->manufactureRepository->getAll();
+        $data = [
+            'key' => $request->key
+        ];
+        $manufactures = $this->manufactureRepository->getManufactureByCondition($data);
 
-        return view('admin.manufacture.list_manufacture', [
-            'manufactures' => $manufactures
-        ]);
+        return view('admin.manufacture.list_manufacture', compact('manufactures'));
     }
 
+    // delete manufacture
     public function destroy(int $id)
     {
         $this->manufactureRepository->delete($id);
@@ -49,18 +55,17 @@ class ManufactureController extends Controller
         return redirect()->back();
     }
 
+    // show information manufacture
     public function show(int $id)
     {
         $manufactures = $this->manufactureRepository->find($id);
 
-        return view('admin.manufacture.show_manufacture', [
-            'manufactures' => $manufactures
-        ]);
+        return view('admin.manufacture.show_manufacture', compact('manufactures'));
     }
 
-    public function update(int $id, CreateManufactureFormRequest $request)
+    // update information manufacture
+    public function update(int $id, EditManufactureFormRequest $request)
     {
-
         $this->manufactureRepository->update($id, $request->toArray());
 
         return redirect()->route('list_manufacture');

@@ -32,9 +32,9 @@ class CreateStorageFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'quantity.required' => 'Please enter an code',
-            'quantity.numeric' => 'Quantity must be a number',
-            'description.required' => 'Please enter an description',
+            'quantity.required' => 'Không được bỏ trống ô này',
+            'quantity.numeric' => 'Yêu cầu nhập số',
+            'description.required' => 'Không được bỏ trống ô này',
         ];
     }
 }

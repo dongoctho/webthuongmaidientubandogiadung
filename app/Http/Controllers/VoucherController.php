@@ -3,57 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateVoucherFormRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\EditVoucherFormRequest;
 use App\Repositories\Contracts\RepositoryInterface\VoucherRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\ProductRepositoryInterface;
+use Illuminate\Http\Request;
 
 class VoucherController extends Controller
 {
     protected $voucherRepository;
     protected $productRepository;
 
-    public function __construct(VoucherRepositoryInterface $voucherRepositoryInterface,
-    ProductRepositoryInterface $productRepositoryInterface)
-    {
+    public function __construct(
+        VoucherRepositoryInterface $voucherRepositoryInterface,
+        ProductRepositoryInterface $productRepositoryInterface
+    ) {
         $this->voucherRepository = $voucherRepositoryInterface;
         $this->productRepository = $productRepositoryInterface;
     }
 
+    // show voucher page
     public function index()
     {
         $products = $this->productRepository->getAll();
 
-        return view('admin.voucher.add_voucher', [
-            'products' => $products
-        ]);
+        return view('admin.voucher.add_voucher', compact('products'));
     }
 
+    // create voucher to  database
     public function create(CreateVoucherFormRequest $request)
     {
-        $products = $this->productRepository->getAll();
+        $this->voucherRepository->create($request->toArray());
 
-        $data = [
-            'code' => $request->code,
-            'name' => $request->name,
-            'discount' => $request->discount,
-            'quantity' => $request->quantity,
-            'voucher_type' => $request->voucher_type,
-        ];
-
-        $this->voucherRepository->create($data);
-
-        return view('admin.voucher.add_voucher')->with('msg', 'Created');
+        return redirect()->route('list_voucher')->with('msg', 'Created');
     }
 
-    public function list()
+    // show list voucher
+    public function list(Request $request)
     {
-        $vouchers = $this->voucherRepository->getAll();
+        $data = [
+            'key' => $request->key
+        ];
+        $vouchers = $this->voucherRepository->getVoucherByCondition($data);
 
-        return view('admin.voucher.list_voucher', [
-            'vouchers' => $vouchers
-        ]);
+        return view('admin.voucher.list_voucher', compact('vouchers'));
     }
 
+    // delete voucher
     public function destroy(int $id)
     {
         $this->voucherRepository->delete($id);
@@ -61,26 +56,18 @@ class VoucherController extends Controller
         return redirect()->back();
     }
 
+    // show information voucher
     public function show(int $id)
     {
         $vouchers = $this->voucherRepository->find($id);
 
-        return view('admin.voucher.show_voucher', [
-            'vouchers' => $vouchers
-        ]);
+        return view('admin.voucher.show_voucher', compact('vouchers'));
     }
 
-    public function update(int $id, CreateVoucherFormRequest $request)
+    // update information voucher
+    public function update(int $id, EditVoucherFormRequest $request)
     {
-        $data = [
-            'code' => $request->code,
-            'name' => $request->name,
-            'discount' => $request->discount,
-            'quantity' => $request->quantity,
-            'voucher_type' => $request->voucher_type
-        ];
-
-        $this->voucherRepository->update($id, $data);
+        $this->voucherRepository->update($id, $request->toArray());
 
         return redirect()->route('list_voucher');
     }

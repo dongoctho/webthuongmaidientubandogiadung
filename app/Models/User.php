@@ -28,7 +28,8 @@ class User extends Authenticatable
         'address',
         'avatar',
         'role',
-        'remember_token'
+        'remember_token',
+        'google_id'
     ];
 
     /**

@@ -26,7 +26,7 @@ class CreateRegisterFormRequest extends FormRequest
         return [
             'name' => ['required'],
             'email' => ['required', 'email', 'unique:users'],
-            'phone' => ['required', 'min:10'],
+            'phone' => ['required', 'min:10', 'max:12', 'numeric'],
             'password' => ['required', 'min:8'],
             'repassword' => ['required']
         ];
@@ -35,15 +35,16 @@ class CreateRegisterFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'Please enter an email',
-            'email.unique' => 'Email bị trùng',
-            'email.email' => 'Please enter ...@gmail.com',
-            'password.required' => 'Please enter an password',
-            'password.min' => 'Password must be more than 8 characters',
-            'name.required' => 'Please enter an name',
-            'repassword' => 'Please enter an repassword',
-            'phone.required' => 'Please enter an phone',
-            'phone.min' => 'phone must be more than 10 characters'
+            'email.required' => 'Không được bỏ trống ô này',
+            'email.unique' => 'Email đã tồn tại',
+            'email.email' => 'Nhập đúng định dạng ...@gmail.com',
+            'password.required' => 'Không được bỏ trống ô này',
+            'password.min' => 'Mật khẩu không được nhỏ hơn 8 ký tự',
+            'name.required' => 'Không được bỏ trống ô này',
+            'repassword.required' => 'Không được bỏ trống ô này',
+            'phone.required' => 'Không được bỏ trống ô này',
+            'phone.min' => 'Số điện thoại không được nhỏ hon 10 ký tự',
+            'phone.max' => 'Số điện thoại không được lớn hơn 12 ký tự'
         ];
     }
 }

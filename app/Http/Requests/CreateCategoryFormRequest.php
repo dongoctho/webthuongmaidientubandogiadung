@@ -24,17 +24,19 @@ class CreateCategoryFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4'],
-            'name' => ['required']
+            'code' => ['required', 'min:4', 'unique:categories'],
+            'name' => ['required', 'unique:categories'],
         ];
     }
 
     public function messages()
     {
         return [
-            'code.required' => 'Please enter an code',
-            'name.required' => 'Please enter an name',
-            'code.min' => 'Code must be more than 4 characters'
+            'code.required' => 'Không được bỏ trống ô này',
+            'name.required' => 'Không được bỏ trống ô này',
+            'code.min' => 'Không được nhập nhỏ hơn 4 ký tự',
+            'code.unique' => 'Mã bị trùng',
+            'name.unique' => 'Tên bị trùng'
         ];
     }
 }

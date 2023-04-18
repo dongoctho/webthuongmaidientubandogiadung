@@ -2,50 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Repositories\Contracts\RepositoryInterface\UserRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\CategoryRepositoryInterface;
 use App\Http\Requests\CreateCategoryFormRequest;
-use App\Models\Category;
+use App\Http\Requests\EditCategoryFormRequest;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     protected $userRepository;
     protected $categoryRepository;
 
-    public function __construct(CategoryRepositoryInterface $categoryRepositoryInterface,
-                                UserRepositoryInterface $userRepositoryInterface)
-    {
+    public function __construct (
+        CategoryRepositoryInterface $categoryRepositoryInterface,
+        UserRepositoryInterface $userRepositoryInterface
+    ) {
         $this->categoryRepository = $categoryRepositoryInterface;
         $this->userRepository = $userRepositoryInterface;
     }
 
+    // show add category page
     public function index()
     {
         return view('admin.category.add_category');
     }
 
+    // create category to database
     public function create(CreateCategoryFormRequest $request)
     {
-        $data = $request->all();
         $this->categoryRepository->create($request->toArray());
 
-        return response()->json([
-            'name' => $data['name'],
-            'code' => $data['code'],
-        ], 201);
+        return redirect()->route('list_category')->with('msg', 'Created');
     }
 
-    public function list()
+    // show list categories
+    public function list(Request $request)
     {
-        $categories = $this->categoryRepository->getAll();
+        $data = [
+            'key' => $request->key
+        ];
+        $categories = $this->categoryRepository->getCategoryByCondition($data);
 
-        return view('admin.category.list_category', [
-            'categories' => $categories
-        ]);
-
+        return view('admin.category.list_category', compact('categories'));
     }
 
+    // delete category
     public function destroy(int $id)
     {
         $this->categoryRepository->delete($id);
@@ -54,22 +55,21 @@ class CategoryController extends Controller
 
     }
 
+    // show information category
     public function show(int $id)
     {
         $categories = $this->categoryRepository->find($id);
 
-        return view('admin.category.show_category', [
-            'categories' => $categories
-        ]);
+        return view('admin.category.show_category', compact('categories'));
 
     }
 
-    public function update(int $id, CreateCategoryFormRequest $request)
+    // update information category
+    public function update(int $id, EditCategoryFormRequest $request)
     {
         $this->categoryRepository->update($id, $request->toArray());
 
         return redirect()->route('list_category');
-
     }
 
 }

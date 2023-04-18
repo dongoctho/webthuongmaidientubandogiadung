@@ -3,7 +3,7 @@
 <div class="card1">
 
     <div class="category_top" style="display:flex; justify-content: center; margin: 50px 0 0 0">
-        <h1 class="">ADD MANUFACTURE</h1>
+        <h1 class="">Thêm Nhà Sản Xuất</h1>
     </div>
 
     <div class="add-bottom">
@@ -14,42 +14,47 @@
                     <div class="col-sm-6 mb-3 mb-sm-0">
                         <div class="" style="display: flex; margin-left:10px; flex-direction:column; margin-top:30px">
                             <div class="">
-                                <p>Enter Manufacture Code</p>
+                                <p>Nhập Mã Nhà Sản Xuất</p>
                             </div>
-                            <input style="height:50px" type="text" name="code" value="{{old('code')}}" class="form-control" placeholder="Enter manufacture code ..." aria-label="Username" aria-describedby="addon-wrapping">
+                            <input required="required" style="height:50px" type="text" name="code" value="{{old('code')}}" class="form-control"
+                            placeholder="Nhập Mã Nhà Sản Xuất" aria-label="Username" aria-describedby="addon-wrapping">
                         </div>
                         <div class="">
                             @if ($errors->all())
-                            <p style="color: red; margin-left: 10px">{{$errors->first('code')}}</p>
+                            <span style="color: red; margin-left: 10px">{{$errors->first('code')}}</span>
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
                         <div class="" style="display: flex; margin-left:10px; flex-direction:column; margin-top:30px">
                             <div class="">
-                                <p>Enter Manufacture Description</p>
+                                <p>Nhập Tên Nhà Sản Xuất</p>
                             </div>
-                            <input style="height:50px" type="text" name="description" value="{{old('description')}}" class="form-control" placeholder="Enter manufacture des ..." aria-label="Username" aria-describedby="addon-wrapping">
+                            <input required="required" style="height:50px" type="text" name="name" value="{{old('name')}}" class="form-control"
+                            placeholder="Nhập Tên Nhà Sản Xuất" aria-label="Username" aria-describedby="addon-wrapping">
                         </div>
-                        <div class="">
+                        <div class="" style="margin-left:10px">
                             @if ($errors->all())
-                            <p style="color: red; margin-left:10px">{{$errors->first('description')}}</p>
+                            <span style="color: red">{{$errors->first('name')}}</span>
                             @endif
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
+
+                    <div class="col-sm-6">
                         <div class="" style="display: flex; margin-left:10px; flex-direction:column; margin-top:30px">
                             <div class="">
-                                <p>Enter Manufacture Name</p>
+                                <p>Nhập Mô Tả</p>
                             </div>
-                            <input style="height:50px" type="text" name="name" value="{{old('name')}}" class="form-control" placeholder="Enter manufacture name ..." aria-label="Username" aria-describedby="addon-wrapping">
+                            <div class="form-outline">
+                                <textarea required="required" class="form-control" name="description" id="textAreaExample1" rows="4"></textarea>
+                            </div>
                         </div>
-                        <div class="" style="margin-left:10px">
+                        <div class="">
                             @if ($errors->all())
-                            <p style="color: red">{{$errors->first('name')}}</p>
+                            <span style="color: red; margin-left:10px">{{$errors->first('description')}}</span>
                             @endif
                         </div>
                     </div>
@@ -57,9 +62,9 @@
 
                 <div class="justify" style="margin: 10px; display:flex; justify-content: center; flex-direction: column; margin-top: 40px;">
                     @if (isset($msg))
-                    <p style="color: red">{{$msg}}</p>
+                    <span style="color: red">{{$msg}}</span>
                     @endif
-                    <input class="btn btn-primary btn-user btn-block" value="CREATE" type="submit">
+                    <input class="btn btn-primary btn-user btn-block" value="Thêm Mới" type="submit">
                 </div>
             </form>
 

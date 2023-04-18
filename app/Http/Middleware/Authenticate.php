@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Constants\AuthConstant;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Support\Facades\Auth;
 
 class Authenticate extends Middleware
 {
@@ -14,7 +16,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
+        if (Auth::user()->role == AuthConstant::CLIENT) {
             return route('login');
         }
     }

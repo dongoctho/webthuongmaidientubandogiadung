@@ -24,8 +24,8 @@ class CreateProductFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4'],
-            'name' => ['required'],
+            'code' => ['required', 'min:4', 'unique:products'],
+            'name' => ['required', 'unique:products'],
             'price' => ['required', 'numeric'],
             'description' => ['required']
         ];
@@ -34,12 +34,13 @@ class CreateProductFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'code.required' => 'Please enter an code',
-            'name.required' => 'Please enter an name',
-            'code.min' => 'Code must be more than 4 characters',
-            'price.required' => 'Please enter an price',
-            'price.numeric' => 'Price must be a number',
-            'description.required' => 'Please enter an description'
+            'code.required' => 'Không được bỏ trống ô này',
+            'code.unique' => 'Mã bị trùng',
+            'name.required' => 'Không được bỏ trống ô này',
+            'code.min' => 'Không được nhập nhỏ hơn 4 ký tự',
+            'price.required' => 'Không được bỏ trống ô này',
+            'price.numeric' => 'Yêu cầu nhập số',
+            'description.required' => 'Không được bỏ trống ô này'
         ];
     }
 }

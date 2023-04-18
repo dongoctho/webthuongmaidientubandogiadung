@@ -12,4 +12,18 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
     {
         return Category::class;
     }
+
+    public function getCategoryByCondition($condition, array $column = ['*'])
+    {
+        $query = $this->model->newQuery();
+        $query->select($column)->where('categories.deleted_at', '=', null)->get();
+
+        if (isset($condition['key'])) {
+            $query->where('name', 'like', '%'.$condition['key'].'%')
+                  ->orWhere('code', 'like', '%'.$condition['key'].'%')
+                  ->get();
+        }
+
+        return $query->paginate(6);
+    }
 }

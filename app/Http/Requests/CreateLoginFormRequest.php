@@ -32,10 +32,10 @@ class CreateLoginFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'Please enter an email',
-            'email.email' => 'Please enter ...@gmail.com',
-            'password.required' => 'Please enter an password',
-            'password.min' => 'Password must be more than 8 characters'
+            'email.required' => 'Không được bỏ trống ô này',
+            'email.email' => 'Nhập đúng định dạng ...@gmail.com',
+            'password.required' => 'Không được bỏ trống ô này',
+            'password.min' => 'Không được nhập nhỏ hơn 8n ký tự'
         ];
     }
 }

@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Register</title>
+    <title>Đăng Ký</title>
 
     <!-- Custom fonts for this template-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -35,45 +35,45 @@
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                                <h1 class="h4 text-gray-900 mb-4">Tạo tài khoản mới!</h1>
                             </div>
                             <form action="" method="post">
                                 @csrf
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        @if ($errors->all())
-                                        <p style="color: red">{{$errors->first('name')}}</p>
+                                        <input required="required" type="text" class="form-control form-control-user name" value="{{old('name')}}" name="name" id="exampleFirstName"
+                                            placeholder="Nhập tên">
+                                            @if ($errors->all())
+                                        <span style="color: red">{{$errors->first('name')}}</span>
                                         @endif
-                                        <input type="text" class="form-control form-control-user name" value="{{old('name')}}" name="name" id="exampleFirstName"
-                                            placeholder="Enter Name">
                                     </div>
                                     <div class="col-sm-6">
-                                        @if ($errors->all())
-                                        <p style="color: red">{{$errors->first('phone')}}</p>
-                                        @endif
-                                        <input type="text" class="form-control form-control-user phone" name="phone" value="{{old('phone')}}" id="exampleLastName"
-                                            placeholder="Enter Phone">
+                                        <input required="required" type="text" class="form-control form-control-user phone" name="phone" value="{{old('phone')}}" id="exampleLastName"
+                                            placeholder="Nhập số điện thoại">
+                                            @if ($errors->all())
+                                            <span style="color: red">{{$errors->first('phone')}}</span>
+                                            @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @if ($errors->all())
-                                    <p style="color: red">{{$errors->first('email')}}</p>
+                                    <input required="required" type="email" name="email" class="form-control form-control-user email" value="{{old('email')}}" id="exampleInputEmail"
+                                        placeholder="Nhập địa chỉ email">
+                                        @if ($errors->all())
+                                    <span style="color: red">{{$errors->first('email')}}</span>
                                     @endif
-                                    <input type="text" name="email" class="form-control form-control-user email" value="{{old('email')}}" id="exampleInputEmail"
-                                        placeholder="Enter Email Address">
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" name="password" class="form-control form-control-user password"
-                                            id="exampleInputPassword" placeholder="Password">
+                                        <input required="required" type="password" name="password" class="form-control form-control-user password"
+                                            id="exampleInputPassword" placeholder="Nhập mật khẩu">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="password" name="repassword" class="form-control form-control-user repassword"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        <input required="required" type="password" name="repassword" class="form-control form-control-user repassword"
+                                            id="exampleRepeatPassword" placeholder="Nhập lại mật khẩu">
                                     </div>
                                 </div>
                                     <div class="" style="display: flex; justify-content:center;">
-                                        <p style="color: red"></p>
+                                        <span style="color: red"></span>
                                     </div>
                                     @if ($errors->all())
                                         <script>
@@ -87,15 +87,12 @@
                                         </script>
                                     @endif
                                 <input
-                                    class="btn btn-primary btn-user btn-block" type="submit" value="Register">
+                                    class="btn btn-primary btn-user btn-block" type="submit" value="Đăng ký">
                                 <hr>
                             </form>
                             <hr>
                             <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div>
-                            <div class="text-center">
-                                <a class="small" href="{{route('login_page')}}">Already have an account? Login!</a>
+                                <a class="small" href="{{route('login_page')}}">Bạn đã có tài khoản? Đăng nhập!</a>
                             </div>
                         </div>
                     </div>

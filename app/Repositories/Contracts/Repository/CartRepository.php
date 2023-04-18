@@ -37,4 +37,21 @@ class CartRepository extends BaseRepository implements CartRepositoryInterface
         return $this->model->where('user_id', $id)->first();
     }
 
+    public function getCartByCondition($condition, array $column = ['*'])
+    {
+        $query = $this->model->newQuery();
+        $query->select($column)
+            ->where('carts.deleted_at', '=', null)
+            ->leftjoin('users', 'carts.user_id', '=', 'users.id')->get();
+
+        if (isset($condition['key'])) {
+            $query->where('users.name', 'like', '%'.$condition['key'].'%')
+                  ->orWhere('code', 'like', '%'.$condition['key'].'%')
+            ->get();
+        }
+
+        return $query->paginate(6);
+    }
+
+
 }

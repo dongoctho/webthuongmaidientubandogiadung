@@ -7,10 +7,10 @@ use App\Repositories\Contracts\RepositoryInterface\CategoryRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\StorageRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\CartRepositoryInterface;
 use App\Http\Requests\CreateQuantityCartFormRequest;
-use App\Models\CartDetail;
 use App\Constants\CartConstant;
 use App\Repositories\Contracts\RepositoryInterface\CartDetailRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Services\SumPriceService;
 
 class CartController extends Controller
 {
@@ -21,48 +21,47 @@ class CartController extends Controller
     protected $manufactureRepository;
     protected $cartRepository;
     protected $cartDetailRepository;
+    protected $sum_price_service;
 
-    public function __construct(
+    public function __construct (
         ProductRepositoryInterface $productRepositoryInterface,
         StorageRepositoryInterface $storageRepositoryInterface,
         CategoryRepositoryInterface $categoryRepositoryInterface,
         ManufactureRepositoryInterface $manufactureRepositoryInterface,
         CartRepositoryInterface $cartRepositoryInterface,
-        CartDetailRepositoryInterface $cartDetailRepositoryInterface
-    ){
+        CartDetailRepositoryInterface $cartDetailRepositoryInterface,
+        SumPriceService $sumPriceService
+    ) {
         $this->productRepository = $productRepositoryInterface;
         $this->storageRepository = $storageRepositoryInterface;
         $this->categoryRepository = $categoryRepositoryInterface;
         $this->manufactureRepository = $manufactureRepositoryInterface;
         $this->cartRepository = $cartRepositoryInterface;
         $this->cartDetailRepository = $cartDetailRepositoryInterface;
+        $this->sum_price_service = $sumPriceService;
     }
 
-    /*
-    * Add product to cart
-    */
+    // Add product to cart
     public function addCart($id, CreateQuantityCartFormRequest $request)
     {
         $user = auth()->user();
         $product = $this->productRepository->find($id);
         $idUserCart = $this->cartRepository->findUser($user->id);
         $storage = $this->storageRepository->findProduct($product->id);
-
-        if ($request->quantity > $storage->quantity){
+        if ( $request->quantity > $storage->quantity ){
             return redirect()->back()->with('msg', 'Số lượng nhập không được vượt quá hàng trong kho');
         }
-
-        if ($product->product_type == 0) {
+        if ( $product->product_type == 0 ) {
             $priceHandle = $product->price * (1 - ($product->discount / 100));
-        } else if ($product->product_type == 1) {
+        } else if ( $product->product_type == 1 ) {
             $priceHandle = $product->price - $product->discount;
         }
 
+        if ( isset($idUserCart) ) {
+            $cartDetail = $this->cartDetailRepository->findProduct($id, $idUserCart->id);
 
-        if (isset($idUserCart)) {
-            $cartDetail = $this->cartDetailRepository->findProduct($id);
+            if ( $cartDetail == null ) {
 
-            if ($cartDetail == null) {
                 $data = [
                     'cart_id' => $idUserCart->id,
                     'product_id' => $id,
@@ -70,14 +69,16 @@ class CartController extends Controller
                     'quantity' => $request->quantity,
                     'image' => $product->image
                 ];
+
                 $this->cartDetailRepository->create($data);
 
                 return redirect()->back();
-            }
-            else if ($id == $cartDetail->product_id) {
+            } else if ( $id == $cartDetail->product_id ) {
+
                 $dataCart = [
                     'quantity' => $request->quantity + $cartDetail->quantity,
                 ];
+
                 $this->cartDetailRepository->update($cartDetail->id, $dataCart);
 
                 return redirect()->back();
@@ -87,9 +88,8 @@ class CartController extends Controller
                 'user_id' => $user->id
             ];
             $cartId = $this->cartRepository->create($dataUser);
-            $cartDetail = $this->cartDetailRepository->findProduct($id);
-
-            if ($cartDetail == null) {
+            $cartDetail = $this->cartDetailRepository->findProduct($id, $cartId);
+            if ( $cartDetail == null ) {
                 $data = [
                     'cart_id' => $cartId->id,
                     'product_id' => $id,
@@ -100,8 +100,7 @@ class CartController extends Controller
                 $this->cartDetailRepository->create($data);
 
                 return redirect()->back();
-            }
-            else if ($id == $cartDetail->product_id) {
+            } else if ( $id == $cartDetail->product_id ) {
                 $dataCart = [
                     'quantity' => $request->quantity + $cartDetail->quantity,
                 ];
@@ -126,15 +125,20 @@ class CartController extends Controller
         $data = $request->all();
         $cart = $this->cartDetailRepository->find($data['id']);
         $priceCart = $cart->price * $data['quantity'];
+
         $input = [
             'quantity' => $data['quantity']
         ];
+
         $this->cartDetailRepository->update($data['id'], $input);
+
         $carts = $this->cartDetailRepository->getByCondition([
             'cart_id' => $cart->cart_id,
         ]);
+
         $sum = 0;
-        foreach ($carts as $item) {
+
+        foreach ( $carts as $item ) {
             $sum += $item->quantity * $item->price;
         }
 
@@ -150,6 +154,7 @@ class CartController extends Controller
     {
         $buttonPlus = CartConstant::BUTTON_PLUS;
         $buttonMinus = CartConstant::BUTTON_MINUS;
+
         $columnSelect = [
             'carts_detail.id as id',
             'carts.id as carts_id',
@@ -167,32 +172,26 @@ class CartController extends Controller
         $user = auth()->user();
         $count = $this->cartRepository->countProductInCart($user->id);
         $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect);
+        $sumPrice = $this->sum_price_service->sumPrice($user->id, $columnSelect);
 
-        $sumPrice = 0;
-
-        foreach ($cartDetails as $item) {
-            $sumPrice += $item->price * $item->quantity;
-        }
-
-            return view('client.cart_detail', [
-                'cartDetails' => $cartDetails,
-                'count' => $count,
-                'sumPrice' => $sumPrice,
-                'buttonPlus' => $buttonPlus,
-                'buttonMinus' => $buttonMinus
-            ]);
+        return view('client.cart_detail', compact('cartDetails', 'count', 'sumPrice', 'buttonPlus', 'buttonMinus'));
     }
 
-    public function list()
+    // show list cart admin
+    public function list(Request $request)
     {
-        $carts = $this->cartRepository->getAll();
+        $data = [
+            'key' => $request->key
+        ];
+        $carts = $this->cartRepository->getCartByCondition($data);
 
         return view('admin.cart.list_cart', compact('carts'));
     }
 
-    public function listCartDetail(int $id_user, int $id)
+    // show cart detail admin
+    public function listCartDetail(int $id_user)
     {
-        $cart_details = $this->cartDetailRepository->getCartDetail($id_user, $id);
+        $cart_details = $this->cartDetailRepository->getCartDetail($id_user);
 
         return view('admin.cart.list_cart_detail', compact('cart_details'));
     }

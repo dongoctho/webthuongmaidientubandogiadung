@@ -6,4 +6,5 @@ use App\Repositories\BaseRepositoryInterface;
 
 interface VoucherRepositoryInterface extends BaseRepositoryInterface
 {
+    public function getVoucherByCondition($condition, array $column = ['*']);
 }

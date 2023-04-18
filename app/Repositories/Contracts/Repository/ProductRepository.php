@@ -12,6 +12,15 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         return Product::class;
     }
+
+    public function findProduct($product_id)
+    {
+        return $this->model
+        ->where('products.id', $product_id)
+        ->where('products.deleted_at', '=', null)
+        ->first();
+    }
+
     public function getByCondition($condition, array $column = ['*'])
     {
         $query = $this->model->newQuery();
@@ -48,7 +57,22 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
             $query->where('name', 'like', '%'.$condition['findProductByName'].'%')
             ->get();
         }
-        return $query->get();
+        return $query->paginate(6);
+    }
+
+    public function getProductByCondition($condition, array $column = ['*'])
+    {
+        $query = $this->model->newQuery();
+        $query->select($column)->where('products.deleted_at', '=', null)->get();
+
+        if (isset($condition['key'])) {
+            $query->where('name', 'like', '%'.$condition['key'].'%')
+                  ->orWhere('code', 'like', '%'.$condition['key'].'%')
+                  ->orWhere('price', 'like', '%'.$condition['key'].'%')
+            ->get();
+        }
+
+        return $query->paginate(6);
     }
 
 }

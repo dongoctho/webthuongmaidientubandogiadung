@@ -8,5 +8,5 @@ interface OrderDetailRepositoryInterface extends BaseRepositoryInterface
 {
     public function findProduct($product_id);
     public function getAllOrder($userId);
-    public function getOrderDetail($userId, $id);
+    public function getOrderDetail($userId, $id, $condition, array $column = ['*']);
 }

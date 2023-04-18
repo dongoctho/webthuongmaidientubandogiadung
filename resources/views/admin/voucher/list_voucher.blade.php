@@ -4,48 +4,46 @@
     <div class="card1">
 
         <div class="category_top" style="display:flex; justify-content: center; margin: 50px 0 20px 0">
-            <h1 class="">LIST VOUCHERS</h1>
+            <h1 class="">Danh Sách Phiếu Giảm Giá</h1>
         </div>
 
         <div class="card-body">
             <div class="search-bar">
-                <form class="search-form d-flex align-items-center" method="POST" action="#">
-                  <input type="text" style="width: 350px; height: 40px; padding-left: 10px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;border-top: solid 1px gray; border-left: solid 1px gray; border-bottom: solid 1px gray;border-right: 0;" name="query" placeholder="Search" title="Enter search keyword">
+                <form class="search-form d-flex align-items-center" method="GET" action="">
+                  <input type="text" name="key" style="width: 350px; height: 40px; padding-left: 10px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;border-top: solid 1px gray; border-left: solid 1px gray; border-bottom: solid 1px gray;border-right: 0;" name="query" placeholder="Search" title="Enter search keyword">
                   <button type="submit" style="height: 40px; background-color:white; padding-right: 15px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-top: solid 1px gray;border-right: solid 1px gray;border-bottom: solid 1px gray;border-left: 0;" title="Search"><i class="bi bi-search"></i></button>
                 </form>
             </div>
-          <table id="example1" class="table">
+          <table id="example1" class="table" style="text-align: center">
                 <thead>
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Voucher Code</th>
-                    <th scope="col">Voucher Name</th>
-                    <th scope="col">Voucher Discount</th>
-                    <th scope="col">Voucher Quantity</th>
-                    <th scope="col">Voucher Type</th>
-                    <th scope="col">Created at</th>
-                    <th scope="col">Deleted at</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
+                    <th scope="col">#</th>
+                    <th scope="col">Mã phiếu giảm giá</th>
+                    <th scope="col">Tên phiếu giảm giá</th>
+                    <th scope="col">Giá trị giảm giá</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Kiểu giảm giá</th>
+                    <th scope="col">Thêm lúc</th>
+                    <th scope="col">Sửa</th>
+                    <th scope="col">Xóa</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($vouchers as $voucher)
+                @foreach ($vouchers as $key => $voucher)
                 <tr>
-                    <td>{{$voucher->id}}</td>
+                    <td>{{$key + 1}}</td>
                     <td>{{$voucher->code}}</td>
                     <td>{{$voucher->name}}</td>
                     <td>{{$voucher->discount}}</td>
                     <td>{{$voucher->quantity}}</td>
                     <td>
                         @if ($voucher->voucher_type == 0)
-                            Percent
+                            Phần Trăm
                         @else
-                            VND
+                            Giá Tiền
                         @endif
                     </td>
                     <td>{{$voucher->created_at}}</td>
-                    <td>{{$voucher->deleted_at}}</td>
                     <td><a href="{{route('show_voucher', ['id'=>$voucher->id])}}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -58,6 +56,9 @@
                 @endforeach
                 </tbody>
             </table>
+        </div>
+        <div class="col-12 pb-1" style="display: flex;  justify-content: center">
+            {!! $vouchers->links() !!}
         </div>
     </div>
 

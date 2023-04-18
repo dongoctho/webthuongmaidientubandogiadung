@@ -10,4 +10,5 @@ interface CartRepositoryInterface extends BaseRepositoryInterface
     public function countProductInCart($userId);
     public function sellectCartDetail($userId);
     public function findUser($id);
+    public function getCartByCondition($condition, array $column = ['*']);
 }

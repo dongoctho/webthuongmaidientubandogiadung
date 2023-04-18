@@ -9,7 +9,9 @@ use App\Repositories\Contracts\RepositoryInterface\StorageRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\UserRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\CartRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\VoucherRepositoryInterface;
+use App\Services\ImageService;
 use App\Http\Requests\CreateProductFormRequest;
+use App\Http\Requests\EditProductFormRequest;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -21,6 +23,7 @@ class ProductController extends Controller
     protected $manufactureRepository;
     protected $cartRepository;
     protected $voucherRepository;
+    protected $image_service;
 
     public function __construct(
         UserRepositoryInterface $userRepositoryInterface,
@@ -29,8 +32,9 @@ class ProductController extends Controller
         CategoryRepositoryInterface $categoryRepositoryInterface,
         ManufactureRepositoryInterface $manufactureRepositoryInterface,
         CartRepositoryInterface $cartRepositoryInterface,
-        VoucherRepositoryInterface $voucherRepositoryInterface
-    ){
+        VoucherRepositoryInterface $voucherRepositoryInterface,
+        ImageService $imageService
+    ) {
         $this->userRepository = $userRepositoryInterface;
         $this->productRepository = $productRepositoryInterface;
         $this->storageRepository = $storageRepositoryInterface;
@@ -38,6 +42,7 @@ class ProductController extends Controller
         $this->manufactureRepository = $manufactureRepositoryInterface;
         $this->cartRepository = $cartRepositoryInterface;
         $this->voucherRepository = $voucherRepositoryInterface;
+        $this->image_service = $imageService;
     }
 
     // show index client product
@@ -50,14 +55,15 @@ class ProductController extends Controller
         ];
 
         $user = auth()->user();
+        $condition = $request->seachByPrice;
         $products = $this->productRepository->getByCondition($data);
         $count = 0;
 
-        if (isset($user)) {
+        if ( isset($user) ) {
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.product', compact('user', 'count', 'products'));
+        return view('client.product', compact('user', 'count', 'products', 'condition'));
     }
 
     // show product detail client
@@ -67,46 +73,30 @@ class ProductController extends Controller
         $products = $this->productRepository->getByCondition("*");
         $product_detail = $this->productRepository->find($id);
         $storages = $this->storageRepository->findProduct($id);
-        $count = 0;
         $manufacture = $this->manufactureRepository->find($product_detail->manufacture_id);
+        $count = 0;
 
-        if (isset($user)) {
+        if ( isset($user) ) {
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.product_detail', [
-            'products' => $products,
-            'product_detail' => $product_detail,
-            'storages' => $storages,
-            'manufactures' => $manufacture,
-            'count' => $count,
-        ]);
+        return view('client.product_detail', compact('products', 'product_detail', 'storages', 'manufacture', 'count'));
     }
 
-    // show index product admin
+    // show add product page admin
     public function index()
     {
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.add_product', [
-            'manufactures' => $manufactures,
-            'categories' => $categories
-        ]);
+        return view('admin.product.add_product', compact('manufactures', 'categories'));
     }
 
-    // create product admin
+    // create product to database admin
     public function create(CreateProductFormRequest $request)
     {
-        $manufactures = $this->manufactureRepository->getAll();
-        $categories = $this->categoryRepository->getAll();
-
-        if ( $request -> has('image') )
-        {
-            $file = $request->image;
-            $ext = $request->image->extension();
-            $file_name = time().'-'.'product.'.$ext;
-            $file->move(public_path('uploads'), $file_name);
+        if ( $request -> has('image') ) {
+            $image = $this->image_service->image($request->image);
         }
 
         $data = [
@@ -119,29 +109,25 @@ class ProductController extends Controller
             'manufacture_id' => $request->manufacture_id,
             'description' => $request->description,
             'sale' => 0,
-            'image' => $file_name
+            'image' => $image
         ];
 
         $this->productRepository->create($data);
 
-        return view('admin.product.add_product', [
-            'manufactures' => $manufactures,
-            'categories' => $categories
-        ])->with('msg', 'Created');
+        return redirect()->route('list_product')->with('msg', 'Created');
     }
 
     // show list product admin
-    public function list()
+    public function list(Request $request)
     {
-        $products = $this->productRepository->getAll();
+        $data = [
+            'key' => $request->key
+        ];
+        $products = $this->productRepository->getProductByCondition($data);
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.list_product', [
-            'products' => $products,
-            'manufactures' => $manufactures,
-            'categories' => $categories
-        ]);
+        return view('admin.product.list_product', compact('products', 'manufactures', 'categories'));
     }
 
     // delete product admin
@@ -152,60 +138,25 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    // show edit product admin
+    // show information product admin
     public function show(int $id)
     {
         $products = $this->productRepository->find($id);
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.show_product', [
-            'products' => $products,
-            'manufactures' => $manufactures,
-            'categories' => $categories
-        ]);
+        return view('admin.product.show_product', compact('products', 'manufactures', 'categories'));
     }
 
-    // edit product admin
-    public function update(int $id, CreateProductFormRequest $request)
+    // edit information product admin
+    public function update(int $id, EditProductFormRequest $request)
     {
-        if ( $request->image == null )
-        {
-            $data = [
-                'code' => $request->code,
-                'name' => $request->name,
-                'price' => $request->price,
-                'discount' => $request->discount,
-                'product_type' => $request->product_type,
-                'category_id' => $request->category_id,
-                'manufacture_id' => $request->manufacture_id,
-                'description' => $request->description,
-            ];
-            $this->productRepository->update($id, $data);
-
-            return redirect()->route('list_product');
+        $data = $request->all();
+        if (isset($data['image'])) {
+            $data['image'] = $this->image_service->image($data['image']);
         }
-        else {
-            $file = $request->image;
-            $ext = $request->image->extension();
-            $file_name = time().'-'.'product.'.$ext;
-            $file->move(public_path('uploads'), $file_name);
+        $this->productRepository->update($id, $data);
 
-            $data = [
-                'code' => $request->code,
-                'name' => $request->name,
-                'price' => $request->price,
-                'discount' => $request->discount,
-                'product_type' => $request->product_type,
-                'category_id' => $request->category_id,
-                'manufacture_id' => $request->manufacture_id,
-                'description' => $request->description,
-                'image' => $file_name
-            ];
-
-            $this->productRepository->update($id, $data);
-
-            return redirect()->route('list_product');
-        }
+        return redirect()->route('list_product');
     }
 }
