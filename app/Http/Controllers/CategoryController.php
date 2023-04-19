@@ -38,12 +38,14 @@ class CategoryController extends Controller
     // show list categories
     public function list(Request $request)
     {
+        $key = "";
         $data = [
             'key' => $request->key
         ];
+        $key = $request->key;
         $categories = $this->categoryRepository->getCategoryByCondition($data);
 
-        return view('admin.category.list_category', compact('categories'));
+        return view('admin.category.list_category', compact('categories', 'key'));
     }
 
     // delete category

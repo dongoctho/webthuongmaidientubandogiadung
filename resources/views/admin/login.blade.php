@@ -48,7 +48,7 @@
                                         <form action="" method="post">
                                             @csrf
                                             <div class="form-group">
-                                                <input required="required" type="email" name="email"
+                                                <input name="email"
                                                     class="form-control form-control-user"
                                                     id="exampleInputEmail" aria-describedby="emailHelp"
                                                     placeholder="Nhập địa chỉ email"
@@ -59,7 +59,7 @@
                                                     @endif
                                             </div>
                                             <div class="form-group">
-                                                <input required="required" type="password" name="password"
+                                                <input type="password" name="password"
                                                     class="form-control form-control-user"
                                                     id="exampleInputPassword" placeholder="Nhập mật khẩu"
                                                     >

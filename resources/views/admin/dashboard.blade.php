@@ -140,17 +140,17 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="{{route('list_voucher')}}">
-          <i class="bi bi-gem"></i><span>Mã Giảm Giá</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-gem"></i><span>Phiếu Giảm Giá</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="{{route('add_voucher')}}">
-              <i class="bi bi-circle"></i><span>Thêm Mới Mã Giảm Giá</span>
+              <i class="bi bi-circle"></i><span>Thêm Mới Phiếu Giảm Giá</span>
             </a>
           </li>
           <li>
             <a href="{{route('list_voucher')}}">
-              <i class="bi bi-circle"></i><span>Danh Sách Mã Giảm Giá</span>
+              <i class="bi bi-circle"></i><span>Danh Sách Phiếu Giảm Giá</span>
             </a>
           </li>
         </ul>

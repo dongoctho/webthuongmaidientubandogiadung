@@ -11,8 +11,12 @@
         <div class="card-body">
             <div class="search-bar">
                 <form class="search-form d-flex align-items-center" method="GET" action="">
-                  <input type="text" name="key"
-                  style="width: 350px; height: 40px; padding-left: 10px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;border-top: solid 1px gray; border-left: solid 1px gray; border-bottom: solid 1px gray;border-right: 0;" name="query" placeholder="Search" title="Enter search keyword">
+                  <input
+                  type="text"
+                  name="key"
+                  style="width: 350px; height: 40px; padding-left: 10px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;border-top: solid 1px gray; border-left: solid 1px gray; border-bottom: solid 1px gray;border-right: 0;"
+                  placeholder="Tìm kiếm"
+                  value="{{$key}}">
                   <button type="submit" style="height: 40px; background-color:white; padding-right: 15px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-top: solid 1px gray;border-right: solid 1px gray;border-bottom: solid 1px gray;border-left: 0;" title="Search"><i class="bi bi-search"></i></button>
                 </form>
             </div>

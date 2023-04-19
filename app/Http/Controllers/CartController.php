@@ -180,12 +180,14 @@ class CartController extends Controller
     // show list cart admin
     public function list(Request $request)
     {
+        $key = "";
         $data = [
             'key' => $request->key
         ];
+        $key = $request->key;
         $carts = $this->cartRepository->getCartByCondition($data);
 
-        return view('admin.cart.list_cart', compact('carts'));
+        return view('admin.cart.list_cart', compact('carts', 'key'));
     }
 
     // show cart detail admin

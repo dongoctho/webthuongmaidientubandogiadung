@@ -57,6 +57,9 @@ class CreateVoucherFormRequest extends FormRequest
                     $validator->errors()->add('discount', 'Yêu cầu nhập số lớn hơn 0 !!!');
                 }
             }
+            if ($data['quantity'] <= 0) {
+                $validator->errors()->add('quantity', 'Yêu cầu nhập số lớn hơn 0 !!!');
+            }
         });
     }
 }

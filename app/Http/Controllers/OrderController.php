@@ -329,9 +329,11 @@ class OrderController extends Controller
     // show list order admin
     public function list(Request $request)
     {
+        $key = "";
         $data = [
             'key' => $request->key
         ];
+        $key = $request->key;
         $column = [
             'orders.id',
             'users.id  as user_id',
@@ -345,7 +347,7 @@ class OrderController extends Controller
         ];
         $orders = $this->orderRepository->getOrderByCondition($data, $column);
 
-        return view('admin.order.list_order', compact('orders'));
+        return view('admin.order.list_order', compact('orders', 'key'));
     }
 
     // show information order admin
@@ -376,9 +378,6 @@ class OrderController extends Controller
     // show list order detail admin
     public function listOrderDetail(int $id_user, int $id, Request $request)
     {
-        $data = [
-            'key' => $request->key
-        ];
         $column = [
             'orders_detail.order_id',
             'orders_detail.id',
@@ -390,7 +389,7 @@ class OrderController extends Controller
             'products.name',
             'orders_detail.created_at'
         ];
-        $order_details = $this->orderDetailRepository->getOrderDetail($id_user, $id, $data, $column);
+        $order_details = $this->orderDetailRepository->getOrderDetail($id_user, $id, $column);
 
         return view('admin.order.list_order_detail', compact('order_details'));
     }

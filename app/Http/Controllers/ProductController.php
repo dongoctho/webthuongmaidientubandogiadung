@@ -120,14 +120,17 @@ class ProductController extends Controller
     // show list product admin
     public function list(Request $request)
     {
+        $key = "";
         $data = [
             'key' => $request->key
         ];
+
+        $key = $request->key;
         $products = $this->productRepository->getProductByCondition($data);
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.list_product', compact('products', 'manufactures', 'categories'));
+        return view('admin.product.list_product', compact('products', 'manufactures', 'categories', 'key'));
     }
 
     // delete product admin

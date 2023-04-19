@@ -19,7 +19,7 @@
                                 <div class="">
                                     <p>Nhập Mã Sản Phẩm</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" name="code" value="{{old('code')}}" class="form-control"
+                                <input style="height:50px" type="text" name="code" value="{{old('code')}}" class="form-control"
                                 placeholder="Nhập Mã Sản Phẩm" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -33,7 +33,7 @@
                                 <div class="">
                                     <p>Nhập Đơn Giá</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" name="price" value="{{old('price')}}" class="form-control"
+                                <input  style="height:50px" type="text" name="price" value="{{old('price')}}" class="form-control"
                                 placeholder="Nhập Đơn Giá" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -61,11 +61,20 @@
                         </div>
                         <div class="col-sm-6 mb-3 mb-sm-0">
                             <div class="" style="display: flex;  margin-left: 70px; flex-direction:column; margin-top:30px">
+
                                 <div class="">
                                     <p>Chọn Hình Ảnh</p>
                                 </div>
                                 <div style="width: 500px;" class="flex-nowrap" style="display: flex; flex-direction:column;">
-                                    <input required="required" style="height:50px" type="file" name="image" class="form-control" placeholder="Chọn Hình Ảnh" aria-label="Username" aria-describedby="addon-wrapping">
+                                    <input accept=".jpg, .png"
+                                    value="{{old('image')}}"
+                                    style="height:50px"
+                                    type="file"
+                                    name="image"
+                                    class="form-control"
+                                    placeholder="Chọn Hình Ảnh"
+                                    aria-label="Username"
+                                    aria-describedby="addon-wrapping">
                                     <div class="">
                                         @if ($errors->all())
                                         <span style="color: red">{{$errors->first('image')}}</span>
@@ -74,6 +83,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="form-group row">
@@ -82,7 +92,7 @@
                                 <div class="">
                                     <p>Nhập Tên Sản Phẩm</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" name="name" value="{{old('name')}}" class="form-control"
+                                <input style="height:50px" type="text" name="name" value="{{old('name')}}" class="form-control"
                                 placeholder="Nhập Tên Sản Phẩm" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -115,7 +125,7 @@
                                     <p>Nhập Mô Tả</p>
                                 </div>
                                 <div class="form-outline">
-                                    <textarea required="required" class="form-control" name="description" id="textAreaExample1" rows="4"></textarea>
+                                    <textarea class="form-control" name="description" id="textAreaExample1" rows="4">{{old('description')}}</textarea>
                                 </div>
                                 <div class="">
                                     @if ($errors->all())
@@ -134,7 +144,6 @@
                     <input class="btn btn-primary btn-user btn-block" value="Thêm Mới" type="submit">
                 </div>
             </form>
-
         </div>
 
     </div>

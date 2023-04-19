@@ -22,7 +22,7 @@
                                 <div class="">
                                     <p>Nhập Mã Phiếu Giảm Giá</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" name="code" value="{{old('code')}}" class="form-control"
+                                <input style="height:50px" type="text" name="code" value="{{old('code')}}" class="form-control"
                                 placeholder="Nhập Mã Phiếu Giảm Giá" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -36,7 +36,7 @@
                                 <div class="">
                                     <p>Nhập Tên Phiếu Giảm Giá</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" name="name" value="{{old('name')}}" class="form-control"
+                                <input style="height:50px" type="text" name="name" value="{{old('name')}}" class="form-control"
                                 placeholder="Nhập Tên Phiếu Giảm Giá" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -57,8 +57,16 @@
                                     <span style="color: red">{{$errors->first('voucher_type')}}</span>
                                     @endif
                                 <select style="height:50px; width: 500px" name="voucher_type" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
-                                        <option value="0">Phần Trăm</option>
-                                        <option value="1">Giá Tiền</option>
+                                        <option
+                                        @if (old('voucher_type') == 0)
+                                            selected
+                                        @endif
+                                        value="0">Phần Trăm</option>
+                                        <option
+                                        @if (old('voucher_type') == 1)
+                                            selected
+                                        @endif
+                                        value="1">Giá Tiền</option>
                                 </select>
                             </div>
                         </div>
@@ -84,7 +92,7 @@
                                 <div class="">
                                     <p>Nhập Số Lượng</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" name="quantity" value="{{old('quantity')}}" class="form-control"
+                                <input style="height:50px" type="text" name="quantity" value="{{old('quantity')}}" class="form-control"
                                 placeholder="Nhập Số Lượng" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())

@@ -30,6 +30,7 @@ class CreateRegisterFormRequest extends FormRequest
             'password' => ['required', 'min:8'],
             'repassword' => ['required']
         ];
+
     }
 
     public function messages()
@@ -44,7 +45,18 @@ class CreateRegisterFormRequest extends FormRequest
             'repassword.required' => 'Không được bỏ trống ô này',
             'phone.required' => 'Không được bỏ trống ô này',
             'phone.min' => 'Số điện thoại không được nhỏ hon 10 ký tự',
-            'phone.max' => 'Số điện thoại không được lớn hơn 12 ký tự'
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $data = $validator->getData();
+
+            if ($data['phone'] <= 0) {
+                $validator->errors()->add('phone', 'Yêu cầu nhập số lớn hơn 0 !!!');
+                dd($validator);
+            }
+        });
     }
 }

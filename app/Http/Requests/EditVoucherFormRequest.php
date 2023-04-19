@@ -43,4 +43,23 @@ class EditVoucherFormRequest extends FormRequest
             'quantity.numeric' => 'Yêu cầu nhập số'
         ];
     }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $data = $validator->getData();
+            if ($data['voucher_type'] == 0) {
+                if ($data['discount'] > 100 || $data['discount'] < 0) {
+                    $validator->errors()->add('discount', 'Yêu cầu nhập số từ 1 - 100 !!!');
+                }
+            } else {
+                if ($data['discount'] < 0) {
+                    $validator->errors()->add('discount', 'Yêu cầu nhập số lớn hơn 0 !!!');
+                }
+            }
+            if ($data['quantity'] <= 0) {
+                $validator->errors()->add('quantity', 'Yêu cầu nhập số lớn hơn 0 !!!');
+            }
+        });
+    }
 }

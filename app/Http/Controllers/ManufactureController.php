@@ -39,12 +39,14 @@ class ManufactureController extends Controller
     // show list manufacture
     public function list(Request $request)
     {
+        $key = "";
         $data = [
             'key' => $request->key
         ];
+        $key = $request->key;
         $manufactures = $this->manufactureRepository->getManufactureByCondition($data);
 
-        return view('admin.manufacture.list_manufacture', compact('manufactures'));
+        return view('admin.manufacture.list_manufacture', compact('manufactures', 'key'));
     }
 
     // delete manufacture

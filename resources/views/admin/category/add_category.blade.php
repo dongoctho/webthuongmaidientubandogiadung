@@ -21,7 +21,7 @@
                                 <div class="">
                                     <p>Nhập Mã Danh Mục</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" id="code" name="code" value="{{old('code')}}" class="form-control"
+                                <input style="height:50px" type="text" id="code" name="code" value="{{old('code')}}" class="form-control"
                                 placeholder="Nhập mã danh mục" aria-label="Username" aria-describedby="addon-wrapping">
                             </div>
                             <div class="" style="margin-left:10px">
@@ -35,7 +35,7 @@
                                 <div class="">
                                     <p>Nhập Tên Danh Mục</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" id="name" name="name" class="form-control" value="{{old('name')}}"
+                                <input style="height:50px" type="text" id="name" name="name" class="form-control" value="{{old('name')}}"
                                 placeholder="Nhập tên danh mục" aria-label="Username" aria-describedby="addon-wrapping">
                             </div>
                             <div class="">

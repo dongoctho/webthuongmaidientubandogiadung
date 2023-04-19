@@ -41,14 +41,14 @@
                                 @csrf
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input required="required" type="text" class="form-control form-control-user name" value="{{old('name')}}" name="name" id="exampleFirstName"
+                                        <input type="text" class="form-control form-control-user name" value="{{old('name')}}" name="name" id="exampleFirstName"
                                             placeholder="Nhập tên">
                                             @if ($errors->all())
                                         <span style="color: red">{{$errors->first('name')}}</span>
                                         @endif
                                     </div>
                                     <div class="col-sm-6">
-                                        <input required="required" type="text" class="form-control form-control-user phone" name="phone" value="{{old('phone')}}" id="exampleLastName"
+                                        <input type="text" class="form-control form-control-user phone" name="phone" value="{{old('phone')}}" id="exampleLastName"
                                             placeholder="Nhập số điện thoại">
                                             @if ($errors->all())
                                             <span style="color: red">{{$errors->first('phone')}}</span>
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input required="required" type="email" name="email" class="form-control form-control-user email" value="{{old('email')}}" id="exampleInputEmail"
+                                    <input name="email" class="form-control form-control-user email" value="{{old('email')}}" id="exampleInputEmail"
                                         placeholder="Nhập địa chỉ email">
                                         @if ($errors->all())
                                     <span style="color: red">{{$errors->first('email')}}</span>
@@ -64,11 +64,11 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input required="required" type="password" name="password" class="form-control form-control-user password"
+                                        <input type="password" name="password" class="form-control form-control-user password"
                                             id="exampleInputPassword" placeholder="Nhập mật khẩu">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input required="required" type="password" name="repassword" class="form-control form-control-user repassword"
+                                        <input type="password" name="repassword" class="form-control form-control-user repassword"
                                             id="exampleRepeatPassword" placeholder="Nhập lại mật khẩu">
                                     </div>
                                 </div>

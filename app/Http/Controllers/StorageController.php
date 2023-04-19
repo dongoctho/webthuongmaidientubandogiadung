@@ -46,9 +46,13 @@ class StorageController extends Controller
     // show list storage
     public function list(Request $request)
     {
+        $key = "";
         $data = [
-            'key' => $request->key,
+            'key' => $request->key
         ];
+
+        $key = $request->key;
+
         $column = [
             'storages.quantity',
             'storages.id as id',
@@ -58,7 +62,7 @@ class StorageController extends Controller
         ];
         $storages = $this->storageRepository->getStorageByCondition($data, $column);
 
-        return view('admin.storage.list_storage', compact('storages'));
+        return view('admin.storage.list_storage', compact('storages', 'key'));
     }
 
     // delete storage

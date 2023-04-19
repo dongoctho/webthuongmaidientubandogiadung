@@ -9,12 +9,6 @@
 
         <!-- /.card-header -->
         <div class="card-body">
-            <div class="search-bar">
-                <form class="search-form d-flex align-items-center" method="POST" action="#">
-                  <input type="text" style="width: 350px; height: 40px; padding-left: 10px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;border-top: solid 1px gray; border-left: solid 1px gray; border-bottom: solid 1px gray;border-right: 0;" name="query" placeholder="Search" title="Enter search keyword">
-                  <button type="submit" style="height: 40px; background-color:white; padding-right: 15px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-top: solid 1px gray;border-right: solid 1px gray;border-bottom: solid 1px gray;border-left: 0;" title="Search"><i class="bi bi-search"></i></button>
-                </form>
-            </div>
           <table  style="text-align: center" id="example1" class="table">
                 <thead>
                 <tr>
@@ -32,7 +26,7 @@
                 @foreach ($cart_details as $key => $cart_detail)
                 <tr>
                     <td>{{$key + 1}}</td>
-                    <td>{{$cart_detail->product->name}}</td>
+                    <td>{{$cart_detail->name}}</td>
                     <td>{{number_format($cart_detail->price)}} VND</td>
                     <td>{{$cart_detail->quantity}}</td>
                     <td><img src="{{asset('uploads/'.$cart_detail->image)}}" width="50px" height="35px" alt="error"></td>

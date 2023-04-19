@@ -46,7 +46,6 @@ class CartRepository extends BaseRepository implements CartRepositoryInterface
 
         if (isset($condition['key'])) {
             $query->where('users.name', 'like', '%'.$condition['key'].'%')
-                  ->orWhere('code', 'like', '%'.$condition['key'].'%')
             ->get();
         }
 

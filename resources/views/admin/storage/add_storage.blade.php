@@ -22,7 +22,7 @@
                                 <div class="">
                                     <p>Nhập Số Lượng</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" name="quantity" value="{{old('quantity')}}" class="form-control"
+                                <input style="height:50px" type="text" name="quantity" value="{{old('quantity')}}" class="form-control"
                                 placeholder="Nhập Số Lượng" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -36,7 +36,7 @@
                                 <div class="">
                                     <p>Nhập Mô Tả</p>
                                 </div>
-                                <input required="required" style="height:50px" type="text" name="description" value="{{old('description')}}" class="form-control"
+                                <input style="height:50px" type="text" name="description" value="{{old('description')}}" class="form-control"
                                 placeholder="Nhập Mô Tả" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())

@@ -16,7 +16,7 @@
                             <div class="">
                                 <p>Nhập Mã Nhà Sản Xuất</p>
                             </div>
-                            <input required="required" style="height:50px" type="text" name="code" value="{{old('code')}}" class="form-control"
+                            <input style="height:50px" type="text" name="code" value="{{old('code')}}" class="form-control"
                             placeholder="Nhập Mã Nhà Sản Xuất" aria-label="Username" aria-describedby="addon-wrapping">
                         </div>
                         <div class="">
@@ -30,7 +30,7 @@
                             <div class="">
                                 <p>Nhập Tên Nhà Sản Xuất</p>
                             </div>
-                            <input required="required" style="height:50px" type="text" name="name" value="{{old('name')}}" class="form-control"
+                            <input style="height:50px" type="text" name="name" value="{{old('name')}}" class="form-control"
                             placeholder="Nhập Tên Nhà Sản Xuất" aria-label="Username" aria-describedby="addon-wrapping">
                         </div>
                         <div class="" style="margin-left:10px">
@@ -49,7 +49,7 @@
                                 <p>Nhập Mô Tả</p>
                             </div>
                             <div class="form-outline">
-                                <textarea required="required" class="form-control" name="description" id="textAreaExample1" rows="4"></textarea>
+                                <textarea class="form-control" name="description" id="textAreaExample1" rows="4"></textarea>
                             </div>
                         </div>
                         <div class="">

@@ -37,4 +37,15 @@ class CreateStorageFormRequest extends FormRequest
             'description.required' => 'Không được bỏ trống ô này',
         ];
     }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $data = $validator->getData();
+
+            if ($data['quantity'] <= 0) {
+                $validator->errors()->add('quantity', 'Yêu cầu nhập số lớn hơn 0 !!!');
+            }
+        });
+    }
 }
