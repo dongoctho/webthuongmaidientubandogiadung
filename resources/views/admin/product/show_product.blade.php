@@ -76,10 +76,10 @@
                                 </div>
                                 <div style="width: 500px;" class="flex-nowrap" style="display: flex; flex-direction:column;">
                                     <div style="width: 500px;" class="input-group flex-nowrap">
-                                        <span>{{$products->image}}</span>
                                         <input style="height:50px" type="file" name="image" value="{{$products->image}}" class="form-control"
                                         accept=".jpg, .png" aria-label="Username" aria-describedby="addon-wrapping">
                                         <img src="{{asset('uploads/'.$products->image)}}" width="50px" height="50px" alt="error">
+                                        <span>{{$products->image}}</span>
                                     </div>
                                 </div>
                             </div>

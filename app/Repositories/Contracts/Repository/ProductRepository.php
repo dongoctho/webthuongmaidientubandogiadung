@@ -75,4 +75,14 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return $query->paginate(6);
     }
 
+    public function getProductByConditionAdmin($condition, array $column = ['*'])
+    {
+        $query = $this->model->newQuery();
+        $query->select($column)->where('products.deleted_at', '=', null)
+                               ->where('storages.quantity', '>', '0')
+                               ->join('storages', 'products.id', '=', 'storages.product_id');
+
+        return $query->get();
+    }
+
 }

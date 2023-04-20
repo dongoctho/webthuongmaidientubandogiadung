@@ -12,4 +12,18 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return User::class;
     }
+
+    public function getUserByCondition($condition, array $column = ['*'])
+    {
+        $query = $this->model->newQuery();
+        $query->select($column)->where('users.deleted_at', '=', null)->get();
+
+        if (isset($condition['key'])) {
+            $query->where('name', 'like', '%'.$condition['key'].'%')
+                  ->orWhere('code', 'like', '%'.$condition['key'].'%')
+                  ->get();
+        }
+
+        return $query->paginate(6);
+    }
 }

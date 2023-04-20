@@ -6,24 +6,27 @@ use App\Repositories\Contracts\RepositoryInterface\UserRepositoryInterface;
 use App\Http\Requests\CreateLoginFormRequest;
 use App\Http\Requests\CreateRegisterFormRequest;
 use App\Http\Requests\CreateChangePassFormRequest;
+use App\Http\Requests\CreateAccountFormRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Services\ImageService;
 use Carbon\Carbon;
 use Laravel\Socialite\Facades\Socialite;
 use App\Constants\AuthConstant;
 use Illuminate\Support\Facades\Auth;
 use app\Models\User;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
     protected $userRepository;
-    protected $productRepository;
-    protected $storageRepository;
-    protected $categoryRepository;
-    protected $manufactureRepository;
+    protected $image_service;
 
-    public function __construct(UserRepositoryInterface $userRepositoryInterface)
-    {
+    public function __construct(
+        UserRepositoryInterface $userRepositoryInterface,
+        ImageService $imageService
+    ) {
         $this->userRepository = $userRepositoryInterface;
+        $this->image_service = $imageService;
     }
 
     public function redirecToGoogle()
@@ -131,5 +134,54 @@ class AuthController extends Controller
         } else {
             return redirect()->route('register_page')->with('msg', 'Unsuccessful');
         }
+    }
+
+    // list account
+    public function listUser(Request $request)
+    {
+        $key = "";
+        $columnSelect = [
+            'users.name',
+            'users.email',
+            'users.phone',
+            'users.role',
+            'users.birthday',
+            'users.avatar',
+            'users.address'
+        ];
+
+        $users = $this->userRepository->getUserByCondition($columnSelect);
+
+        return view('admin.user.list_user', compact('users', 'key'));
+    }
+
+    // index create account
+    public function indexUserAdmin()
+    {
+        return view('admin.user.add_user');
+    }
+
+    // add account admin
+    public function createUserAdmin(CreateAccountFormRequest $request)
+    {
+
+        if ( $request -> has('avatar') ) {
+            $image = $this->image_service->image($request->avatar);
+        }
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'birthday' => $request->birthday,
+            'avatar' => $image,
+            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country
+        ];
+
+        $this->userRepository->create($data);
+
+        return redirect()->route('list_user');
     }
 }

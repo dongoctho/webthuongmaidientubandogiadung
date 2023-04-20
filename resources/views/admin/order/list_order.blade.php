@@ -38,43 +38,37 @@
                 @foreach ($orders as $key => $order)
                 <tr>
                     <td>{{$key + 1}}</td>
-                    <td>{{$order->user_name}}</td>
+                    <td>{{$order->name}}</td>
                     <td>{{$order->phone}}</td>
                     <td>{{$order->address}}</td>
-                    <td>{{$order->price}}</td>
+                    <td>{{number_format($order->price)}} VND</td>
                     <td>{{$order->voucher_name}}</td>
-                        <td><select style="height:40px" onchange="changeStatus({{$order->id}})" id="optionSelect-{{$order->id}}" name="status" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
-                            <option
-                            @if ($order->status == 0)
-                                selected
-                            @elseif ($order->status == 1)
-                                disabled
-                            @endif
-                            value="0">Đang Chờ Xác Nhận</option>
-                            <option
-                            @if ($order->status == 1)
-                                selected
-                            @endif
-                            value="1">Đơn Hàng Đã Đặt</option>
-                            <option
-                            @if ($order->status == 2)
-                                selected
-                            @elseif ($order->status == 0)
-                                disabled
-                            @endif
-                            value="2">Đã Giao Cho ĐVVC</option>
-                            <option
-                            @if ($order->status == 3)
-                                selected
-                            @elseif ($order->status == 0)
-                                disabled
-                            @endif
-                            value="3">Đã Nhận Được Hàng</option>
-                            <option
-                            @if ($order->status == 4)
-                                selected
-                            @endif
-                            value="4">Đơn Hàng Đặt Không Thành Công</option>
+                    <td><select style="height:40px" onchange="changeStatus({{$order->id}},{{$order->status}})" id="optionSelect-{{$order->id}}" name="status" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
+                        <option
+                        @if ($order->status == 0)
+                            selected
+                        @endif
+                        value="0">Đang Chờ Xác Nhận</option>
+                        <option
+                        @if ($order->status == 1)
+                            selected
+                        @endif
+                        value="1">Đơn Hàng Đã Đặt</option>
+                        <option
+                        @if ($order->status == 2)
+                            selected
+                        @endif
+                        value="2">Đã Giao Cho ĐVVC</option>
+                        <option
+                        @if ($order->status == 3)
+                            selected
+                        @endif
+                        value="3">Đã Nhận Được Hàng</option>
+                        <option
+                        @if ($order->status == 4)
+                            selected
+                        @endif
+                        value="4">Đơn Hàng Đặt Không Thành Công</option>
                     </select></td>
                     <td>{{$order->created_at}}</td>
                     <td><a href="{{route('list_order_detail', ['id_user' => $order->user_id, 'id'=>$order->id])}}"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
@@ -92,7 +86,7 @@
     </div>
 
     <script>
-        function changeStatus (id) {
+        function changeStatus (id, oldStatus) {
             var status = $('#optionSelect-'+id).val();
             $.ajax({
                 url: '{{route('updateStatus')}}',
@@ -101,10 +95,20 @@
                     "_token": "{{ csrf_token() }}",
                     'id':id,
                     'status':status,
+                    'oldStatus':oldStatus,
                 }
             }).done(function(data) {
+                console.log(data);
                 if (data.success) {
-                    alert("Edit status success!");
+                    swal("Thành Công!", "", "success");
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    swal("Thất Bại!", "", "error");
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
                 }
             });
         }

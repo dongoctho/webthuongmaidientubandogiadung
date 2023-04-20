@@ -20,6 +20,7 @@ class CreateOrdersTable extends Migration
             $table->integer('voucher_id')->unsigned();
             $table->foreign('voucher_id')->references('id')->on('vouchers');
             $table->string('phone');
+            $table->string('name');
             $table->string('address');
             $table->integer('price');
             $table->integer('status');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateOrderFormRequest;
+use App\Http\Requests\CreateOrderAdminFormRequest;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\RepositoryInterface\ProductRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\ManufactureRepositoryInterface;
@@ -55,6 +56,91 @@ class OrderController extends Controller
         $this->orderRepository = $orderRepositoryInterface;
         $this->orderDetailRepository = $orderDetailRepositoryInterface;
         $this->sum_price_service = $sumPriceService;
+    }
+
+    // index add order admin
+    public function addOrderAdmin()
+    {
+        $columnSelect = [
+            'storages.id as storage_id',
+            'products.id as product_id',
+            'products.price',
+            'products.name',
+            'products.image',
+        ];
+
+        $products = $this->productRepository->getProductByConditionAdmin($columnSelect);
+        $vouchers = $this->voucherRepository->getVoucherByConditionAdmin();
+
+        return view('admin.order.add_order', compact('products', 'vouchers'));
+    }
+
+    // add order admin
+    public function createOrderAdmin(CreateOrderAdminFormRequest $request)
+    {
+        $sumPrice = 0;
+        $priceHandle = 0;
+        $sumPriceVoucher = 0;
+        $voucher = $this->voucherRepository->findVoucher($request->voucher_id);
+        $product = $this->productRepository->findProduct($request->product_id);
+        $user = auth()->user();
+
+        if ( $product->product_type == 0 ) {
+            $priceHandle = $product->price * (1 - ($product->discount / 100));
+        } else if ( $product->product_type == 1 ) {
+            $priceHandle = $product->price - $product->discount;
+        }
+
+        $sumPrice = $priceHandle * $request->quantity;
+
+        if ( $request->voucher_id == null ) {
+            $sumPriceVoucher = $sumPrice;
+        } else {
+            if ( $voucher->voucher_type == 0 ) {
+                $sumPriceVoucher = $sumPrice * (1 - ($voucher->discount / 100));
+            } else if ( $voucher->voucher_type == 1 ) {
+                $sumPriceVoucher = $sumPrice - $voucher->discount;
+                if ( $sumPriceVoucher < 0) {
+                    $sumPriceVoucher = 0;
+                }
+            }
+        }
+
+        $dataUser = [
+            'user_id' => $user->id,
+            'voucher_id' => $request->voucher_id,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+            'price' => $sumPriceVoucher,
+            'status' => 0
+        ];
+
+        $orderId = $this->orderRepository->create($dataUser);
+
+        $data = [
+            'order_id' => $orderId->id,
+            'product_id' => $request->product_id,
+            'price' => $priceHandle,
+            'quantity' => $request->quantity,
+            'image' => $product->image
+        ];
+
+        $storage = $this->storageRepository->findProduct($request->product_id);
+
+        $quantity = [
+            'quantity' => $storage->quantity - $request->quantity,
+            'description' => $storage->quantity - $request->quantity
+        ];
+
+        $this->storageRepository->updateProductId($request->product_id, $quantity);
+        $this->orderDetailRepository->create($data);
+        $this->productRepository->update($request->product_id, ['sale' => $product->product_sale + $request->quantity]);
+        if (isset($voucher)) {
+            $this->voucherRepository->update($voucher->id, ['quantity' => $voucher->quantity - 1]);
+        }
+
+        return redirect()->route('list_order');
     }
 
     // show order page
@@ -189,7 +275,7 @@ class OrderController extends Controller
                 'voucher_id' => $voucher->id,
                 'name' => $user->name,
                 'phone' => $request->phone,
-                'address' => $request->homenumber.''.$request->ward.''.$request->city.''.$request->country,
+                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
                 'price' => $priceHandle,
                 'status' => 0
             ];
@@ -253,7 +339,7 @@ class OrderController extends Controller
                 'voucher_id' => $voucher->id,
                 'name' => $user->name,
                 'phone' => $request->phone,
-                'address' => $request->homenumber.''.$request->ward.''.$request->city.''.$request->country,
+                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
                 'price' => $priceHandle,
                 'status' => 0
             ];
@@ -340,6 +426,7 @@ class OrderController extends Controller
             'vouchers.name as voucher_name',
             'users.name as user_name',
             'orders.phone',
+            'orders.name',
             'orders.address',
             'orders.price',
             'orders.status',
@@ -362,28 +449,105 @@ class OrderController extends Controller
     public function update(Request $request)
     {
         $data = $request->all();
-        $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
-
-        if ( $result != false ) {
-            return response()->json([
-                'success' => $data['status'],
-            ], 201);
+        if ($data['oldStatus'] == 0) {
+            if ($data['status'] == 2) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else if ($data['status'] == 3) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else {
+                $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
+                if ( $result != false ) {
+                    return response()->json([
+                        'success' => $data['status'],
+                    ], 201);
+                }
+            }
+        } else if ($data['oldStatus'] == 1) {
+            if ($data['status'] == 0) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else if ($data['status'] == 3) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else if ($data['status'] == 4) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else {
+                $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
+                if ( $result != false ) {
+                    return response()->json([
+                        'success' => $data['status'],
+                    ], 201);
+                }
+            }
+        } else if ($data['oldStatus'] == 2) {
+            if ($data['status'] == 0) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else if ($data['status'] == 1) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else if ($data['status'] == 4) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else {
+                $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
+                if ( $result != false ) {
+                    return response()->json([
+                        'success' => $data['status'],
+                    ], 201);
+                }
+            }
+        } else if ($data['oldStatus'] == 3) {
+            if ($data['status'] == 0) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else if ($data['status'] == 1) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else if ($data['status'] == 2) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else if ($data['status'] == 4) {
+                return response()->json([
+                    'error' => $data['status'],
+                ], 200);
+            } else {
+                $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
+                if ( $result != false ) {
+                    return response()->json([
+                        'success' => $data['status'],
+                    ], 201);
+                }
+            }
         }
-
-        return response()->json([
-            'error' => $data['status'],
-        ], 500);
     }
 
     // show list order detail admin
     public function listOrderDetail(int $id_user, int $id, Request $request)
     {
+        $sumPrice = 0;
         $column = [
             'orders_detail.order_id',
             'orders_detail.id',
             'orders_detail.order_id',
             'orders_detail.product_id',
             'orders_detail.price',
+            'orders_detail.product_type',
+            'orders_detail.discount',
             'orders_detail.quantity',
             'orders_detail.image',
             'products.name',
@@ -391,6 +555,15 @@ class OrderController extends Controller
         ];
         $order_details = $this->orderDetailRepository->getOrderDetail($id_user, $id, $column);
 
-        return view('admin.order.list_order_detail', compact('order_details'));
+        foreach ($order_details as $order_detail) {
+            if ( $order_detail->product_type == 0 ) {
+                $priceHandle = $order_detail->price * (1 - ($order_detail->discount / 100));
+            } else if ( $order_detail->product_type == 1 ) {
+                $priceHandle = $order_detail->price - $order_detail->discount;
+            }
+            $sumPrice += $order_detail->quantity * $priceHandle;
+        }
+
+        return view('admin.order.list_order_detail', compact('order_details', 'sumPrice'));
     }
 }

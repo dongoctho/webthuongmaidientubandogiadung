@@ -168,6 +168,11 @@
               <i class="bi bi-circle"></i><span>Danh Sách Đơn Hàng</span>
             </a>
           </li>
+          <li>
+            <a href="{{route('add_order_admin')}}">
+              <i class="bi bi-circle"></i><span>Thêm Đơn Hàng</span>
+            </a>
+          </li>
         </ul>
       </li><!-- End Charts Nav -->
 
@@ -186,7 +191,25 @@
         </ul>
       </li><!-- End Charts Nav -->
 
-
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#user" data-bs-toggle="collapse" href="{{route('list_user')}}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
+              </svg><span style="margin-left: 10px">Tài Khoản</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="user" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{{route('add_user')}}">
+              <i class="bi bi-circle"></i><span>Thêm Tài Khoản</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{route('list_user')}}">
+              <i class="bi bi-circle"></i><span>Danh Sách Tài Khoản</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Charts Nav -->
 
     </ul>
 
@@ -214,7 +237,10 @@
   @yield('list_order_detail')
   @yield('show_order')
   @yield('list_cart')
+  @yield('add_order_admin')
   @yield('list_cart_detail')
+  @yield('list_user')
+  @yield('add_user')
   <!-- end yield -->
 
   </main><!-- End #main -->

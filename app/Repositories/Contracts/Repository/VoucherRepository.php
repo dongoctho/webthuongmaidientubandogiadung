@@ -26,4 +26,20 @@ class VoucherRepository extends BaseRepository implements VoucherRepositoryInter
 
         return $query->paginate(6);
     }
+
+    public function getVoucherByConditionAdmin()
+    {
+        $query = $this->model->newQuery();
+        $query->select(['*'])->where('vouchers.deleted_at', '=', null);
+
+        return $query->get();
+    }
+
+    public function findVoucher($voucher_id)
+    {
+        return $this->model
+        ->where('vouchers.id', $voucher_id)
+        ->where('vouchers.deleted_at', '=', null)
+        ->first();
+    }
 }

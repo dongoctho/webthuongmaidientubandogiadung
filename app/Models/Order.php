@@ -17,6 +17,7 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'voucher_id',
+        'name',
         'phone',
         'address',
         'price',
