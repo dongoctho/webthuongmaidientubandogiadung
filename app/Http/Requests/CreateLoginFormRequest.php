@@ -35,7 +35,18 @@ class CreateLoginFormRequest extends FormRequest
             'email.required' => 'Không được bỏ trống ô này',
             'email.email' => 'Nhập đúng định dạng ...@gmail.com',
             'password.required' => 'Không được bỏ trống ô này',
-            'password.min' => 'Không được nhập nhỏ hơn 8n ký tự'
+            'password.min' => 'Không được nhập nhỏ hơn 8 ký tự'
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $data = $validator->getData();
+
+            if (!auth()->attempt(['email' => $data['email'], 'password' => $data['password']])) {
+                $validator->errors()->add('password', 'Sai tài khoản hoặc mật khẩu !!!');
+            }
+        });
     }
 }

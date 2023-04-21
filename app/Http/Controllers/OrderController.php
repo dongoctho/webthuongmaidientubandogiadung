@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateOrderFormRequest;
 use App\Http\Requests\CreateOrderAdminFormRequest;
+use App\Constants\OrderConstant;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\RepositoryInterface\ProductRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\ManufactureRepositoryInterface;
@@ -450,42 +451,42 @@ class OrderController extends Controller
     {
         $check = false;
         $data = $request->all();
-        if ($data['oldStatus'] == 0) {
-            if ($data['status'] == 2) {
+        if ($data['oldStatus'] == OrderConstant::WAIT_CONFIRM) {
+            if ($data['status'] == OrderConstant::DELIVERED) {
                 $check;
-            } else if ($data['status'] == 3) {
-                $check;
-            } else {
-                $check = true;
-            }
-        } else if ($data['oldStatus'] == 1) {
-            if ($data['status'] == 0) {
-                $check;
-            } else if ($data['status'] == 3) {
-                $check;
-            } else if ($data['status'] == 4) {
+            } else if ($data['status'] == OrderConstant::RECEIVED) {
                 $check;
             } else {
                 $check = true;
             }
-        } else if ($data['oldStatus'] == 2) {
-            if ($data['status'] == 0) {
+        } else if ($data['oldStatus'] == OrderConstant::CONFIRMED) {
+            if ($data['status'] == OrderConstant::WAIT_CONFIRM) {
                 $check;
-            } else if ($data['status'] == 1) {
+            } else if ($data['status'] == OrderConstant::RECEIVED) {
                 $check;
-            } else if ($data['status'] == 4) {
+            } else if ($data['status'] == OrderConstant::UNSUCCESSFUL) {
                 $check;
             } else {
                 $check = true;
             }
-        } else if ($data['oldStatus'] == 3) {
-            if ($data['status'] == 0) {
+        } else if ($data['oldStatus'] == OrderConstant::DELIVERED) {
+            if ($data['status'] == OrderConstant::WAIT_CONFIRM) {
                 $check;
-            } else if ($data['status'] == 1) {
+            } else if ($data['status'] == OrderConstant::CONFIRMED) {
                 $check;
-            } else if ($data['status'] == 2) {
+            } else if ($data['status'] == OrderConstant::UNSUCCESSFUL) {
                 $check;
-            } else if ($data['status'] == 4) {
+            } else {
+                $check = true;
+            }
+        } else if ($data['oldStatus'] == OrderConstant::RECEIVED) {
+            if ($data['status'] == OrderConstant::WAIT_CONFIRM) {
+                $check;
+            } else if ($data['status'] == OrderConstant::CONFIRMED) {
+                $check;
+            } else if ($data['status'] == OrderConstant::DELIVERED) {
+                $check;
+            } else if ($data['status'] == OrderConstant::RECEIVED) {
                 $check;
             } else {
                 $check = true;

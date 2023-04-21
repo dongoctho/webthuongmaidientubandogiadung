@@ -66,10 +66,16 @@
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" name="password" class="form-control form-control-user password"
                                             id="exampleInputPassword" placeholder="Nhập mật khẩu">
+                                        @if ($errors->all())
+                                        <span style="color: red">{{$errors->first('password')}}</span>
+                                        @endif
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" name="repassword" class="form-control form-control-user repassword"
                                             id="exampleRepeatPassword" placeholder="Nhập lại mật khẩu">
+                                        @if ($errors->all())
+                                        <span style="color: red">{{$errors->first('repassword')}}</span>
+                                        @endif
                                     </div>
                                 </div>
                                     <div class="" style="display: flex; justify-content:center;">

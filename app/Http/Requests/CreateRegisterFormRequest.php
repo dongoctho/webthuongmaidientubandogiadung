@@ -55,7 +55,9 @@ class CreateRegisterFormRequest extends FormRequest
 
             if ($data['phone'] <= 0) {
                 $validator->errors()->add('phone', 'Yêu cầu nhập số lớn hơn 0 !!!');
-                dd($validator);
+            }
+            if ($data['password'] !== $data['repassword']) {
+                $validator->errors()->add('repassword', 'Nhập lại mật khẩu không đúng !!!');
             }
         });
     }

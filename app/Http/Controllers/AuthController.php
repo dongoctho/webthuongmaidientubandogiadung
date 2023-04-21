@@ -74,17 +74,13 @@ class AuthController extends Controller
     // login
     public function login(CreateLoginFormRequest $request)
     {
-        if ( auth()->attempt(['email' => $request->email, 'password' => $request->password]) ) {
-            $user =  auth()->user();
-            if ( $user->role == AuthConstant::ADMIN ) {
-                return redirect()->route('dashboard');
-            } else if ( $user->role == AuthConstant::CLIENT ) {
-                return redirect()->route('client_index');
-            } else if ( $user->role == AuthConstant::CONTENT ) {
-                return redirect()->route('dashboard');
-            }
-        } else {
-            return redirect()->back()->with('msg', 'Wrong username or password');
+        $user =  auth()->user();
+        if ( $user->role == AuthConstant::ADMIN ) {
+            return redirect()->route('dashboard');
+        } else if ( $user->role == AuthConstant::CLIENT ) {
+            return redirect()->route('client_index');
+        } else if ( $user->role == AuthConstant::CONTENT ) {
+            return redirect()->route('dashboard');
         }
     }
 
@@ -117,25 +113,21 @@ class AuthController extends Controller
     // register
     public function register(CreateRegisterFormRequest $request)
     {
-        if ( $request->password === $request->repassword ) {
-            $data = [
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'password' => Hash::make($request->password),
-                'role' => AuthConstant::CLIENT,
-                'repassword' => $request->repassword,
-                'birthday' => Carbon::now(),
-                'avatar' => 'no avatar yet',
-                'address' => 'no address yet'
-            ];
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'role' => AuthConstant::CLIENT,
+            'repassword' => $request->repassword,
+            'birthday' => Carbon::now(),
+            'avatar' => 'no avatar yet',
+            'address' => 'no address yet'
+        ];
 
-            $this->userRepository->create($data);
+        $this->userRepository->create($data);
 
-            return redirect()->route('login_page')->with('msg', 'Success');
-        } else {
-            return redirect()->route('register_page')->with('msg', 'Unsuccessful');
-        }
+        return redirect()->route('login_page')->with('msg', 'Success');
     }
 
     // list account
@@ -193,24 +185,24 @@ class AuthController extends Controller
         $data = $request->all();
         $check = false;
 
-        if ($user->role == 0) {
-            if ($data['oldRole'] == 0) {
+        if ($user->role == AuthConstant::ADMIN) {
+            if ($data['oldRole'] == AuthConstant::ADMIN) {
                 return $check;
-            } elseif ($data['oldRole'] == 1) {
-                if ($data['role'] == 0) {
+            } elseif ($data['oldRole'] == AuthConstant::CLIENT) {
+                if ($data['role'] == AuthConstant::ADMIN) {
                     $check;
                 } else {
                     $check = true;
                 }
-            } elseif ($data['oldRole'] == 2) {
-                if ($data['role'] == 0) {
+            } elseif ($data['oldRole'] == AuthConstant::CONTENT) {
+                if ($data['role'] == AuthConstant::ADMIN) {
                     $check;
                 } else {
                     $check = true;
                 }
             }
-        } else if ($user->role == 2) {
-            if ($data['role'] == 0) {
+        } else if ($user->role == AuthConstant::CONTENT) {
+            if ($data['role'] == AuthConstant::ADMIN) {
                 $check;
             } else {
                 $check = true;
