@@ -64,6 +64,7 @@ Route::prefix('admin')->middleware('CheckLogin')->group(function(){
         Route::get('/create', [AuthController::class, 'indexUserAdmin'])->name('add_user');
         Route::post('/create', [AuthController::class, 'createUserAdmin']);
         Route::get('/list', [AuthController::class, 'listUser'])->name('list_user');
+        Route::post('/update-role', [AuthController::class, 'updateRole'])->name('updateRole');
     });
 
     //Cart

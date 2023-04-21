@@ -80,6 +80,8 @@ class AuthController extends Controller
                 return redirect()->route('dashboard');
             } else if ( $user->role == AuthConstant::CLIENT ) {
                 return redirect()->route('client_index');
+            } else if ( $user->role == AuthConstant::CONTENT ) {
+                return redirect()->route('dashboard');
             }
         } else {
             return redirect()->back()->with('msg', 'Wrong username or password');
@@ -184,4 +186,48 @@ class AuthController extends Controller
 
         return redirect()->route('list_user');
     }
+
+    public function updateRole(Request $request)
+    {
+        $user = auth()->user();
+        $data = $request->all();
+        $check = false;
+
+        if ($user->role == 0) {
+            if ($data['oldRole'] == 0) {
+                return $check;
+            } elseif ($data['oldRole'] == 1) {
+                if ($data['role'] == 0) {
+                    $check;
+                } else {
+                    $check = true;
+                }
+            } elseif ($data['oldRole'] == 2) {
+                if ($data['role'] == 0) {
+                    $check;
+                } else {
+                    $check = true;
+                }
+            }
+        } else if ($user->role == 2) {
+            if ($data['role'] == 0) {
+                $check;
+            } else {
+                $check = true;
+            }
+        }
+        if ($check == false) {
+            return response()->json([
+                'error' => $data['role'],
+            ], 200);
+        } else {
+            $result = $this->userRepository->update($data['id'], ['role' => $data['role']]);
+            if ($result != false) {
+                return response()->json([
+                    'success' => $data['role'],
+                ], 201);
+            }
+        }
+    }
 }
+

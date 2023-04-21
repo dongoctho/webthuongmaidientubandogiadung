@@ -44,17 +44,17 @@
                             <td>{{$user->birthday}}</td>
                             <td><select style="height:40px" onchange="changeStatus({{$user->id}},{{$user->role}})" id="optionSelect-{{$user->id}}" name="status" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
                                 <option
-                                @if ($user->status == 0)
+                                @if ($user->role == 0)
                                     selected
                                 @endif
                                 value="0">Quản lý</option>
                                 <option
-                                @if ($user->status == 1)
+                                @if ($user->role == 1)
                                     selected
                                 @endif
                                 value="1">Khách hàng</option>
                                 <option
-                                @if ($user->status == 2)
+                                @if ($user->role == 2)
                                     selected
                                 @endif
                                 value="2">Nhân viên</option>
@@ -74,16 +74,16 @@
         </div>
     </div>
     <script>
-        function changeStatus (id, oldStatus) {
-            var status = $('#optionSelect-'+id).val();
+        function changeStatus (id, oldRole) {
+            var role = $('#optionSelect-'+id).val();
             $.ajax({
-                url: '{{route('updateStatus')}}',
+                url: '{{route('updateRole')}}',
                 type: 'POST',
                 data: {
                     "_token": "{{ csrf_token() }}",
                     'id':id,
-                    'status':status,
-                    'oldStatus':oldStatus,
+                    'role':role,
+                    'oldRole':oldRole,
                 }
             }).done(function(data) {
                 console.log(data);

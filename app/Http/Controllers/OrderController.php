@@ -448,90 +448,60 @@ class OrderController extends Controller
     // update status order admin
     public function update(Request $request)
     {
+        $check = false;
         $data = $request->all();
         if ($data['oldStatus'] == 0) {
             if ($data['status'] == 2) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else if ($data['status'] == 3) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else {
-                $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
-                if ( $result != false ) {
-                    return response()->json([
-                        'success' => $data['status'],
-                    ], 201);
-                }
+                $check = true;
             }
         } else if ($data['oldStatus'] == 1) {
             if ($data['status'] == 0) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else if ($data['status'] == 3) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else if ($data['status'] == 4) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else {
-                $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
-                if ( $result != false ) {
-                    return response()->json([
-                        'success' => $data['status'],
-                    ], 201);
-                }
+                $check = true;
             }
         } else if ($data['oldStatus'] == 2) {
             if ($data['status'] == 0) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else if ($data['status'] == 1) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else if ($data['status'] == 4) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else {
-                $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
-                if ( $result != false ) {
-                    return response()->json([
-                        'success' => $data['status'],
-                    ], 201);
-                }
+                $check = true;
             }
         } else if ($data['oldStatus'] == 3) {
             if ($data['status'] == 0) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else if ($data['status'] == 1) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else if ($data['status'] == 2) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else if ($data['status'] == 4) {
-                return response()->json([
-                    'error' => $data['status'],
-                ], 200);
+                $check;
             } else {
-                $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
-                if ( $result != false ) {
-                    return response()->json([
-                        'success' => $data['status'],
-                    ], 201);
-                }
+                $check = true;
+            }
+        }
+
+        if ($check == false) {
+            return response()->json([
+                'error' => $data['status'],
+            ], 200);
+        } else {
+            $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
+            if ( $result != false ) {
+                return response()->json([
+                    'success' => $data['status'],
+                ], 201);
             }
         }
     }
