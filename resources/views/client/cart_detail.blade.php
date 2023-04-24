@@ -310,10 +310,14 @@
                     'quantity':quantity
                 }
             }).done(function(data) {
+                setTimeout(function() {
+                    location.reload();
+                }, 10);
                 var priceFormat = data.priceItem.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
                 var sumFormat = data.sum.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
                 $('#cart-item-'+data.cartId).text(priceFormat);
                 $('#sum').text(sumFormat);
+
             });
        }
     </script>

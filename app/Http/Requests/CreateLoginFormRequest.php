@@ -24,7 +24,7 @@ class CreateLoginFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['required','email'],
+            'email' => ['required','regex:/(.*)@gmail\.com/i'],
             'password' => ['required', 'min:8']
         ];
     }
@@ -33,7 +33,7 @@ class CreateLoginFormRequest extends FormRequest
     {
         return [
             'email.required' => 'Không được bỏ trống ô này',
-            'email.email' => 'Nhập đúng định dạng ...@gmail.com',
+            'email.regex' => 'Nhập đúng định dạng ...@gmail.com',
             'password.required' => 'Không được bỏ trống ô này',
             'password.min' => 'Không được nhập nhỏ hơn 8 ký tự'
         ];

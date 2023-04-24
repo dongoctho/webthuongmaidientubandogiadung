@@ -25,8 +25,8 @@ class CreateRegisterFormRequest extends FormRequest
     {
         return [
             'name' => ['required'],
-            'email' => ['required', 'email', 'unique:users'],
-            'phone' => ['required', 'min:10', 'numeric'],
+            'email' => ['required', 'regex:/(.*)@gmail\.com/i', 'unique:users'],
+            'phone' => ['required', 'min:10', 'numeric', 'regex:/(0)[0-9]{10}/'],
             'password' => ['required', 'min:8'],
             'repassword' => ['required']
         ];
@@ -38,13 +38,14 @@ class CreateRegisterFormRequest extends FormRequest
         return [
             'email.required' => 'Không được bỏ trống ô này',
             'email.unique' => 'Email đã tồn tại',
-            'email.email' => 'Nhập đúng định dạng ...@gmail.com',
+            'email.regex' => 'Nhập đúng định dạng ...@gmail.com',
             'password.required' => 'Không được bỏ trống ô này',
             'password.min' => 'Mật khẩu không được nhỏ hơn 8 ký tự',
             'name.required' => 'Không được bỏ trống ô này',
             'repassword.required' => 'Không được bỏ trống ô này',
             'phone.required' => 'Không được bỏ trống ô này',
             'phone.min' => 'Số điện thoại không được nhỏ hon 10 ký tự',
+            'phone.regex' => 'Nhập đúng định dạng số điện thoại'
         ];
     }
 

@@ -219,12 +219,12 @@
                     </div>
                     <div class="">
                         @if ($errors->all())
-                        <p style="color: red">{{$errors->first('quantity')}}</p>
+                        <span style="color: red">{{$errors->first('quantity')}}</span>
                         @endif
                     </div>
                     @if (Session::has('msg'))
                     <div class="">
-                        <p style="color: red">{{Session::get('msg')}}</p>
+                        <span style="color: red">{{Session::get('msg')}}</span>
                     </div>
                     @endif
                 </form>

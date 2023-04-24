@@ -48,6 +48,7 @@ class CartController extends Controller
         $product = $this->productRepository->find($id);
         $idUserCart = $this->cartRepository->findUser($user->id);
         $storage = $this->storageRepository->findProduct($product->id);
+
         if ( $request->quantity > $storage->quantity ){
             return redirect()->back()->with('msg', 'Số lượng nhập không được vượt quá hàng trong kho');
         }
@@ -74,6 +75,9 @@ class CartController extends Controller
 
                 return redirect()->back();
             } else if ( $id == $cartDetail->product_id ) {
+                if ( $request->quantity + $cartDetail->quantity > $storage->quantity ) {
+                    return redirect()->back()->with('msg', 'Số lượng nhập không được vượt quá hàng trong kho');
+                }
 
                 $dataCart = [
                     'quantity' => $request->quantity + $cartDetail->quantity,
@@ -124,7 +128,12 @@ class CartController extends Controller
     {
         $data = $request->all();
         $cart = $this->cartDetailRepository->find($data['id']);
+        $storage = $this->storageRepository->findProduct($data['productId']);
         $priceCart = $cart->price * $data['quantity'];
+
+        if ( $data['quantity'] > $storage->quantity ) {
+            return redirect()->back()->with('msg', 'Số lượng nhập không được vượt quá hàng trong kho');
+        }
 
         $input = [
             'quantity' => $data['quantity']

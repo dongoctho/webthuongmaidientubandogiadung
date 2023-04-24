@@ -163,11 +163,16 @@ class OrderController extends Controller
         ];
         $idUserCart = $this->cartRepository->findUser($user->id);
         $cartDetail = $this->cartDetailRepository->findProduct($request->productId, $idUserCart->id);
+        $storage = $this->storageRepository->findProduct($product_id);
 
         if (empty($cartDetail)) {
-            $quantity = 1;
+            $quantity = $request->quantity;
         } else {
-            $quantity = 1 + $cartDetail->quantity;
+            if ( $request->quantity + $cartDetail->quantity > $storage->quantity ) {
+                return redirect()->back()->with('msg', 'Số lượng nhập không được vượt quá hàng trong kho');
+            } else {
+                $quantity = $request->quantity + $cartDetail->quantity;
+            }
         }
 
         $condition = [];
@@ -242,15 +247,8 @@ class OrderController extends Controller
         $user = auth()->user();
         $priceHandle = 0;
         $sumPrice = 0;
-        $quantity = 0;
         $voucher_id = explode("-", $request->voucher_id);
         $voucher = $this->voucherRepository->find($voucher_id[2]);
-
-        if (empty($cartDetail)) {
-            $quantity = 1;
-        } else {
-            $quantity = 1 + $cartDetail->quantity;
-        }
 
         if (isset($request->product_id)) {
             $idUserCart = $this->cartRepository->findUser($user->id);
