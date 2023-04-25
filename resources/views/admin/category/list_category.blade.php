@@ -49,7 +49,7 @@
             </table>
         </div>
         <div class="col-12 pb-1" style="display: flex;  justify-content: center">
-            {!! $categories->links() !!}
+            {!! $categories->appends($data)->links() !!}
         </div>
     </div>
     <script>

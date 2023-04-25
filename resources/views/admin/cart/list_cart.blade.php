@@ -46,7 +46,7 @@
 
         </div>
         <div class="col-12 pb-1" style="display: flex;  justify-content: center">
-            {!! $carts->links() !!}
+            {!! $carts->appends($data)->links() !!}
         </div>
     </div>
 

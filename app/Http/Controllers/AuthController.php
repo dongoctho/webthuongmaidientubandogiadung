@@ -38,16 +38,16 @@ class AuthController extends Controller
     {
         $user = Socialite::driver('google')->stateless()->user();
 
-            $finduser = User::where('google_id', $user->id)->first();
+            $userFind = $this->userRepository->findUser($user->id);
 
-            if($finduser){
+            if($userFind){
 
-                Auth::login($finduser);
+                Auth::login($userFind);
 
                 return redirect()->route('client_index');
 
             }else{
-            $newUser = User::create([
+            $newUser = [
                 'name' => $user->name,
                 'email' => $user->email,
                 'google_id'=> $user->id,
@@ -57,9 +57,11 @@ class AuthController extends Controller
                 'role' => AuthConstant::CLIENT,
                 'birthday' => Carbon::now(),
                 'password' => encrypt('my-google')
-            ]);
+            ];
 
-            Auth::login($newUser);
+            $new_user = $this->userRepository->create($newUser);
+
+            Auth::login($new_user);
 
             return redirect()->route('client_index');
         }
@@ -120,7 +122,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'role' => AuthConstant::CLIENT,
             'repassword' => $request->repassword,
-            'birthday' => Carbon::now(),
+            'birthday' => $request->birthday,
             'avatar' => 'no avatar yet',
             'address' => 'no address yet'
         ];
@@ -134,19 +136,14 @@ class AuthController extends Controller
     public function listUser(Request $request)
     {
         $key = "";
-        $columnSelect = [
-            'users.name',
-            'users.email',
-            'users.phone',
-            'users.role',
-            'users.birthday',
-            'users.avatar',
-            'users.address'
+        $data = [
+            'key' => $request->key
         ];
+        $key = $request->key;
 
-        $users = $this->userRepository->getUserByCondition($columnSelect);
+        $users = $this->userRepository->getUserByCondition($data);
 
-        return view('admin.user.list_user', compact('users', 'key'));
+        return view('admin.user.list_user', compact('users', 'key', 'data'));
     }
 
     // index create account

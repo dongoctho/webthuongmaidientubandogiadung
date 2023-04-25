@@ -18,8 +18,15 @@
                                 <div class="">
                                     <p>Nhập Mã Sản Phẩm</p>
                                 </div>
-                                <input style="height:50px" type="text" name="code" value="{{$products->code}}" class="form-control"
-                                placeholder="Nhập Mã Sản Phẩm" aria-label="Username" aria-describedby="addon-wrapping">
+                                <input
+                                style="height:50px"
+                                type="text"
+                                name="code"
+                                value="{{$errors->all() ? old('code') : $products->code}}"
+                                class="form-control"
+                                placeholder="Nhập Mã Sản Phẩm"
+                                aria-label="Username"
+                                aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
                                     <span style="color: red">{{$errors->first('code')}}</span>
@@ -32,7 +39,7 @@
                                 <div class="">
                                     <p>Nhập Đơn Giá</p>
                                 </div>
-                                <input style="height:50px" type="text" name="price" value="{{$products->price}}" class="form-control"
+                                <input style="height:50px" type="text" name="price" value="{{$errors->all() ? old('price') : $products->price}}" class="form-control"
                                 placeholder="Nhập Đơn Giá" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -92,7 +99,7 @@
                                 <div class="">
                                     <p>Nhập Tên Sản Phẩm</p>
                                 </div>
-                                <input style="height:50px" type="text" value="{{$products->name}}" name="name" class="form-control" placeholder="Nhập Tên Sản Phẩm" aria-label="Username" aria-describedby="addon-wrapping">
+                                <input style="height:50px" type="text" value="{{$errors->all() ? old('name') : $products->name}}" name="name" class="form-control" placeholder="Nhập Tên Sản Phẩm" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
                                     <span style="color: red">{{$errors->first('name')}}</span>
@@ -133,7 +140,7 @@
                                 <div class="">
                                     <p>Chọn Kiểu Giảm Giá</p>
                                 </div>
-                                <select style="height:50px; width: 500px;" name="product_type" value="{{$products->product_type}}" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
+                                <select style="height:50px; width: 500px;" name="product_type" value="{{$errors->all() ? old('product_type') : $products->product_type}}" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
                                     <option
                                         @if ($products->product_type == 0)
                                             selected
@@ -152,7 +159,7 @@
                                 <div class="">
                                     <p>Nhập Giá Trị Giảm Giá</p>
                                 </div>
-                                <input style="height:50px" type="text" name="discount" value="{{$products->discount}}" class="form-control" placeholder="Nhập Giá Trị Giảm Giá" aria-label="Username" aria-describedby="addon-wrapping">
+                                <input style="height:50px" type="text" name="discount" value="{{$errors->all() ? old('discount') : $products->discount}}" class="form-control" placeholder="Nhập Giá Trị Giảm Giá" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
                                     <span style="color: red">{{$errors->first('discount')}}</span>
@@ -170,7 +177,7 @@
                                     <p>Nhập Mô Tả</p>
                                 </div>
                                 <div class="form-outline">
-                                    <textarea class="form-control" name="description" id="textAreaExample1" rows="4">{{$products->description}}</textarea>
+                                    <textarea class="form-control" name="description" id="textAreaExample1" rows="4">{{$errors->all() ? old('description') : $products->description}}</textarea>
                                 </div>
                                 <div class="">
                                     @if ($errors->all())

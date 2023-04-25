@@ -24,7 +24,7 @@ class CreateVoucherFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4', 'unique:vouchers'],
+            'code' => ['required', 'min:4', 'unique:vouchers', 'regex:/(VC)[0-9]{2}/'],
             'name' => ['required', 'unique:vouchers'],
             'discount' => ['required', 'numeric'],
             'quantity' => ['required', 'numeric']
@@ -37,10 +37,12 @@ class CreateVoucherFormRequest extends FormRequest
             'code.required' => 'Không được bỏ trống ô này',
             'name.required' => 'Không được bỏ trống ô này',
             'code.min' => 'Không được nhập nhỏ hơn 4 ký tự',
+            'code.unique' => 'Mã bị trùng',
             'discount.required' => 'Không được bỏ trống ô này',
             'discount.numeric' => 'Yêu cầu nhập số',
             'quantity.required' => 'Không được bỏ trống ô này',
-            'quantity.numeric' => 'Yêu cầu nhập số'
+            'quantity.numeric' => 'Yêu cầu nhập số',
+            'code.regex' => 'Nhập đúng định dạng VC + số'
         ];
     }
 

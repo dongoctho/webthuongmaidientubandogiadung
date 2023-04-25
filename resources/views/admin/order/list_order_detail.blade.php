@@ -45,7 +45,7 @@
                 </tbody>
             </table>
             <div class="justify" style="margin: 10px; text-align: center; margin-top: 40px;">
-               <h3>Tổng Tiền: {{number_format($sumPrice)}} VND</h3>
+               <h3>Tổng Tiền: {{number_format($order->price)}} VND</h3>
             </div>
             <div class="justify" style="margin: 10px; display:flex; justify-content: center; flex-direction: column; margin-top: 40px;">
                 <a class="btn btn-primary btn-user btn-block" href="{{route('list_order')}}">Trở Về</a>

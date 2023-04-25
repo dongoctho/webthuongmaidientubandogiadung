@@ -24,7 +24,7 @@ class CreateCategoryFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4', 'unique:categories'],
+            'code' => ['required', 'min:4', 'unique:categories', 'regex:/(CG)[0-9]{2}/'],
             'name' => ['required', 'unique:categories'],
         ];
     }
@@ -36,7 +36,8 @@ class CreateCategoryFormRequest extends FormRequest
             'name.required' => 'Không được bỏ trống ô này',
             'code.min' => 'Không được nhập nhỏ hơn 4 ký tự',
             'code.unique' => 'Mã bị trùng',
-            'name.unique' => 'Tên bị trùng'
+            'name.unique' => 'Tên bị trùng',
+            'code.regex' => 'Nhập đúng định dạng CG + số'
         ];
     }
 }

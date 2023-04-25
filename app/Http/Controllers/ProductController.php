@@ -130,7 +130,7 @@ class ProductController extends Controller
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.list_product', compact('products', 'manufactures', 'categories', 'key'));
+        return view('admin.product.list_product', compact('products', 'manufactures', 'categories', 'key', 'data'));
     }
 
     // delete product admin

@@ -54,7 +54,7 @@
             </table>
         </div>
         <div class="col-12 pb-1" style="display: flex;  justify-content: center">
-            {!! $manufactures->links() !!}
+            {!! $manufactures->appends($data)->links() !!}
         </div>
     </div>
 

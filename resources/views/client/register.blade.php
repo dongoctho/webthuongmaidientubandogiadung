@@ -55,6 +55,15 @@
                                             @endif
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="date" class="form-control form-control-user name" value="{{old('birthday')}}" name="birthday" id="exampleFirstName"
+                                            placeholder="Nhập ngày sinh">
+                                            @if ($errors->all())
+                                        <span style="color: red">{{$errors->first('birthday')}}</span>
+                                        @endif
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <input name="email" class="form-control form-control-user email" value="{{old('email')}}" id="exampleInputEmail"
                                         placeholder="Nhập địa chỉ email">

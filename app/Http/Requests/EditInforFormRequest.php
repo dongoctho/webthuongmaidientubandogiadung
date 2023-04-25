@@ -28,7 +28,8 @@ class EditInforFormRequest extends FormRequest
             'email' => ['required', 'email'],
             'phone' => ['required', 'min:10'],
             'birthday' => ['required', 'before:13 years ago'],
-            'address' => ['required']
+            'address' => ['required'],
+            'image' => ['mimes:jpeg,png,jpg,gif']
         ];
     }
 
@@ -41,7 +42,8 @@ class EditInforFormRequest extends FormRequest
             'phone.required' => 'Không được để trống ô này',
             'phone.min' => 'Số điện thoại phải từ 10 số trở lên',
             'birthday.required' => 'Không được để trống ô này',
-            'birthday.before:13 years ago' => 'Bạn phải ít nhất 13 tuổi',
+            'birthday.before' => 'Bạn phải ít nhất 13 tuổi',
+            'image.mimes' => 'Yêu cầu nhập đúng định dạng: jpeg, png, jpg, gif',
             'address.required' => 'Không được để trống ô này'
         ];
     }

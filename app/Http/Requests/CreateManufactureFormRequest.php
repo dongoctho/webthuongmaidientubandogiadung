@@ -24,7 +24,7 @@ class CreateManufactureFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4', 'unique:manufactures'],
+            'code' => ['required', 'min:4', 'unique:manufactures', 'regex:/(MF)[0-9]{2}/'],
             'name' => ['required', 'unique:manufactures'],
             'description' => ['required']
         ];
@@ -37,7 +37,8 @@ class CreateManufactureFormRequest extends FormRequest
             'name.required' => 'Không được bỏ trống ô này',
             'code.min' => 'Không được nhập nhỏ hơn 4 ký tự',
             'description.required' => 'Không được bỏ trống ô này',
-            'code.unique' => 'Mã bị trùng'
+            'code.unique' => 'Mã bị trùng',
+            'code.regex' => 'Nhập đúng định dạng MF + số'
         ];
     }
 }

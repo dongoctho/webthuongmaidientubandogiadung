@@ -66,7 +66,7 @@
                                     <p>Chọn Hình Ảnh</p>
                                 </div>
                                 <div style="width: 500px;" class="flex-nowrap" style="display: flex; flex-direction:column;">
-                                    <input accept=".jpg, .png"
+                                    <input
                                     value="{{old('image')}}"
                                     style="height:50px"
                                     type="file"

@@ -70,7 +70,7 @@
             </table>
         </div>
         <div class="col-12 pb-1" style="display: flex;  justify-content: center">
-            {!! $users->links() !!}
+            {!! $users->appends($data)->links() !!}
         </div>
     </div>
     <script>

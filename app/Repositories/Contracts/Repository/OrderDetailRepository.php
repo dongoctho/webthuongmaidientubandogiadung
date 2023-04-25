@@ -30,7 +30,7 @@ class OrderDetailRepository extends BaseRepository implements OrderDetailReposit
         return $query;
     }
 
-    public function getOrderDetail($userId, $id, $condition, array $column = ['*'])
+    public function getOrderDetail($userId, $id, array $column = ['*'])
     {
         $query = $this->model
             ->select($column)
@@ -39,11 +39,6 @@ class OrderDetailRepository extends BaseRepository implements OrderDetailReposit
             ->where('orders_detail.order_id', '=', $id)
             ->leftjoin('orders', 'orders.id', '=', 'orders_detail.order_id')
             ->leftjoin('products', 'orders_detail.product_id', '=', 'products.id')->get();
-
-        if (isset($condition['key'])) {
-            $query->where('name', 'like', '%'.$condition['key'].'%')
-            ->get();
-        }
 
         return $query;
     }

@@ -24,10 +24,11 @@ class CreateProductFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4', 'unique:products'],
+            'code' => ['required', 'min:4', 'unique:products', 'regex:/(PD)[0-9]{2}/'],
             'name' => ['required', 'unique:products'],
             'price' => ['required', 'numeric'],
-            'description' => ['required']
+            'description' => ['required'],
+            'image' => ['required', 'mimes:jpeg,png,jpg,gif']
         ];
     }
 
@@ -40,7 +41,21 @@ class CreateProductFormRequest extends FormRequest
             'code.min' => 'Không được nhập nhỏ hơn 4 ký tự',
             'price.required' => 'Không được bỏ trống ô này',
             'price.numeric' => 'Yêu cầu nhập số',
-            'description.required' => 'Không được bỏ trống ô này'
+            'description.required' => 'Không được bỏ trống ô này',
+            'image.required' => 'Không được bỏ trống ô này',
+            'image.mimes' => 'Yêu cầu nhập đúng định dạng: jpeg, png, jpg, gif',
+            'code.regex' => 'Nhập đúng định dạng PD + số'
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $data = $validator->getData();
+
+            if ($data['price'] <= 0) {
+                $validator->errors()->add('price', 'Yêu cầu nhập số lớn hơn 0 !!!');
+            }
+        });
     }
 }

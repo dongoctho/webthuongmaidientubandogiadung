@@ -22,7 +22,7 @@
                                 <div class="">
                                     <p>Nhập Mã Phiếu Giảm Giá</p>
                                 </div>
-                                <input style="height:50px" type="text" name="code" value="{{$vouchers->code}}" class="form-control"
+                                <input style="height:50px" type="text" name="code" value="{{$errors->all() ? old('code') : $vouchers->code}}" class="form-control"
                                 placeholder="Nhập Mã Giảm Giá" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -36,7 +36,7 @@
                                 <div class="">
                                     <p>Nhập Tên Phiếu Giảm Giá</p>
                                 </div>
-                                <input style="height:50px" type="text" name="name" value="{{$vouchers->name}}" class="form-control"
+                                <input style="height:50px" type="text" name="name" value="{{$errors->all() ? old('name') : $vouchers->name}}" class="form-control"
                                 placeholder="Nhập Tên Mã Giảm Giá" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -72,7 +72,7 @@
                                 <div class="">
                                     <p>Nhập Giá Trị Giảm Giá</p>
                                 </div>
-                                <input style="height:50px" type="text" name="discount" value="{{$vouchers->discount}}" class="form-control"
+                                <input style="height:50px" type="text" name="discount" value="{{$errors->all() ? old('discount') : $vouchers->discount}}" class="form-control"
                                 placeholder="Nhập Giá Trị Giảm Giá" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -90,7 +90,7 @@
                                 <div class="">
                                     <p>Nhập Số Lượng</p>
                                 </div>
-                                <input style="height:50px" type="text" name="quantity" value="{{$vouchers->quantity}}" class="form-control"
+                                <input style="height:50px" type="text" name="quantity" value="{{$errors->all() ? old('quantity') : $vouchers->quantity}}" class="form-control"
                                 placeholder="Nhập Số Lượng" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())

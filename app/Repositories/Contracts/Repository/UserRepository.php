@@ -13,6 +13,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return User::class;
     }
 
+    public function findUser($id){
+        return $this->model->where('google_id', $id)->first();
+    }
+
     public function getUserByCondition($condition, array $column = ['*'])
     {
         $query = $this->model->newQuery();
@@ -20,7 +24,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         if (isset($condition['key'])) {
             $query->where('name', 'like', '%'.$condition['key'].'%')
-                  ->orWhere('code', 'like', '%'.$condition['key'].'%')
+                  ->orWhere('email', 'like', '%'.$condition['key'].'%')
                   ->get();
         }
 

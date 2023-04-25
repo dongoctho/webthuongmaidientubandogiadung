@@ -60,6 +60,11 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="">
+                                    @if ($errors->all())
+                                    <span style="color: red">{{$errors->first('product_id')}}</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>

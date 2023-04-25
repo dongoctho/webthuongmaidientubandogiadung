@@ -63,7 +63,7 @@
             </table>
         </div>
         <div class="col-12 pb-1" style="display: flex;  justify-content: center">
-            {!! $vouchers->links() !!}
+            {!! $vouchers->appends($data)->links() !!}
         </div>
     </div>
 

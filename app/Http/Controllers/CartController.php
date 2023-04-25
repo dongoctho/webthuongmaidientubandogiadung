@@ -196,7 +196,7 @@ class CartController extends Controller
         $key = $request->key;
         $carts = $this->cartRepository->getCartByCondition($data);
 
-        return view('admin.cart.list_cart', compact('carts', 'key'));
+        return view('admin.cart.list_cart', compact('carts', 'key', 'data'));
     }
 
     // show cart detail admin

@@ -17,6 +17,10 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         return $this->model->where('user_id', $id)->first();
     }
 
+    public function findOrder($id){
+        return $this->model->where('id', $id)->first();
+    }
+
     public function getOrderByCondition($condition, array $column = ['*'])
     {
         $query = $this->model->newQuery();
@@ -26,8 +30,9 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
             ->leftjoin('vouchers', 'orders.voucher_id', '=', 'vouchers.id')->get();
 
         if (isset($condition['key'])) {
-            $query->where('users.name', 'like', '%'.$condition['key'].'%')
-                  ->orWhere('users.phone', 'like', '%'.$condition['key'].'%')
+            $query->where('orders.name', 'like', '%'.$condition['key'].'%')
+                  ->orWhere('orders.phone', 'like', '%'.$condition['key'].'%')
+                  ->orWhere('orders.address', 'like', '%'.$condition['key'].'%')
             ->get();
         }
 

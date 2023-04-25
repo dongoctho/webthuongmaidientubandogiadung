@@ -48,7 +48,7 @@ class VoucherController extends Controller
 
         $vouchers = $this->voucherRepository->getVoucherByCondition($data);
 
-        return view('admin.voucher.list_voucher', compact('vouchers', 'key'));
+        return view('admin.voucher.list_voucher', compact('vouchers', 'key', 'data'));
     }
 
     // delete voucher

@@ -21,7 +21,7 @@
                             <div class="" style="display: flex; margin-left:10px; flex-direction:column; margin-top:30px">
                                 <div class="">
                                     <p>Nhập Mã Danh Mục</p>
-                                </div><input style="height:50px" type="text" name="code" value="{{$categories->code}}" class="form-control"
+                                </div><input style="height:50px" type="text" name="code" value="{{$errors->all() ? old('code') : $categories->code}}" class="form-control"
                                 placeholder="Nhập Mã Danh Mục" aria-label="Username" aria-describedby="addon-wrapping">
                             </div>
                             <div class="">
@@ -35,7 +35,7 @@
                                 <div class="">
                                     <p>Nhập Tên Danh Mục</p>
                                 </div>
-                                <input style="height:50px" type="text" name="name" value="{{$categories->name}}" class="form-control"
+                                <input style="height:50px" type="text" name="name" value="{{$errors->all() ? old('name') : $categories->name}}" class="form-control"
                                 placeholder="Nhập Tên Danh Mục" aria-label="Username" aria-describedby="addon-wrapping">
                             </div>
                             <div class="" style="">

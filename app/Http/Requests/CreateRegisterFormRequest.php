@@ -28,7 +28,8 @@ class CreateRegisterFormRequest extends FormRequest
             'email' => ['required', 'regex:/(.*)@gmail\.com/i', 'unique:users'],
             'phone' => ['required', 'min:10', 'numeric', 'regex:/(0)[0-9]{10}/'],
             'password' => ['required', 'min:8'],
-            'repassword' => ['required']
+            'repassword' => ['required'],
+            'birthday' => ['required','before:13 years ago'],
         ];
 
     }
@@ -36,6 +37,7 @@ class CreateRegisterFormRequest extends FormRequest
     public function messages()
     {
         return [
+            'birthday.required' => 'Không được bỏ trống ô này',
             'email.required' => 'Không được bỏ trống ô này',
             'email.unique' => 'Email đã tồn tại',
             'email.regex' => 'Nhập đúng định dạng ...@gmail.com',
@@ -45,7 +47,8 @@ class CreateRegisterFormRequest extends FormRequest
             'repassword.required' => 'Không được bỏ trống ô này',
             'phone.required' => 'Không được bỏ trống ô này',
             'phone.min' => 'Số điện thoại không được nhỏ hon 10 ký tự',
-            'phone.regex' => 'Nhập đúng định dạng số điện thoại'
+            'phone.regex' => 'Nhập đúng định dạng số điện thoại',
+            'birthday.before' => 'Bạn phải ít nhất 13 tuổi',
         ];
     }
 

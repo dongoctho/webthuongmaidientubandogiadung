@@ -22,7 +22,7 @@
                                 <div class="">
                                     <p>Nhập Số Lượng</p>
                                 </div>
-                                <input style="height:50px" type="text" name="quantity" value="{{$storages->quantity}}" class="form-control"
+                                <input style="height:50px" type="text" name="quantity" value="{{$errors->all() ? old('quantity') : $storages->quantity}}" class="form-control"
                                 placeholder="Nhập Số Lượng" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())
@@ -36,7 +36,7 @@
                                 <div class="">
                                     <p>Nhập Mô Tả</p>
                                 </div>
-                                <input style="height:50px" type="text" name="description" value="{{$storages->description}}" class="form-control"
+                                <input style="height:50px" type="text" name="description" value="{{$errors->all() ? old('description') : $storages->description}}" class="form-control"
                                 placeholder="Nhập Mô Tả" aria-label="Username" aria-describedby="addon-wrapping">
                                 <div class="">
                                     @if ($errors->all())

@@ -45,7 +45,7 @@ class CategoryController extends Controller
         $key = $request->key;
         $categories = $this->categoryRepository->getCategoryByCondition($data);
 
-        return view('admin.category.list_category', compact('categories', 'key'));
+        return view('admin.category.list_category', compact('categories', 'key', 'data'));
     }
 
     // delete category

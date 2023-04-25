@@ -24,7 +24,7 @@ class EditCategoryFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4'],
+            'code' => ['required', 'min:4', 'unique:categories,code,'.$this->id, 'regex:/(CG)[0-9]{2}/'],
             'name' => ['required'],
         ];
     }
@@ -34,7 +34,9 @@ class EditCategoryFormRequest extends FormRequest
         return [
             'code.required' => 'Không được bỏ trống ô này',
             'name.required' => 'Không được bỏ trống ô này',
-            'code.min' => 'Không được nhập nhỏ hơn 4 ký tự'
+            'code.min' => 'Không được nhập nhỏ hơn 4 ký tự',
+            'code.unique' => 'Mã bị trùng',
+            'code.regex' => 'Nhập đúng định dạng CG + số'
         ];
     }
 }

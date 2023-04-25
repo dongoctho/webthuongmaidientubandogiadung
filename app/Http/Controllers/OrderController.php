@@ -433,7 +433,7 @@ class OrderController extends Controller
         ];
         $orders = $this->orderRepository->getOrderByCondition($data, $column);
 
-        return view('admin.order.list_order', compact('orders', 'key'));
+        return view('admin.order.list_order', compact('orders', 'key', 'data'));
     }
 
     // show information order admin
@@ -478,17 +478,7 @@ class OrderController extends Controller
                 $check = true;
             }
         } else if ($data['oldStatus'] == OrderConstant::RECEIVED) {
-            if ($data['status'] == OrderConstant::WAIT_CONFIRM) {
-                $check;
-            } else if ($data['status'] == OrderConstant::CONFIRMED) {
-                $check;
-            } else if ($data['status'] == OrderConstant::DELIVERED) {
-                $check;
-            } else if ($data['status'] == OrderConstant::RECEIVED) {
-                $check;
-            } else {
-                $check = true;
-            }
+            $check;
         }
 
         if ($check == false) {
@@ -508,31 +498,13 @@ class OrderController extends Controller
     // show list order detail admin
     public function listOrderDetail(int $id_user, int $id, Request $request)
     {
-        $sumPrice = 0;
         $column = [
-            'orders_detail.order_id',
-            'orders_detail.id',
-            'orders_detail.order_id',
-            'orders_detail.product_id',
-            'orders_detail.price',
-            'orders_detail.product_type',
-            'orders_detail.discount',
-            'orders_detail.quantity',
-            'orders_detail.image',
-            'products.name',
-            'orders_detail.created_at'
+            'orders_detail.*',
+            'products.name'
         ];
         $order_details = $this->orderDetailRepository->getOrderDetail($id_user, $id, $column);
+        $order = $this->orderRepository->findOrder($id);
 
-        foreach ($order_details as $order_detail) {
-            if ( $order_detail->product_type == 0 ) {
-                $priceHandle = $order_detail->price * (1 - ($order_detail->discount / 100));
-            } else if ( $order_detail->product_type == 1 ) {
-                $priceHandle = $order_detail->price - $order_detail->discount;
-            }
-            $sumPrice += $order_detail->quantity * $priceHandle;
-        }
-
-        return view('admin.order.list_order_detail', compact('order_details', 'sumPrice'));
+        return view('admin.order.list_order_detail', compact('order_details', 'order'));
     }
 }

@@ -25,7 +25,8 @@ class CreateStorageFormRequest extends FormRequest
     {
         return [
             'quantity' => ['required', 'numeric'],
-            'description' => ['required']
+            'description' => ['required'],
+            'product_id' => ['unique:storages']
         ];
     }
 
@@ -35,6 +36,7 @@ class CreateStorageFormRequest extends FormRequest
             'quantity.required' => 'Không được bỏ trống ô này',
             'quantity.numeric' => 'Yêu cầu nhập số',
             'description.required' => 'Không được bỏ trống ô này',
+            'product_id.unique' => 'Sản phẩm đã có trong kho'
         ];
     }
 

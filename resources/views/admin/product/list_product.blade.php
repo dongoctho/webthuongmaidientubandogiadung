@@ -74,7 +74,7 @@
             </table>
         </div>
         <div class="col-12 pb-1" style="display: flex;  justify-content: center">
-            {!! $products->links() !!}
+            {!! $products->appends($data)->links() !!}
         </div>
     </div>
 

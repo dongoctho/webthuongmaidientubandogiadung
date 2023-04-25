@@ -62,7 +62,7 @@ class StorageController extends Controller
         ];
         $storages = $this->storageRepository->getStorageByCondition($data, $column);
 
-        return view('admin.storage.list_storage', compact('storages', 'key'));
+        return view('admin.storage.list_storage', compact('storages', 'key', 'data'));
     }
 
     // delete storage
