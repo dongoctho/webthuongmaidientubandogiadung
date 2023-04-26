@@ -26,7 +26,7 @@ class CreateRegisterFormRequest extends FormRequest
         return [
             'name' => ['required'],
             'email' => ['required', 'regex:/(.*)@gmail\.com/i', 'unique:users'],
-            'phone' => ['required', 'min:10', 'numeric', 'regex:/(0)[0-9]{10}/'],
+            'phone' => ['required', 'min:10', 'numeric', 'regex:/(0)[0-9]{9}/'],
             'password' => ['required', 'min:8'],
             'repassword' => ['required'],
             'birthday' => ['required','before:13 years ago'],

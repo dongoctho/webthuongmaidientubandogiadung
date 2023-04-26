@@ -27,16 +27,15 @@ class CreateAccountFormRequest extends FormRequest
             'name' => ['required'],
             'birthday' => ['required'],
             'email' => ['required', 'email', 'unique:users'],
-            'phone' => ['required', 'min:10', 'numeric'],
             'password' => ['required', 'min:8'],
-            'repassword' => ['required'],
-            'phone' => ['required', 'min:10'],
+            'phone' => ['required', 'numeric', 'regex:/(0)[0-9]{9}/'],
             'country' => ['required'],
             'city' => ['required'],
             'ward' => ['required'],
-            'avatar' => ['required'],
+            'avatar' => ['required', 'mimes:jpeg,png,jpg,gif'],
             'homenumber' => ['required', 'numeric'],
         ];
+
 
     }
 
@@ -49,9 +48,7 @@ class CreateAccountFormRequest extends FormRequest
             'password.required' => 'Không được bỏ trống ô này',
             'password.min' => 'Mật khẩu không được nhỏ hơn 8 ký tự',
             'name.required' => 'Không được bỏ trống ô này',
-            'repassword.required' => 'Không được bỏ trống ô này',
             'phone.required' => 'Không được bỏ trống ô này',
-            'phone.min' => 'Số điện thoại không được nhỏ hon 10 ký tự',
             'country.required' => 'Không được để trống ô này',
             'city.required' => 'Không được để trống ô này',
             'ward.required' => 'Không được để trống ô này',
@@ -59,7 +56,11 @@ class CreateAccountFormRequest extends FormRequest
             'birthday.required' => 'Không được để trống ô này',
             'avatar.required' => 'Không được để trống ô này',
             'homenumber.numeric' => 'Yêu cầu nhập số',
+            'phone.numeric' => 'Yêu cầu nhập số',
+            'image.mimes' => 'Yêu cầu nhập đúng định dạng: jpeg, png, jpg, gif',
+            'phone.regex' => 'Nhập đúng định dạng số điện thoại',
         ];
+
     }
 
     public function withValidator($validator)

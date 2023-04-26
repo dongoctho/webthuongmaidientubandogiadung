@@ -155,8 +155,8 @@ class AuthController extends Controller
     // add account admin
     public function createUserAdmin(CreateAccountFormRequest $request)
     {
-
-        if ( $request -> has('avatar') ) {
+        dd($request);
+        if ( $request->has('avatar') ) {
             $image = $this->image_service->image($request->avatar);
         }
 
