@@ -9,7 +9,7 @@
 
         <!-- /.card-header -->
         <div class="card-body">
-            <div class="search-bar">
+            <div class="search-bar" style="display: flex; justify-content:space-between">
                 <form class="search-form d-flex align-items-center" method="GET" action="">
                   <input
                   type="text"
@@ -19,6 +19,7 @@
                   value="{{$key}}">
                   <button type="submit" style="height: 40px; background-color:white; padding-right: 15px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-top: solid 1px gray;border-right: solid 1px gray;border-bottom: solid 1px gray;border-left: 0;" title="Search"><i class="bi bi-search"></i></button>
                 </form>
+                <a href="{{route('add_order_admin')}}" class="btn btn-primary">Thêm Mới</a>
             </div>
           <table  style="text-align: center" id="example1" class="table">
                 <thead>

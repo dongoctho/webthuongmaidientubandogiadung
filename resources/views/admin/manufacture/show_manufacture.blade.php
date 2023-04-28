@@ -13,6 +13,7 @@
             <form action="" method="post" enctype="multipart/form-data">
 
                 @csrf
+                <a style="margin-left: 10px" href="{{route('list_manufacture')}}" class="btn btn-primary">Danh Sách</a>
 
                 <div class="add-bottom-1">
 

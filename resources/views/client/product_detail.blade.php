@@ -177,7 +177,11 @@
                             @endif
                     </div>
                     <h5  style="color: rgb(78, 78, 78)" class="font-weight-semi mb-4">Số lượng trong kho: {{$storages->quantity}}</h5>
-                    <p class="mb-4">Nhà sản xuất: {{$product_detail->manufacture->name}}</p>
+                    <p class="mb-4">Nhà sản xuất:
+                        @if (isset($product_detail->manufacture_id))
+                            {{$product_detail->manufacture->name}}
+                        @endif
+                        </p>
                     <p class="mb-4">Mô tả: {{$product_detail->description}}</p>
                     <div class="d-flex align-items-center mb-4 pt-2">
                         <div class="input-group quantity mr-3 group-quantity" style="width: 130px;">
@@ -344,6 +348,7 @@
         $(document).ready(function () {
             var quantity = @json($storages->quantity);
             var url = $('#btn_buy').attr('href');
+            $('#btn_buy').attr('href', url + '&&quantity=' + 1);
             $('.quantity button').on('click', function () {
                 var button = $(this);
                 var oldValue = button.parent().parent().find('input').val();

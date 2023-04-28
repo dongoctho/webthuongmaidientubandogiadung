@@ -11,6 +11,7 @@
         <div class="add-bottom-input">
 
             <form action="" method="post" enctype="multipart/form-data">
+                <a style="margin-left: 10px" href="{{route('list_voucher')}}" class="btn btn-primary">Danh Sách</a>
 
                 @csrf
 

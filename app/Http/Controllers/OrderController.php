@@ -62,6 +62,7 @@ class OrderController extends Controller
     // index add order admin
     public function addOrderAdmin()
     {
+        $check_order = true;
         $columnSelect = [
             'storages.id as storage_id',
             'products.id as product_id',
@@ -73,7 +74,7 @@ class OrderController extends Controller
         $products = $this->productRepository->getProductByConditionAdmin($columnSelect);
         $vouchers = $this->voucherRepository->getVoucherByConditionAdmin();
 
-        return view('admin.order.add_order', compact('products', 'vouchers'));
+        return view('admin.order.add_order', compact('products', 'vouchers', 'check_order'));
     }
 
     // add order admin
@@ -165,15 +166,14 @@ class OrderController extends Controller
         $cartDetail = $this->cartDetailRepository->findProduct($request->productId, $idUserCart->id);
         $storage = $this->storageRepository->findProduct($product_id);
 
-        if (empty($cartDetail)) {
+
+        dd($request->quantity);
+
+        if (isset($cartDetail)) {
             $quantity = $request->quantity;
-        } else {
-            if ( $request->quantity + $cartDetail->quantity > $storage->quantity ) {
-                return redirect()->back()->with('msg', 'Số lượng nhập không được vượt quá hàng trong kho');
-            } else {
-                $quantity = $request->quantity + $cartDetail->quantity;
-            }
         }
+        
+        dd($quantity);
 
         $condition = [];
 
@@ -414,6 +414,7 @@ class OrderController extends Controller
     // show list order admin
     public function list(Request $request)
     {
+        $check_order = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -433,15 +434,7 @@ class OrderController extends Controller
         ];
         $orders = $this->orderRepository->getOrderByCondition($data, $column);
 
-        return view('admin.order.list_order', compact('orders', 'key', 'data'));
-    }
-
-    // show information order admin
-    public function show(int $id)
-    {
-        $order = $this->orderRepository->find($id);
-
-        return view('admin.order.show_order', compact('order'));
+        return view('admin.order.list_order', compact('orders', 'key', 'data', 'check_order'));
     }
 
     // update status order admin
@@ -498,6 +491,7 @@ class OrderController extends Controller
     // show list order detail admin
     public function listOrderDetail(int $id_user, int $id, Request $request)
     {
+        $check_order = true;
         $column = [
             'orders_detail.*',
             'products.name'
@@ -505,6 +499,6 @@ class OrderController extends Controller
         $order_details = $this->orderDetailRepository->getOrderDetail($id_user, $id, $column);
         $order = $this->orderRepository->findOrder($id);
 
-        return view('admin.order.list_order_detail', compact('order_details', 'order'));
+        return view('admin.order.list_order_detail', compact('order_details', 'order', 'check_order'));
     }
 }

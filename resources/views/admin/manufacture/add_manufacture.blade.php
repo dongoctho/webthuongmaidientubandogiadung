@@ -9,8 +9,10 @@
     <div class="add-bottom">
         <div class="add-bottom-input">
             <form action="" method="post" enctype="multipart/form-data">
-                @csrf
+                    <a style="margin-left: 10px" href="{{route('list_manufacture')}}" class="btn btn-primary">Danh Sách</a>
+                    @csrf
                 <div class="form-group row">
+
                     <div class="col-sm-6 mb-3 mb-sm-0">
                         <div class="" style="display: flex; margin-left:10px; flex-direction:column; margin-top:30px">
                             <div class="">

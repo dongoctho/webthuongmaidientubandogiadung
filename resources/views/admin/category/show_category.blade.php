@@ -15,6 +15,7 @@
                 @csrf
 
                 <div class="add-bottom-1">
+                    <a style="margin-left: 10px" href="{{route('list_category')}}" class="btn btn-primary">Danh Sách</a>
 
                     <div class="form-group row">
                         <div class="col-sm-6 mb-3 mb-sm-0">

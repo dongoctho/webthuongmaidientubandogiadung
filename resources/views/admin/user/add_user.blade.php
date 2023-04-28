@@ -9,6 +9,7 @@
     <div class="add-bottom">
         <div class="add-bottom-input">
             <form action="" method="post" enctype="multipart/form-data">
+                <a style="margin-left: 10px" href="{{route('list_user')}}" class="btn btn-primary">Danh Sách</a>
 
                 @csrf
 
@@ -165,11 +166,6 @@
                                     <span style="color: red">{{$errors->first('role')}}</span>
                                     @endif
                                 <select style="height:50px; width: 500px" name="role" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
-                                        <option
-                                        @if (old('role') == 0)
-                                            selected
-                                        @endif
-                                        value="0">Quản lý</option>
                                         <option
                                         @if (old('role') == 1)
                                             selected

@@ -24,7 +24,8 @@ class CategoryController extends Controller
     // show add category page
     public function index()
     {
-        return view('admin.category.add_category');
+        $check_category = true;
+        return view('admin.category.add_category', compact('check_category'));
     }
 
     // create category to database
@@ -38,6 +39,7 @@ class CategoryController extends Controller
     // show list categories
     public function list(Request $request)
     {
+        $check_category = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -45,7 +47,7 @@ class CategoryController extends Controller
         $key = $request->key;
         $categories = $this->categoryRepository->getCategoryByCondition($data);
 
-        return view('admin.category.list_category', compact('categories', 'key', 'data'));
+        return view('admin.category.list_category', compact('categories', 'key', 'data', 'check_category'));
     }
 
     // delete category
@@ -60,9 +62,10 @@ class CategoryController extends Controller
     // show information category
     public function show(int $id)
     {
+        $check_category = true;
         $categories = $this->categoryRepository->find($id);
 
-        return view('admin.category.show_category', compact('categories'));
+        return view('admin.category.show_category', compact('categories', 'check_category'));
 
     }
 

@@ -100,18 +100,6 @@ class AuthController extends Controller
         return view('client.register');
     }
 
-    // show change password page
-    public function change_pass_page()
-    {
-        return view('client.change_password');
-    }
-
-    // show register page
-    public function change_pass(CreateChangePassFormRequest $request)
-    {
-        dd($request->toArray());
-    }
-
     // register
     public function register(CreateRegisterFormRequest $request)
     {
@@ -135,6 +123,7 @@ class AuthController extends Controller
     // list account
     public function listUser(Request $request)
     {
+        $check_user = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -143,19 +132,27 @@ class AuthController extends Controller
 
         $users = $this->userRepository->getUserByCondition($data);
 
-        return view('admin.user.list_user', compact('users', 'key', 'data'));
+        return view('admin.user.list_user', compact('users', 'key', 'data', 'check_user'));
     }
 
     // index create account
     public function indexUserAdmin()
     {
-        return view('admin.user.add_user');
+        $check_user = true;
+        return view('admin.user.add_user', compact('check_user'));
+    }
+
+    // delete user
+    public function destroy(int $id)
+    {
+        $this->userRepository->delete($id);
+
+        return redirect()->back();
     }
 
     // add account admin
     public function createUserAdmin(CreateAccountFormRequest $request)
     {
-        dd($request);
         if ( $request->has('avatar') ) {
             $image = $this->image_service->image($request->avatar);
         }

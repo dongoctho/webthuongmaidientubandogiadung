@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Contracts\RepositoryInterface\StorageRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\ProductRepositoryInterface;
 use App\Http\Requests\CreateStorageFormRequest;
+use App\Http\Requests\EditStorageFormRequest;
 use Illuminate\Http\Request;
 
 class StorageController extends Controller
@@ -23,9 +24,10 @@ class StorageController extends Controller
     // show storage page
     public function index()
     {
+        $check_storage = true;
         $products = $this->productRepository->getAll();
 
-        return view('admin.storage.add_storage', compact('products'));
+        return view('admin.storage.add_storage', compact('products', 'check_storage'));
     }
 
     // create storage to database
@@ -46,6 +48,7 @@ class StorageController extends Controller
     // show list storage
     public function list(Request $request)
     {
+        $check_storage = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -62,7 +65,7 @@ class StorageController extends Controller
         ];
         $storages = $this->storageRepository->getStorageByCondition($data, $column);
 
-        return view('admin.storage.list_storage', compact('storages', 'key', 'data'));
+        return view('admin.storage.list_storage', compact('storages', 'key', 'data', 'check_storage'));
     }
 
     // delete storage
@@ -76,14 +79,15 @@ class StorageController extends Controller
     // show information storage
     public function show(int $id)
     {
+        $check_storage = true;
         $products = $this->productRepository->getAll();
         $storages = $this->storageRepository->find($id);
 
-        return view('admin.storage.show_storage', compact('storages', 'products'));
+        return view('admin.storage.show_storage', compact('storages', 'products', 'check_storage'));
     }
 
     // update information storage
-    public function update(int $id, CreateStorageFormRequest $request)
+    public function update(int $id, EditStorageFormRequest $request)
     {
         $data = [
             'code' => $request->code,

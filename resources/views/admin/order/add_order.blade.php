@@ -9,7 +9,7 @@
     <div class="add-bottom">
         <div class="add-bottom-input">
             <form action="" method="post" enctype="multipart/form-data">
-
+                <a style="margin-left: 10px" href="{{route('list_order')}}" class="btn btn-primary">Danh Sách</a>
                 @csrf
 
                 <div class="add-bottom-1">

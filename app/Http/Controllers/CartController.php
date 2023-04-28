@@ -158,7 +158,7 @@ class CartController extends Controller
         ], 201);
     }
 
-    // show cart
+    // show cart client
     public function showCart()
     {
         $buttonPlus = CartConstant::BUTTON_PLUS;
@@ -189,6 +189,7 @@ class CartController extends Controller
     // show list cart admin
     public function list(Request $request)
     {
+        $check_cart = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -196,14 +197,15 @@ class CartController extends Controller
         $key = $request->key;
         $carts = $this->cartRepository->getCartByCondition($data);
 
-        return view('admin.cart.list_cart', compact('carts', 'key', 'data'));
+        return view('admin.cart.list_cart', compact('carts', 'key', 'data', 'check_cart'));
     }
 
     // show cart detail admin
     public function listCartDetail(int $id_user)
     {
+        $check_cart = true;
         $cart_details = $this->cartDetailRepository->getCartDetail($id_user);
 
-        return view('admin.cart.list_cart_detail', compact('cart_details'));
+        return view('admin.cart.list_cart_detail', compact('cart_details', 'check_cart'));
     }
 }

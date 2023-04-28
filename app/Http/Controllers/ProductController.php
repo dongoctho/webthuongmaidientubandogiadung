@@ -86,10 +86,11 @@ class ProductController extends Controller
     // show add product page admin
     public function index()
     {
+        $check_product = true;
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.add_product', compact('manufactures', 'categories'));
+        return view('admin.product.add_product', compact('manufactures', 'categories', 'check_product'));
     }
 
     // create product to database admin
@@ -120,6 +121,7 @@ class ProductController extends Controller
     // show list product admin
     public function list(Request $request)
     {
+        $check_product = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -130,7 +132,7 @@ class ProductController extends Controller
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.list_product', compact('products', 'manufactures', 'categories', 'key', 'data'));
+        return view('admin.product.list_product', compact('products', 'manufactures', 'categories', 'key', 'data', 'check_product'));
     }
 
     // delete product admin
@@ -144,11 +146,12 @@ class ProductController extends Controller
     // show information product admin
     public function show(int $id)
     {
+        $check_product = true;
         $products = $this->productRepository->find($id);
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.show_product', compact('products', 'manufactures', 'categories'));
+        return view('admin.product.show_product', compact('products', 'manufactures', 'categories', 'check_product'));
     }
 
     // edit information product admin

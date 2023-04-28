@@ -19,7 +19,8 @@ class ManufactureController extends Controller
     // show manufacture page
     public function index()
     {
-        return view('admin.manufacture.add_manufacture');
+        $check_manufacture = true;
+        return view('admin.manufacture.add_manufacture', compact('check_manufacture'));
     }
 
     // create manufacture to database
@@ -39,6 +40,7 @@ class ManufactureController extends Controller
     // show list manufacture
     public function list(Request $request)
     {
+        $check_manufacture = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -46,7 +48,7 @@ class ManufactureController extends Controller
         $key = $request->key;
         $manufactures = $this->manufactureRepository->getManufactureByCondition($data);
 
-        return view('admin.manufacture.list_manufacture', compact('manufactures', 'key', 'data'));
+        return view('admin.manufacture.list_manufacture', compact('manufactures', 'key', 'data', 'check_manufacture'));
     }
 
     // delete manufacture
@@ -60,9 +62,10 @@ class ManufactureController extends Controller
     // show information manufacture
     public function show(int $id)
     {
+        $check_manufacture = true;
         $manufactures = $this->manufactureRepository->find($id);
 
-        return view('admin.manufacture.show_manufacture', compact('manufactures'));
+        return view('admin.manufacture.show_manufacture', compact('manufactures', 'check_manufacture'));
     }
 
     // update information manufacture
