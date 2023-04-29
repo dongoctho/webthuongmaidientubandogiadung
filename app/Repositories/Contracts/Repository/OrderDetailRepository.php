@@ -42,4 +42,16 @@ class OrderDetailRepository extends BaseRepository implements OrderDetailReposit
 
         return $query;
     }
+
+    public function getOrderDetailByCondition($id, array $column = ['*'])
+    {
+        $query = $this->model
+            ->select($column)
+            ->where('orders_detail.deleted_at', null)
+            ->where('orders_detail.order_id', '=', $id)
+            ->leftjoin('orders', 'orders.id', '=', 'orders_detail.order_id')
+            ->leftjoin('products', 'orders_detail.product_id', '=', 'products.id')->get();
+
+        return $query;
+    }
 }

@@ -167,19 +167,19 @@
                         <td>{{Auth::user()->name}}</td>
                         <td>{{$order->phone}}</td>
                         <td>{{$order->address}}</td>
-                        <td>{{$order->price}}</td>
+                        <td>{{number_format($order->price)}} VND</td>
                         <td>{{$order->voucher->name}}</td>
                         <td>
                             @if ($order->status == 0)
                             Đang Chờ Xác Nhận
                             @elseif ($order->status == 1)
-                            Đơn Hàng Đặt Không Thành Công
-                            @elseif ($order->status == 2)
                             Đơn Hàng Đã Đặt
-                            @elseif ($order->status == 3)
+                            @elseif ($order->status == 2)
                             Đã Giao Cho ĐVVC
-                            @elseif ($order->status == 4)
+                            @elseif ($order->status == 3)
                             Đã Nhận Được Hàng
+                            @elseif ($order->status == 4)
+                            Đơn Hàng Đặt Không Thành Công
                             @endif
                         </td>
                         <td>{{$order->created_at}}</td>

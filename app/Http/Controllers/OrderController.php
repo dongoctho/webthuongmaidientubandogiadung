@@ -154,26 +154,14 @@ class OrderController extends Controller
         $user = auth()->user();
         $params = $request->all();
         $product_id = $request->productId;
-        $columnSelect = [
-            'carts.id as cart_id',
-            'carts_detail.price as cart_price',
-            'carts_detail.quantity',
-            'carts_detail.image',
-            'products.name as product_name',
-            'products.id as product_id'
-        ];
+
         $idUserCart = $this->cartRepository->findUser($user->id);
         $cartDetail = $this->cartDetailRepository->findProduct($request->productId, $idUserCart->id);
         $storage = $this->storageRepository->findProduct($product_id);
 
-
-        dd($request->quantity);
-
         if (isset($cartDetail)) {
             $quantity = $request->quantity;
         }
-        
-        dd($quantity);
 
         $condition = [];
 
@@ -226,9 +214,17 @@ class OrderController extends Controller
             }
             $condition['product_id'] = $params['productId'];
         }
+        $columnSelect = [
+            'carts.id as cart_id',
+            'carts_detail.price as cart_price',
+            'carts_detail.quantity',
+            'carts_detail.image',
+            'products.name as product_name',
+            'products.id as product_id'
+        ];
 
         $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect, $condition);
-        $vouchers = $this->voucherRepository->getAll();
+        $vouchers = $this->voucherRepository->getVoucherByConditionAdmin();
 
         foreach ($cartDetails as $cartDetail) {
             $sumPrice += $cartDetail->cart_price * $cartDetail->quantity;
@@ -296,12 +292,7 @@ class OrderController extends Controller
                 'description' => $storage->quantity - $cartDetail->quantity
             ];
 
-            $this->storageRepository->updateProductId($cartDetail->product_id, $quantity);
             $this->orderDetailRepository->create($data);
-            $this->productRepository->update($cartDetail->product_id, ['sale' => $cartDetail->product_sale + $cartDetail->quantity]);
-            if (isset($voucher)) {
-                $this->voucherRepository->update($voucher->id, ['quantity' => $voucher->quantity - 1]);
-            }
 
             return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
         } else {
@@ -361,17 +352,14 @@ class OrderController extends Controller
                     'description' => $storage->quantity - $cartDetail->quantity
                 ];
 
-                $this->storageRepository->updateProductId($cartDetail->product_id, $quantity);
                 $this->orderDetailRepository->create($data);
-                $this->cartDetailRepository->delete($cartDetail->cart_detail_id);
-                $this->productRepository->update($cartDetail->product_id, ['sale' => $cartDetail->product_sale + $cartDetail->quantity]);
-                $this->voucherRepository->update($voucher->id, ['quantity' => $voucher->quantity - 1]);
+
+                // $this->cartDetailRepository->delete($cartDetail->cart_detail_id);
+
             }
 
             return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
         }
-
-
     }
 
     // show list order client
@@ -442,6 +430,13 @@ class OrderController extends Controller
     {
         $check = false;
         $data = $request->all();
+        $order_details = $this->orderDetailRepository->getOrderDetailByCondition($data['id']);
+        $order = $this->orderRepository->findOrder($data['id']);
+
+        if (isset($order->voucher_id)) {
+            $voucher = $this->voucherRepository->findVoucher($order->voucher_id);
+        }
+
         if ($data['oldStatus'] == OrderConstant::WAIT_CONFIRM) {
             if ($data['status'] == OrderConstant::DELIVERED) {
                 $check;
@@ -468,6 +463,15 @@ class OrderController extends Controller
             } else if ($data['status'] == OrderConstant::UNSUCCESSFUL) {
                 $check;
             } else {
+                foreach ($order_details as $order_detail) {
+                    $storage = $this->storageRepository->findProduct($order_detail->product_id);
+                    $this->storageRepository->updateProductId($order_detail->product_id, ['quantity' => $storage->quantity - $order_detail->quantity]);
+                    $this->productRepository->update($order_detail->product_id, ['sale' => $order_detail->sale + $order_detail->quantity]);
+                }
+
+                if (isset($voucher)) {
+                    $this->voucherRepository->update($voucher->id, ['quantity' => $voucher->quantity - 1]);
+                }
                 $check = true;
             }
         } else if ($data['oldStatus'] == OrderConstant::RECEIVED) {
@@ -480,6 +484,7 @@ class OrderController extends Controller
             ], 200);
         } else {
             $result = $this->orderRepository->update( $data['id'], ['status' => $data['status']]);
+
             if ( $result != false ) {
                 return response()->json([
                     'success' => $data['status'],

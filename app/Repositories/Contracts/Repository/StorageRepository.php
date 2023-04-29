@@ -44,10 +44,11 @@ class StorageRepository extends BaseRepository implements StorageRepositoryInter
 
     public function findProduct($product_id)
     {
-        return $this->model->where('product_id', $product_id)->first();
+        return $this->model
+        ->where('product_id', $product_id)
+        ->where('storages.deleted_at', '=', null)
+        ->first();
     }
-
-
 
     public function getProductSale($condition, array $column = ['*'])
     {

@@ -18,7 +18,10 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
     }
 
     public function findOrder($id){
-        return $this->model->where('id', $id)->first();
+        return $this->model
+            ->where('orders.id', $id)
+            ->where('orders.deleted_at', '=', null)
+            ->first();
     }
 
     public function getOrderByCondition($condition, array $column = ['*'])

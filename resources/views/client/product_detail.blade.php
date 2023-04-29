@@ -370,6 +370,7 @@
                 }
                 console.log(newVal);
             });
+
         })
         function alertCart(){
             swal({
