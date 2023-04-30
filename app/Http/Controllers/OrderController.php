@@ -156,13 +156,8 @@ class OrderController extends Controller
         $product_id = $request->productId;
 
         $idUserCart = $this->cartRepository->findUser($user->id);
-        $cartDetail = $this->cartDetailRepository->findProduct($request->productId, $idUserCart->id);
         $storage = $this->storageRepository->findProduct($product_id);
-
-        if (isset($cartDetail)) {
-            $quantity = $request->quantity;
-        }
-
+        $quantity = $request->quantity;
         $condition = [];
 
         if (isset($params['productId'])){
@@ -173,8 +168,10 @@ class OrderController extends Controller
             } else if ( $product->product_type == 1 ) {
                 $priceHandle = $product->price - $product->discount;
             }
+
             if (isset($idUserCart)) {
 
+                $cartDetail = $this->cartDetailRepository->findProduct($request->productId, $idUserCart->id);
                 if ( $cartDetail == null ) {
 
                     $data = [
@@ -196,6 +193,7 @@ class OrderController extends Controller
                 }
 
             } else {
+
                 $dataUser = [
                     'user_id' => $user->id
                 ];
@@ -285,13 +283,6 @@ class OrderController extends Controller
                 'image' => $cartDetail->image
             ];
 
-            $storage = $this->storageRepository->findProduct($cartDetail->product_id);
-
-            $quantity = [
-                'quantity' => $storage->quantity - $cartDetail->quantity,
-                'description' => $storage->quantity - $cartDetail->quantity
-            ];
-
             $this->orderDetailRepository->create($data);
 
             return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
@@ -346,11 +337,6 @@ class OrderController extends Controller
                 ];
 
                 $storage = $this->storageRepository->findProduct($cartDetail->product_id);
-
-                $quantity = [
-                    'quantity' => $storage->quantity - $cartDetail->quantity,
-                    'description' => $storage->quantity - $cartDetail->quantity
-                ];
 
                 $this->orderDetailRepository->create($data);
 

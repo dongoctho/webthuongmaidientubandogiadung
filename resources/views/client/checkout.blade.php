@@ -344,15 +344,6 @@
                 var priceFormat = priceHandle.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
                 $('#sumPrice').text(priceFormat);
             })
-
-            var element = document.getElementById('position');
-
-            window.onload = function() {
-                if(!window.location.hash) {
-                    window.location = window.location + '#loaded';
-                    window.location.reload();
-                }
-            }
         })
 
 
