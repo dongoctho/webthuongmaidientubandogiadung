@@ -91,27 +91,19 @@ class CartController extends Controller
             $dataUser = [
                 'user_id' => $user->id
             ];
+
             $cartId = $this->cartRepository->create($dataUser);
-            $cartDetail = $this->cartDetailRepository->findProduct($id, $cartId);
-            if ( $cartDetail == null ) {
-                $data = [
-                    'cart_id' => $cartId->id,
-                    'product_id' => $id,
-                    'price' => $product->price,
-                    'quantity' => $request->quantity,
-                    'image' => $product->image
-                ];
-                $this->cartDetailRepository->create($data);
 
-                return redirect()->back();
-            } else if ( $id == $cartDetail->product_id ) {
-                $dataCart = [
-                    'quantity' => $request->quantity + $cartDetail->quantity,
-                ];
-                $this->cartDetailRepository->update($cartDetail->id, $dataCart);
+            $data = [
+                'cart_id' => $cartId->id,
+                'product_id' => $id,
+                'price' => $product->price,
+                'quantity' => $request->quantity,
+                'image' => $product->image
+            ];
+            $this->cartDetailRepository->create($data);
 
-                return redirect()->back();
-            }
+            return redirect()->back();
         }
     }
 

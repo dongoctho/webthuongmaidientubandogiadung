@@ -340,8 +340,6 @@ class OrderController extends Controller
 
                 $this->orderDetailRepository->create($data);
 
-                // $this->cartDetailRepository->delete($cartDetail->cart_detail_id);
-
             }
 
             return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
@@ -377,12 +375,13 @@ class OrderController extends Controller
             'orders_detail.created_at'
         ];
         $order_details = $this->orderDetailRepository->getOrderDetail($id_user, $id, $column);
+        $order = $this->orderRepository->findOrder($id);
 
         if ( isset($user) ) {
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.show_order_detail', compact('order_details', 'count'));
+        return view('client.show_order_detail', compact('order_details', 'count', 'order'));
     }
 
     // show list order admin
