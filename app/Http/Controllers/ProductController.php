@@ -63,17 +63,20 @@ class ProductController extends Controller
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.product', compact('user', 'count', 'products', 'condition'));
+        return view('client.product', compact('user', 'count', 'products', 'condition', 'data'));
     }
 
     // show product detail client
     public function productDetail($id)
     {
+        $column = [
+            'products.*'
+        ];
         $user = auth()->user();
-        $products = $this->productRepository->getByCondition("*");
         $product_detail = $this->productRepository->find($id);
         $storages = $this->storageRepository->findProduct($id);
         $manufacture = $this->manufactureRepository->find($product_detail->manufacture_id);
+        $products = $this->productRepository->getProductByCategory($product_detail->category_id, $column);
         $count = 0;
 
         if ( isset($user) ) {

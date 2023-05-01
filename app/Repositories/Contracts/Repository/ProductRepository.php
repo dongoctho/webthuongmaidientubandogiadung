@@ -85,4 +85,17 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return $query->get();
     }
 
+    public function getProductByCategory($category_id, array $column = ['*'])
+    {
+        $query = $this->model->newQuery();
+        $query->select($column)->where('products.deleted_at', '=', null)
+                               ->where('categories.deleted_at', '=', null)
+                               ->where('storages.quantity', '>', '0')
+                               ->where('products.category_id', '=', $category_id)
+                               ->join('storages', 'products.id', '=', 'storages.product_id')
+                               ->join('categories', 'products.category_id', '=', 'categories.id');
+
+        return $query->get();
+    }
+
 }
