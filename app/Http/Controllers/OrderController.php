@@ -128,19 +128,7 @@ class OrderController extends Controller
             'image' => $product->image
         ];
 
-        $storage = $this->storageRepository->findProduct($request->product_id);
-
-        $quantity = [
-            'quantity' => $storage->quantity - $request->quantity,
-            'description' => $storage->quantity - $request->quantity
-        ];
-
-        $this->storageRepository->updateProductId($request->product_id, $quantity);
         $this->orderDetailRepository->create($data);
-        $this->productRepository->update($request->product_id, ['sale' => $product->product_sale + $request->quantity]);
-        if (isset($voucher)) {
-            $this->voucherRepository->update($voucher->id, ['quantity' => $voucher->quantity - 1]);
-        }
 
         return redirect()->route('list_order');
     }
