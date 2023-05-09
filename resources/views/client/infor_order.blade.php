@@ -10,6 +10,7 @@
 
     <!-- Favicon -->
     <link href="https://cdn-icons-png.flaticon.com/512/3771/3771009.png" rel="icon">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -139,7 +140,7 @@
         <div class="" style="display: flex; justify-content:center;">
             <h1 style="color:#d19c97">{{Session::get('msg')}}</h1>
         </div>
-       @endif
+        @endif
     </div>
     <!-- Page Header End -->
 
@@ -159,16 +160,24 @@
                         <th scope="col">Trạng thái</th>
                         <th scope="col">Thanh toán lúc</th>
                         <th scope="col">Xem chi tiết</th>
+                        <th scope="col">Đặt lại</th>
+                        <th scope="col">Hủy đơn hàng</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach ($orders as $order)
                     <tr>
-                        <td>{{Auth::user()->name}}</td>
+                        <td>{{$order->name}}</td>
                         <td>{{$order->phone}}</td>
                         <td>{{$order->address}}</td>
                         <td>{{number_format($order->price)}} VND</td>
-                        <td>{{$order->voucher->name}}</td>
+                        <td>
+                            @if (isset($order->voucher->name))
+                                {{$order->voucher->name}}
+                            @else
+                                Không có phiếu giảm giá
+                            @endif
+                        </td>
                         <td>
                             @if ($order->status == 0)
                             Đang Chờ Xác Nhận
@@ -187,10 +196,29 @@
                             <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
                             <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
                         </svg></a></td>
+                        <td>
+                            @if ($order->status == 4 || $order->status == 3)
+                                <a class="btn btn-sm btn-primary" style="border-radius: 100%; background-color:rgb(255, 142, 170)" onclick="createOrder({{$order->id}})"><svg style="color:white" xmlns="http://www.w3.org/2000/svg" width="20" height="27" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"/>
+                                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                                  </svg></a>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($order->status == 0)
+                                <a class="btn btn-sm btn-primary" style="border-radius: 100%; background-color:rgb(255, 80, 80)" onclick="deleteCategory({{$order->id}})"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="26" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                                </svg></a>
+                            @endif
+                        </td>
+
                     </tr>
                     @endforeach
                     </tbody>
                 </table>
+            </div>
+            <div class="col-12 pb-1" style="display: flex;  justify-content: center">
+                {!! $orders->links() !!}
             </div>
         </div>
     </div>
@@ -253,6 +281,46 @@
 
     <!-- Template Javascript -->
     <script src="{{asset('js/main.js')}}"></script>
+    <script>
+        function deleteCategory(id) {
+            swal({
+            title: "Bạn muốn hủy?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var url = 'infor/deleted/' + id;
+                    window.location = url;
+                    swal("Hủy thành công!", {
+                    icon: "success",
+                    });
+                } else {
+                    swal("Hủy Thất bại!");
+                }
+            });
+        }
+
+        function createOrder(id) {
+            swal({
+            title: "Bạn muốn đặt lại đơn hàng?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var url = 'infor/reorder/' + id;
+                    window.location = url;
+                } else {
+                    swal("Đặt lại Thất bại!");
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

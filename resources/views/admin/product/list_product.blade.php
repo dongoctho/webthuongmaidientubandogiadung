@@ -21,6 +21,11 @@
                 </form>
                 <a href="{{route('add_product')}}" class="btn btn-primary">Thêm Mới</a>
             </div>
+            @if (Session::has('msg'))
+            <div class="" style="display: flex; justify-content:center;">
+                <h5 style="color:#ff1500">{{Session::get('msg')}}</h5>
+            </div>
+            @endif
           <table id="example1" class="table" style="text-align: center">
                 <thead>
                 <tr>
@@ -59,7 +64,7 @@
                         </td>
                     <td class="description">{{$product->description}}</td>
                     <td>{{$product->sale}}</td>
-                    <td>{{$product->discount}}</td>
+                    <td>{{($product->product_type == 0 ? $product->discount .'%' : number_format($product->discount) . ' VND')}}</td>
                     <td>
                         @if ($product->product_type == 0)
                             Phần trăm

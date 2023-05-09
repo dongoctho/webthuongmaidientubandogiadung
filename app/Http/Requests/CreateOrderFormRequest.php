@@ -24,7 +24,8 @@ class CreateOrderFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone' => ['required', 'min:10'],
+            'name' => ['required'],
+            'phone' => ['required', 'numeric', 'min:10', 'regex:/(0)[0-9]{9}/'],
             'country' => ['required'],
             'city' => ['required'],
             'ward' => ['required'],
@@ -36,10 +37,13 @@ class CreateOrderFormRequest extends FormRequest
     {
         return [
             'phone.required' => 'Không được để trống ô này',
+            'name.required' => 'Không được để trống ô này',
             'country.required' => 'Không được để trống ô này',
             'city.required' => 'Không được để trống ô này',
             'ward.required' => 'Không được để trống ô này',
             'homenumber.required' => 'Không được để trống ô này',
+            'phone.regex' => 'Nhập đúng định dạng số điện thoại',
+            'phone.numeric' => 'Nhập đúng định dạng số điện thoại',
             'phone.min' => 'Số Điện Thoại phải trên 10 số',
         ];
     }

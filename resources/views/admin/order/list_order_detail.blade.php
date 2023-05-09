@@ -44,8 +44,12 @@
                 @endforeach
                 </tbody>
             </table>
+
             <div class="justify" style="margin: 10px; text-align: center; margin-top: 40px;">
-               <h3>Tổng Tiền: {{number_format($order->price)}} VND</h3>
+                @if (isset($order->voucher_id))
+                    <p style="color: rgb(255, 54, 54); font-size:20px">Phiếu giảm giá: {{$order->voucher->name}}</p>
+                    @endif
+                <h3>Tổng Tiền: {{number_format($order->price)}} VND</h3>
             </div>
             <div class="justify" style="margin: 10px; display:flex; justify-content: center; flex-direction: column; margin-top: 40px;">
                 <a class="btn btn-primary btn-user btn-block" href="{{route('list_order')}}">Trở Về</a>

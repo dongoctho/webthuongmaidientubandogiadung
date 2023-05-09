@@ -19,6 +19,7 @@ class CartDetailRepository extends BaseRepository implements CartDetailRepositor
         ->where('carts_detail.product_id', $product_id)
         ->where('carts_detail.cart_id', $cart_id)
         ->where('carts_detail.deleted_at', '=', null)
+        ->leftjoin('products', 'carts_detail.product_id', '=', 'products.id')
         ->first();
     }
 
@@ -40,10 +41,10 @@ class CartDetailRepository extends BaseRepository implements CartDetailRepositor
 
     }
 
-    public function getCartDetail($userId)
+    public function getCartDetail($id)
     {
         $query = $this->model
-            ->where('carts.user_id','=', $userId)
+            ->where('carts_detail.cart_id','=', $id)
             ->where('carts_detail.deleted_at', null)
             ->leftjoin('carts', 'carts.id', '=', 'carts_detail.cart_id')
             ->leftjoin('products', 'carts_detail.product_id', '=', 'products.id')

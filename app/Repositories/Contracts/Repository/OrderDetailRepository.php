@@ -15,7 +15,10 @@ class OrderDetailRepository extends BaseRepository implements OrderDetailReposit
 
     public function findProduct($product_id)
     {
-        return $this->model->where('product_id', $product_id)->first();
+        return $this->model->where('product_id', $product_id)
+                           ->whereNull('orders_detail.deleted_at')
+                           ->join('orders', 'orders.id', '=', 'order_id')
+                           ->first();
     }
 
     public function getAllOrder($userId)

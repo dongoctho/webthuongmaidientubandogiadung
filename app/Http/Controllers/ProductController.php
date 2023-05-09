@@ -9,6 +9,7 @@ use App\Repositories\Contracts\RepositoryInterface\StorageRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\UserRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\CartRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\VoucherRepositoryInterface;
+use App\Repositories\Contracts\RepositoryInterface\OrderDetailRepositoryInterface;
 use App\Services\ImageService;
 use App\Http\Requests\CreateProductFormRequest;
 use App\Http\Requests\EditProductFormRequest;
@@ -24,6 +25,7 @@ class ProductController extends Controller
     protected $cartRepository;
     protected $voucherRepository;
     protected $image_service;
+    protected $orderDetailRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepositoryInterface,
@@ -33,6 +35,7 @@ class ProductController extends Controller
         ManufactureRepositoryInterface $manufactureRepositoryInterface,
         CartRepositoryInterface $cartRepositoryInterface,
         VoucherRepositoryInterface $voucherRepositoryInterface,
+        OrderDetailRepositoryInterface $orderDetailRepositoryInterface,
         ImageService $imageService
     ) {
         $this->userRepository = $userRepositoryInterface;
@@ -42,6 +45,7 @@ class ProductController extends Controller
         $this->manufactureRepository = $manufactureRepositoryInterface;
         $this->cartRepository = $cartRepositoryInterface;
         $this->voucherRepository = $voucherRepositoryInterface;
+        $this->orderDetailRepository = $orderDetailRepositoryInterface;
         $this->image_service = $imageService;
     }
 
@@ -141,7 +145,13 @@ class ProductController extends Controller
     // delete product admin
     public function destroy(int $id)
     {
-        $this->productRepository->delete($id);
+        $order = $this->orderDetailRepository->findProduct($id);
+        $orderArray = $order->toArray();
+        if (isset($order)) {
+            return redirect()->back()->with('msg','Không thể xóa vì sản phẩm đã được đặt');
+        } else {
+            $this->productRepository->delete($id);
+        }
 
         return redirect()->back();
     }

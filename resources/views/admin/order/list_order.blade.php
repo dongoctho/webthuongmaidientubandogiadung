@@ -43,7 +43,13 @@
                     <td>{{$order->phone}}</td>
                     <td>{{$order->address}}</td>
                     <td>{{number_format($order->price)}} VND</td>
-                    <td>{{$order->voucher_name}}</td>
+                    <td>
+                        @if (isset($order->voucher_name))
+                            {{$order->voucher_name}}
+                        @else
+                            Không có phiếu giảm giá
+                        @endif
+                    </td>
                     <td><select style="height:40px" onchange="changeStatus({{$order->id}},{{$order->status}})" id="optionSelect-{{$order->id}}" name="status" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
                         <option
                         @if ($order->status == 0)

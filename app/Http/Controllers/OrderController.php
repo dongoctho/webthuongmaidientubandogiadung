@@ -17,7 +17,6 @@ use App\Repositories\Contracts\RepositoryInterface\OrderRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\OrderDetailRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\CartDetailRepositoryInterface;
 use App\Services\SumPriceService;
-use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class OrderController extends Controller
 {
@@ -83,9 +82,9 @@ class OrderController extends Controller
         $sumPrice = 0;
         $priceHandle = 0;
         $sumPriceVoucher = 0;
-        $voucher = $this->voucherRepository->findVoucher($request->voucher_id);
         $product = $this->productRepository->findProduct($request->product_id);
         $user = auth()->user();
+
 
         if ( $product->product_type == 0 ) {
             $priceHandle = $product->price * (1 - ($product->discount / 100));
@@ -95,9 +94,9 @@ class OrderController extends Controller
 
         $sumPrice = $priceHandle * $request->quantity;
 
-        if ( $request->voucher_id == null ) {
-            $sumPriceVoucher = $sumPrice;
-        } else {
+        if (isset($request->voucher_id)) {
+            $voucher = $this->voucherRepository->findVoucher($request->voucher_id);
+
             if ( $voucher->voucher_type == 0 ) {
                 $sumPriceVoucher = $sumPrice * (1 - ($voucher->discount / 100));
             } else if ( $voucher->voucher_type == 1 ) {
@@ -106,17 +105,28 @@ class OrderController extends Controller
                     $sumPriceVoucher = 0;
                 }
             }
-        }
 
-        $dataUser = [
-            'user_id' => $user->id,
-            'voucher_id' => $request->voucher_id,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-            'price' => $sumPriceVoucher,
-            'status' => 0
-        ];
+            $dataUser = [
+                'user_id' => $user->id,
+                'voucher_id' => $request->voucher_id,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                'price' => $sumPriceVoucher,
+                'status' => 0
+            ];
+        } else {
+            $sumPriceVoucher = $sumPrice;
+            $dataUser = [
+                'user_id' => $user->id,
+                'voucher_id' => null,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                'price' => $sumPriceVoucher,
+                'status' => 0
+            ];
+        }
 
         $orderId = $this->orderRepository->create($dataUser);
 
@@ -202,18 +212,25 @@ class OrderController extends Controller
         }
         $columnSelect = [
             'carts.id as cart_id',
-            'carts_detail.price as cart_price',
+            'products.price as cart_price',
             'carts_detail.quantity',
             'carts_detail.image',
             'products.name as product_name',
-            'products.id as product_id'
+            'products.id as product_id',
+            'products.discount',
+            'products.product_type'
         ];
 
         $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect, $condition);
         $vouchers = $this->voucherRepository->getVoucherByConditionAdmin();
 
         foreach ($cartDetails as $cartDetail) {
-            $sumPrice += $cartDetail->cart_price * $cartDetail->quantity;
+            if ( $cartDetail->product_type == 0 ) {
+                $priceHandle = $cartDetail->cart_price * (1 - ($cartDetail->discount / 100));
+            } else if ( $cartDetail->product_type == 1 ) {
+                $priceHandle = $cartDetail->cart_price - $cartDetail->discount;
+            }
+            $sumPrice += $priceHandle * $cartDetail->quantity;
         }
 
         if ( isset($user) ) {
@@ -223,24 +240,131 @@ class OrderController extends Controller
         return view('client.checkout', compact('count', 'cartDetails', 'vouchers', 'sumPrice','product_id'));
     }
 
+    public function addReOrder(int $id, CreateOrderFormRequest $request)
+    {
+        $sumPrice = 0;
+        $priceHandle = 0;
+        $productPrice = 0;
+        $user = auth()->user();
+        $column = [
+            'orders_detail.order_id',
+            'orders_detail.id',
+            'orders_detail.order_id',
+            'orders_detail.product_id',
+            'products.price',
+            'orders_detail.quantity',
+            'orders_detail.image',
+            'products.name',
+            'products.discount',
+            'products.product_type',
+            'orders_detail.created_at'
+        ];
+        $order_details = $this->orderDetailRepository->getOrderDetail($user->id, $id, $column);
+        $order = $this->orderRepository->findOrder($id);
+
+        foreach ($order_details as $cartDetail) {
+            if ( $cartDetail->product_type == 0 ) {
+                $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+            } else if ( $cartDetail->product_type == 1 ) {
+                $productPrice = $cartDetail->price - $cartDetail->discount;
+            }
+            $sumPrice += $productPrice * $cartDetail->quantity;
+        }
+
+        $voucher_id = explode("-", $request->voucher_id);
+
+        if ( $voucher_id['2'] == "" ) {
+
+            $priceHandle = $sumPrice;
+            $dataUser = [
+                'user_id' => $user->id,
+                'voucher_id' => null,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                'price' => $priceHandle,
+                'status' => 0
+            ];
+        } else {
+
+            $voucher = $this->voucherRepository->find($voucher_id[2]);
+            if ($voucher->voucher_type == 0) {
+                $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
+            } else if ($voucher->voucher_type == 1) {
+                $priceHandle = $sumPrice - $voucher->discount;
+                if ($priceHandle < 0) {
+                    $priceHandle = 0;
+                }
+            }
+            $dataUser = [
+                'user_id' => $user->id,
+                'voucher_id' => $voucher->id,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                'price' => $priceHandle,
+                'status' => 0
+            ];
+        }
+
+        $orderId = $this->orderRepository->create($dataUser);
+
+        foreach ( $order_details as $cartDetail ) {
+            if ( $cartDetail->product_type == 0 ) {
+                $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+            } else if ( $cartDetail->product_type == 1 ) {
+                $productPrice = $cartDetail->price - $cartDetail->discount;
+            }
+            $data = [
+                'order_id' => $orderId->id,
+                'product_id' => $cartDetail->product_id,
+                'price' => $productPrice,
+                'quantity' => $cartDetail->quantity,
+                'image' => $cartDetail->image
+            ];
+
+            $this->orderDetailRepository->create($data);
+
+        }
+
+        return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
+    }
+
     // add cartDetail to order
     public function addOrder(CreateOrderFormRequest $request)
     {
         $user = auth()->user();
         $priceHandle = 0;
+        $productPrice = 0;
         $sumPrice = 0;
         $voucher_id = explode("-", $request->voucher_id);
-        $voucher = $this->voucherRepository->find($voucher_id[2]);
 
         if (isset($request->product_id)) {
             $idUserCart = $this->cartRepository->findUser($user->id);
             $cartDetail = $this->cartDetailRepository->findProduct($request->product_id, $idUserCart->id);
 
-            $sumPrice = $cartDetail->price * $cartDetail->quantity;
+            if ( $cartDetail->product_type == 0 ) {
+                $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+            } else if ( $cartDetail->product_type == 1 ) {
+                $productPrice = $cartDetail->price - $cartDetail->discount;
+            }
 
-            if ( $voucher == null ) {
+            $sumPrice = $productPrice * $cartDetail->quantity;
+
+
+            if ( $voucher_id['2'] == "" ) {
                 $priceHandle = $sumPrice;
+                $dataUser = [
+                    'user_id' => $user->id,
+                    'voucher_id' => null,
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                    'price' => $priceHandle,
+                    'status' => 0
+                ];
             } else {
+                $voucher = $this->voucherRepository->find($voucher_id[2]);
                 if ( $voucher->voucher_type == 0 ) {
                     $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
                 } else if ( $voucher->voucher_type == 1 ) {
@@ -249,24 +373,24 @@ class OrderController extends Controller
                         $priceHandle = 0;
                     }
                 }
-            }
 
-            $dataUser = [
-                'user_id' => $user->id,
-                'voucher_id' => $voucher->id,
-                'name' => $user->name,
-                'phone' => $request->phone,
-                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                'price' => $priceHandle,
-                'status' => 0
-            ];
+                $dataUser = [
+                    'user_id' => $user->id,
+                    'voucher_id' => $voucher->id,
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                    'price' => $priceHandle,
+                    'status' => 0
+                ];
+            }
 
             $orderId = $this->orderRepository->create($dataUser);
 
             $data = [
                 'order_id' => $orderId->id,
                 'product_id' => $request->product_id,
-                'price' => $cartDetail->price,
+                'price' => $sumPrice,
                 'quantity' => $cartDetail->quantity,
                 'image' => $cartDetail->image
             ];
@@ -277,54 +401,82 @@ class OrderController extends Controller
         } else {
             $columnSelect = [
                 'carts.id as cart_id',
-                'carts_detail.price as cart_price',
+                'products.price as price',
                 'carts_detail.quantity',
                 'carts_detail.image',
                 'carts_detail.id as cart_detail_id',
                 'products.name as product_name',
                 'products.id as product_id',
-                'products.sale as product_sale'
+                'products.sale as product_sale',
+                'products.discount',
+                'products.product_type'
             ];
 
             $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect);
             $voucher_id = explode("-", $request->voucher_id);
-            $voucher = $this->voucherRepository->find($voucher_id[2]);
-            $sumPrice = $this->sum_price_service->sumPrice($user->id, $columnSelect);
+            $idUserCart = $this->cartRepository->findUser($user->id);
 
-            $priceHandle = 0;
-            if ( $voucher == null ) {
-                $priceHandle = $sumPrice;
-            } else if ( $voucher->voucher_type == 0 ) {
-                $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
-            } else if ( $voucher->voucher_type == 1 ) {
-                $priceHandle = $sumPrice - $voucher->discount;
-                if ( $priceHandle < 0) {
-                    $priceHandle = 0;
+            foreach ($cartDetails as $cartDetail) {
+                if ( $cartDetail->product_type == 0 ) {
+                    $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+                } else if ( $cartDetail->product_type == 1 ) {
+                    $productPrice = $cartDetail->price - $cartDetail->discount;
                 }
+
+                $sumPrice += $productPrice * $cartDetail->quantity;
             }
 
-            $dataUser = [
-                'user_id' => $user->id,
-                'voucher_id' => $voucher->id,
-                'name' => $user->name,
-                'phone' => $request->phone,
-                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                'price' => $priceHandle,
-                'status' => 0
-            ];
+
+            $priceHandle = 0;
+            if ( $voucher_id['2'] == "" ) {
+
+                $priceHandle = $sumPrice;
+                $dataUser = [
+                    'user_id' => $user->id,
+                    'voucher_id' => null,
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                    'price' => $priceHandle,
+                    'status' => 0
+                ];
+            } else {
+
+                $voucher = $this->voucherRepository->find($voucher_id[2]);
+                if ($voucher->voucher_type == 0) {
+                    $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
+                } else if ($voucher->voucher_type == 1) {
+                    $priceHandle = $sumPrice - $voucher->discount;
+                    if ($priceHandle < 0) {
+                        $priceHandle = 0;
+                    }
+                }
+                $dataUser = [
+                    'user_id' => $user->id,
+                    'voucher_id' => $voucher->id,
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                    'price' => $priceHandle,
+                    'status' => 0
+                ];
+            }
 
             $orderId = $this->orderRepository->create($dataUser);
 
             foreach ( $cartDetails as $cartDetail ) {
+                if ( $cartDetail->product_type == 0 ) {
+                    $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+                } else if ( $cartDetail->product_type == 1 ) {
+                    $productPrice = $cartDetail->price - $cartDetail->discount;
+                }
                 $data = [
                     'order_id' => $orderId->id,
                     'product_id' => $cartDetail->product_id,
-                    'price' => $cartDetail->cart_price,
+                    'price' => $productPrice,
                     'quantity' => $cartDetail->quantity,
                     'image' => $cartDetail->image
                 ];
-
-                $storage = $this->storageRepository->findProduct($cartDetail->product_id);
 
                 $this->orderDetailRepository->create($data);
 
@@ -337,6 +489,16 @@ class OrderController extends Controller
     // show list order client
     public function inforOrder()
     {
+        $sumPrice = 0;
+        $column = [
+            'orders_detail.product_id',
+            'products.name as product_name',
+            'products.discount',
+            'products.product_type',
+            'products.price',
+            'orders_detail.quantity',
+            'products.image'
+        ];
         $user = auth()->user();
         $orders = $this->orderRepository->getAllOrder($user->id);
 
@@ -360,16 +522,19 @@ class OrderController extends Controller
             'orders_detail.quantity',
             'orders_detail.image',
             'products.name',
+            'products.discount',
+            'products.product_type',
             'orders_detail.created_at'
         ];
         $order_details = $this->orderDetailRepository->getOrderDetail($id_user, $id, $column);
         $order = $this->orderRepository->findOrder($id);
+        $sumPrice = $order->price;
 
         if ( isset($user) ) {
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.show_order_detail', compact('order_details', 'count', 'order'));
+        return view('client.show_order_detail', compact('order_details', 'count', 'order', 'sumPrice'));
     }
 
     // show list order admin
@@ -396,6 +561,54 @@ class OrderController extends Controller
         $orders = $this->orderRepository->getOrderByCondition($data, $column);
 
         return view('admin.order.list_order', compact('orders', 'key', 'data', 'check_order'));
+    }
+
+    // deleted order
+    public function deleted(int $id)
+    {
+        $this->orderRepository->update($id, ['status' => OrderConstant::UNSUCCESSFUL]);
+
+        return redirect()->route('infor_order');
+    }
+
+    // re - order
+    public function reOrder(int $id, Request $request)
+    {
+        $product_id = $request->productId;
+        $sumPrice = 0;
+        $column = [
+            'orders_detail.product_id',
+            'products.name as product_name',
+            'products.discount',
+            'products.product_type',
+            'products.price',
+            'orders_detail.quantity',
+            'products.image'
+        ];
+        $user = auth()->user();
+        $order = $this->orderRepository->findOrder($id);
+        $cartDetails = $this->orderDetailRepository->getOrderDetail($user->id, $id, $column);
+        $vouchers = $this->voucherRepository->getVoucherByConditionAdmin();
+
+        $orderArray = $order->toArray();
+        $address = explode("-", $orderArray['address']);
+
+        foreach ($cartDetails as $product) {
+            if ( $product->product_type == 0 ) {
+                $priceHandle = $product->price * (1 - ($product->discount / 100));
+            } else if ( $product->product_type == 1 ) {
+                $priceHandle = $product->price - $product->discount;
+            }
+
+            $sumPrice += $priceHandle * $product->quantity;
+        }
+
+
+        if ( isset($user) ) {
+            $count = $this->cartRepository->countProductInCart($user->id);
+        }
+
+        return view('client.reorder', compact('count', 'cartDetails', 'order', 'vouchers', 'sumPrice', 'product_id', 'address'));
     }
 
     // update status order admin

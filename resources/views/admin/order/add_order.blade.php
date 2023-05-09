@@ -133,6 +133,7 @@
                                     </div>
                                     <div style="width: 500px;" class="input-group flex-nowrap">
                                         <select style="height:50px" name="voucher_id" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
+                                            <option selected></option>
                                             @foreach ($vouchers as $voucher)
                                                 <option value="{{$voucher->id}}">{{$voucher->name}}</option>
                                             @endforeach

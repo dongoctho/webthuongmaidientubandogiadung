@@ -133,14 +133,28 @@ class CartController extends Controller
 
         $this->cartDetailRepository->update($data['id'], $input);
 
-        $carts = $this->cartDetailRepository->getByCondition([
-            'cart_id' => $cart->cart_id,
-        ]);
+        $column = [
+            'carts_detail.quantity',
+            'products.name',
+            'products.price',
+            'products.discount',
+            'products.product_type',
+            'products..image',
+            'carts_detail.product_id'
+        ];
+
+        $carts = $this->cartDetailRepository->getDetailCart($column);
 
         $sum = 0;
 
-        foreach ( $carts as $item ) {
-            $sum += $item->quantity * $item->price;
+        foreach ($carts as $product) {
+            if ( $product->product_type == 0 ) {
+                $priceCart = $product->price * (1 - ($product->discount / 100));
+            } else if ( $product->product_type == 1 ) {
+                $priceCart = $product->price - $product->discount;
+            }
+
+            $sum += $priceCart * $product->quantity;
         }
 
         return response()->json([
@@ -155,6 +169,7 @@ class CartController extends Controller
     {
         $buttonPlus = CartConstant::BUTTON_PLUS;
         $buttonMinus = CartConstant::BUTTON_MINUS;
+        $sumPrice = 0;
 
         $columnSelect = [
             'carts_detail.id as id',
@@ -165,15 +180,26 @@ class CartController extends Controller
             'carts_detail.image',
             'carts_detail.id as cart_detail_id',
             'products.name as product_name',
-            'products.id as product_id',
-            'carts_detail.price as price',
-            'products.sale as product_sale'
+            'carts_detail.product_id as product_id',
+            'products.price as price',
+            'products.sale as product_sale',
+            'products.discount',
+            'products.product_type'
         ];
 
         $user = auth()->user();
         $count = $this->cartRepository->countProductInCart($user->id);
         $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect);
-        $sumPrice = $this->sum_price_service->sumPrice($user->id, $columnSelect);
+
+        foreach ($cartDetails as $product) {
+            if ( $product->product_type == 0 ) {
+                $priceCart = $product->price * (1 - ($product->discount / 100));
+            } else if ( $product->product_type == 1 ) {
+                $priceCart = $product->price - $product->discount;
+            }
+
+            $sumPrice += $priceCart * $product->quantity;
+        }
 
         return view('client.cart_detail', compact('cartDetails', 'count', 'sumPrice', 'buttonPlus', 'buttonMinus'));
     }

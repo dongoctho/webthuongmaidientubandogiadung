@@ -164,21 +164,29 @@
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$order_detail->name}}</td>
-                        <td>{{number_format($order_detail->price)}} VND</td>
+                        <td>
+                        {{number_format($order_detail->price)}} VND
+                        </td>
                         <td>{{$order_detail->quantity}}</td>
                         <td><img src="{{asset('uploads/'.$order_detail->image)}}" width="50px" height="35px" alt="error"></td>
-                        <td>{{number_format($order_detail->quantity * $order_detail->price)}} VND</td>
+                        <td>
+                            {{number_format($order_detail->quantity * $order_detail->price)}} VND
+                        </td>
                     </tr>
                     @endforeach
                     </tbody>
                 </table>
 
                 <div class="justify" style="margin: 10px; text-align: center; margin-top: 40px;">
-                    <h3>Tổng Tiền: {{number_format($order->price)}} VND</h3>
-                 </div>
-                 <div class="justify" style="margin: 10px; display:flex; justify-content: center; flex-direction: column; margin-top: 40px;">
-                     <a style="font-size: 25px" class="btn btn-primary btn-user btn-block" href="{{route('infor_order')}}">Trở Về</a>
-                 </div>
+                    @if (isset($order->voucher_id))
+                        <p style="color: rgb(255, 54, 54); font-size:20px">Phiếu giảm giá: {{$order->voucher->name}}</p>
+                        @endif
+                    <h3>Tổng Tiền: {{number_format($sumPrice)}} VND</h3>
+                </div>
+
+                <div class="justify" style="margin: 10px; display:flex; justify-content: center; flex-direction: column; margin-top: 40px;">
+                    <a style="font-size: 25px" class="btn btn-primary btn-user btn-block" href="{{route('infor_order')}}">Trở Về</a>
+                </div>
             </div>
         </div>
     </div>

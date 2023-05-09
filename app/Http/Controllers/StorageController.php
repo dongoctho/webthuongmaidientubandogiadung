@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\RepositoryInterface\StorageRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\ProductRepositoryInterface;
+use App\Repositories\Contracts\RepositoryInterface\OrderDetailRepositoryInterface;
 use App\Http\Requests\CreateStorageFormRequest;
 use App\Http\Requests\EditStorageFormRequest;
 use Illuminate\Http\Request;
@@ -12,13 +13,16 @@ class StorageController extends Controller
 {
     protected $storageRepository;
     protected $productRepository;
+    protected $orderDetailRepository;
 
     public function __construct(
         StorageRepositoryInterface $storageRepositoryInterface,
-        ProductRepositoryInterface $productRepositoryInterface
+        ProductRepositoryInterface $productRepositoryInterface,
+        OrderDetailRepositoryInterface $orderDetailRepositoryInterface
     ) {
         $this->storageRepository = $storageRepositoryInterface;
         $this->productRepository = $productRepositoryInterface;
+        $this->orderDetailRepository = $orderDetailRepositoryInterface;
     }
 
     // show storage page
@@ -61,6 +65,7 @@ class StorageController extends Controller
             'storages.id as id',
             'storages.description',
             'products.name',
+            'storages.product_id',
             'storages.created_at'
         ];
         $storages = $this->storageRepository->getStorageByCondition($data, $column);
@@ -69,9 +74,14 @@ class StorageController extends Controller
     }
 
     // delete storage
-    public function destroy(int $id)
+    public function destroy(int $id, int $product_id)
     {
-        $this->storageRepository->delete($id);
+        $order = $this->orderDetailRepository->findProduct($product_id);
+        if (isset($order)) {
+            return redirect()->back()->with('msg','Không thể xóa vì sản phẩm đã được đặt');
+        } else {
+            $this->storageRepository->delete($id);
+        }
 
         return redirect()->back();
     }

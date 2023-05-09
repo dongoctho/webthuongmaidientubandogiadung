@@ -159,7 +159,14 @@
                         @foreach ($cartDetails as $cartDetail)
                         <tr>
                             <td class="align-middle"><img src="{{asset('uploads/'.$cartDetail->image)}}" alt="" style="width: 50px;"></td>
-                            <td id="priceProduct" value="{{$cartDetail->price}}" class="align-middle">{{number_format($cartDetail->price, 0, ",", ".")}} VND</td>
+                            <td id="priceProduct" value="{{$cartDetail->price}}" class="align-middle">
+                                @if ( $cartDetail->product_type == 0 )
+                                    {{number_format($cartDetail->price * (1 - ($cartDetail->discount / 100)))}} VND
+                                @elseif ( $cartDetail->product_type == 1 )
+                                    {{number_format($cartDetail->price - $cartDetail->discount)}} VND
+                                @endif
+                            </td>
+
                             <td class="align-middle">
                                 <div class="input-group quantity mr-3 group-quantity" style="width: 130px;">
                                     <div class="input-group-btn">
@@ -179,7 +186,13 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle" id="cart-item-{{$cartDetail->id}}">{{number_format($cartDetail->quantity * $cartDetail->price,0, ",", ".")}} VND</td>
+                            <td class="align-middle" id="cart-item-{{$cartDetail->id}}">
+                                @if ( $cartDetail->product_type == 0 )
+                                    {{number_format($cartDetail->quantity * ($cartDetail->price * (1 - ($cartDetail->discount / 100))))}} VND
+                                @elseif ( $cartDetail->product_type == 1 )
+                                    {{number_format($cartDetail->quantity * ($cartDetail->price - $cartDetail->discount))}} VND
+                                @endif
+                            </td>
                             <td class="align-middle"><a onclick="deleteCategory({{$cartDetail->id}})" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td>
                         </tr>
                         @endforeach

@@ -143,7 +143,7 @@
 
     <!-- Checkout Start -->
     <div class="container-fluid pt-5">
-        <form action="{{route('payment')}}" method="post" enctype="multipart/form-data">
+        <form action="" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row px-xl-5">
             <div class="col-lg-8">
@@ -152,7 +152,7 @@
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label>Họ Và Tên</label>
-                            <input class="form-control" name="name" value="{{Auth::user()->name}}" type="text">
+                            <input class="form-control" name="name" value="{{$order->name}}" type="text">
                             <div class="" style="">
                                 @if ($errors->all())
                                 <p style="color: red">{{$errors->first('name')}}</p>
@@ -161,7 +161,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Số Điện Thoại</label>
-                            <input class="form-control" value="{{old('phone')}}" type="text" name="phone" placeholder="Số Điện Thoại...">
+                            <input class="form-control" value="{{$order->phone}}" type="text" name="phone" placeholder="Số Điện Thoại...">
                             <div class="" style="">
                                 @if ($errors->all())
                                 <p style="color: red">{{$errors->first('phone')}}</p>
@@ -170,7 +170,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Quốc Gia</label>
-                            <input class="form-control" value="{{old('country')}}" type="text" name="country" placeholder="Quốc Gia...">
+                            <input class="form-control" value="{{$address[3]}}" type="text" name="country" placeholder="Quốc Gia...">
                             <div class="" style="">
                                 @if ($errors->all())
                                 <p style="color: red">{{$errors->first('country')}}</p>
@@ -179,7 +179,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Tỉnh/Thành Phố</label>
-                            <input class="form-control" value="{{old('city')}}" type="text" name="city" placeholder="Tỉnh/Thành Phố...">
+                            <input class="form-control" value="{{$address[2]}}" type="text" name="city" placeholder="Tỉnh/Thành Phố...">
                             <div class="" style="">
                                 @if ($errors->all())
                                 <p style="color: red">{{$errors->first('city')}}</p>
@@ -188,7 +188,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Xã/Phường</label>
-                            <input class="form-control" value="{{old('ward')}}" type="text" name="ward" placeholder="Xã/Phường...">
+                            <input class="form-control" value="{{$address[1]}}" type="text" name="ward" placeholder="Xã/Phường...">
                             <div class="" style="">
                                 @if ($errors->all())
                                 <p style="color: red">{{$errors->first('ward')}}</p>
@@ -197,7 +197,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Số Nhà</label>
-                            <input class="form-control" value="{{old('homenumber')}}" type="text" name="homenumber" placeholder="Số Nhà...">
+                            <input class="form-control" value="{{$address[0]}}" type="text" name="homenumber" placeholder="Số Nhà...">
                             <div class="" style="">
                                 @if ($errors->all())
                                 <p style="color: red">{{$errors->first('homenumber')}}</p>
@@ -231,16 +231,16 @@
                                     <td class="align-middle">{{$cartDetail->quantity}}</td>
                                     <td class="align-middle">
                                         @if ( $cartDetail->product_type == 0 )
-                                            {{number_format($cartDetail->cart_price * (1 - ($cartDetail->discount / 100)))}} VND
+                                            {{number_format($cartDetail->price * (1 - ($cartDetail->discount / 100)))}} VND
                                         @elseif ( $cartDetail->product_type == 1 )
-                                            {{number_format($cartDetail->cart_price - $cartDetail->discount)}} VND
+                                            {{number_format($cartDetail->price - $cartDetail->discount)}} VND
                                         @endif
                                     </td>
                                     <td class="align-middle">
                                         @if ( $cartDetail->product_type == 0 )
-                                            {{number_format($cartDetail->quantity * ($cartDetail->cart_price * (1 - ($cartDetail->discount / 100))))}} VND
+                                            {{number_format($cartDetail->quantity * ($cartDetail->price * (1 - ($cartDetail->discount / 100))))}} VND
                                         @elseif ( $cartDetail->product_type == 1 )
-                                            {{number_format($cartDetail->quantity * ($cartDetail->cart_price - $cartDetail->discount))}} VND
+                                            {{number_format($cartDetail->quantity * ($cartDetail->price - $cartDetail->discount))}} VND
                                         @endif
                                     </td>
                                 </tr>

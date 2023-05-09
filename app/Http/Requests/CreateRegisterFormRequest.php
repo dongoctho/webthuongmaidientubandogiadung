@@ -48,6 +48,7 @@ class CreateRegisterFormRequest extends FormRequest
             'phone.required' => 'Không được bỏ trống ô này',
             'phone.min' => 'Số điện thoại không được nhỏ hon 10 ký tự',
             'phone.regex' => 'Nhập đúng định dạng số điện thoại',
+            'phone.numeric' => 'Nhập đúng định dạng số điện thoại',
             'birthday.before' => 'Bạn phải ít nhất 13 tuổi',
         ];
     }

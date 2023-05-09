@@ -25,7 +25,7 @@ class CreateAccountFormRequest extends FormRequest
     {
         return [
             'name' => ['required'],
-            'birthday' => ['required'],
+            'birthday' => ['required', 'before:13 years ago'],
             'email' => ['required', 'email', 'unique:users'],
             'password' => ['required', 'min:8'],
             'phone' => ['required', 'numeric', 'regex:/(0)[0-9]{9}/'],
@@ -59,6 +59,7 @@ class CreateAccountFormRequest extends FormRequest
             'phone.numeric' => 'Yêu cầu nhập số',
             'image.mimes' => 'Yêu cầu nhập đúng định dạng: jpeg, png, jpg, gif',
             'phone.regex' => 'Nhập đúng định dạng số điện thoại',
+            'birthday.before' => 'Bạn phải ít nhất 13 tuổi',
         ];
 
     }

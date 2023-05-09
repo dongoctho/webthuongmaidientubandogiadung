@@ -30,6 +30,7 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         $query->select($column)
             ->where('orders.deleted_at', '=', null)
             ->join('users', 'orders.user_id', '=', 'users.id')
+            ->orderByDesc('orders.id')
             ->leftjoin('vouchers', 'orders.voucher_id', '=', 'vouchers.id')->get();
 
         if (isset($condition['key'])) {
@@ -45,12 +46,11 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
     public function getAllOrder($userId)
     {
         $query = $this->model
-            ->where('user_id', $userId)
-            ->where('orders.deleted_at', null)
-            ->orderByDesc('orders.id')
-            ->get();
+            ->where('user_id', '=', $userId)
+            ->whereNull('deleted_at')
+            ->orderByDesc('id');
 
-        return $query;
+        return $query->paginate(15);
     }
 
 }

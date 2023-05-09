@@ -42,8 +42,11 @@ Route::get('/google/callback',[AuthController::class, 'handleGoogleCallback'])->
 Route::get('',[IndexController::class, 'indexClient'])->name('client_index');
 Route::get('/checkout',[OrderController::class, 'index'])->name('checkout_index');
 Route::post('/checkout/payment',[OrderController::class, 'addOrder'])->name('payment');
+Route::post('/checkout/infor/reorder/{id}',[OrderController::class, 'addReOrder']);
 Route::get('/checkout/infor',[OrderController::class, 'inforOrder'])->name('infor_order');
 Route::get('/checkout/infor/detail/{id_user}/order/{id}',[OrderController::class, 'inforOrderDetail'])->name('infor_order_detail');
+Route::get('/checkout/infor/deleted/{id}',[OrderController::class, 'deleted'])->name('deleted_order');
+Route::get('/checkout/infor/reorder/{id}',[OrderController::class, 'reOrder'])->name('re_order');
 Route::get('/contact',[IndexController::class, 'indexContact'])->name('client_contact');
 Route::get('/productDetail/{id}',[ProductController::class, 'productDetail'])->name('product_detail');
 Route::post('/productDetail/{id}',[CartController::class, 'addCart'])->name('cart_detail');
@@ -121,7 +124,7 @@ Route::prefix('admin')->middleware('CheckLogin')->group(function(){
         Route::get('/list', [StorageController::class, 'list'])->name('list_storage');
         Route::get('/edit/{id}', [StorageController::class, 'show'])->name('show_storage');
         Route::post('/edit/{id}', [StorageController::class, 'update']);
-        Route::get('/delete/{id}', [StorageController::class, 'destroy'])->name('delete_storage');
+        Route::get('/delete/{id}/{product_id}', [StorageController::class, 'destroy'])->name('delete_storage');
     });
 
     //voucher

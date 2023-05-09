@@ -148,7 +148,7 @@
     <!-- Contact Start -->
     <div class="container-fluid pt-5">
         <div class="text-center mb-4">
-            <h2 class="section-title px-5"><span class="px-2">Liên hệ với tôi bằng bất kỳ câu hỏi nào</span></h2>
+            <h2 class="section-title px-5"><span class="px-2">Liên hệ với tôi bằng những hình thức sau</span></h2>
         </div>
         <div class="row px-xl-5">
             <div class="col-lg-7 mb-5">
@@ -156,27 +156,24 @@
                     <div id="success"></div>
                     <form name="sentMessage" id="contactForm" novalidate="novalidate">
                         <div class="control-group">
-                            <input type="text" class="form-control" id="name" placeholder="Tên của bạn"
-                            data-validation-required-message="Please enter your name" />
-                            <p class="help-block text-danger"></p>
+                            <p>Zalo : 0379821973</p>
                         </div>
                         <div class="control-group">
-                            <input type="email" class="form-control" id="email" placeholder="Email của bạn"
-                            data-validation-required-message="Please enter your email" />
-                            <p class="help-block text-danger"></p>
+                            <p>Email : thodongoc2001@gmail.com</p>
                         </div>
                         <div class="control-group">
-                            <textarea class="form-control" rows="6" id="message" placeholder="Tin nhắn"                                data-validation-required-message="Please enter your message"></textarea>
-                            <p class="help-block text-danger"></p>
+                            <p>Facebook : <a href="https://www.facebook.com/profile.php?id=100009337852694">Đỗ Ngọc Thọ</a></p>
                         </div>
-                        <div>
-                            <button class="btn btn-primary py-2 px-4" type="submit" id="sendMessageButton">Gửi Tin Nhắn</button>
+                        <div class="control-group">
+                            <p>Youtube : <a href="https://www.youtube.com/channel/UCXhYmR8GQY6EiCJStgRmJlw">Đỗ Ngọc Thọ</a></p>
+                        </div>
+                        <div class="control-group">
+                            <p>Github : <a href="https://github.com/dongoctho">Ấn vào đây để liên hệ với tôi !</a></p>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="col-lg-5 mb-5">
-                <h5 class="font-weight-semi-bold mb-3">Liên Hệ</h5>
                 <p>Sau hơn 10 năm hoạt động, bằng những nỗ lực không mệt mỏi, trung thành với chính sách “tận tâm phục vụ khách hàng”,
                     Shop đồ gia dụng đã trở thành chuỗi bán lẻ hàng công nghệ hàng đầu, Shop đồ gia dụng trở thành chuỗi nhà thuốc số 1 về thuốc kê toa tại Việt Nam,
                     Shop đồ gia dụng cũng ghi dấu ấn là nhà bán lẻ chính hãng hàng đầu với đầy đủ các chuẩn cửa hàng từ cấp độ cao cấp nhất. Shop đồ gia dụng đã,

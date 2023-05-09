@@ -24,7 +24,7 @@ class CreateCategoryFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4', 'unique:categories', 'regex:/(CG)[0-9]{2}/'],
+            'code' => ['required', 'min:4', 'unique:categories,deleted_at,NULL', 'regex:/(CG)[0-9]{2}/'],
             'name' => ['required', 'unique:categories'],
         ];
     }
