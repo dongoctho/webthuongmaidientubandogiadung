@@ -99,20 +99,27 @@ class IndexController extends Controller
     // show  index client
     public function indexClient(Request $request)
     {
-        $data = [
+        $oldSearch = "";
+        $products = $this->productRepository->getProduct();
+        foreach ($products as $product) {
+            $data[] = $product->name;
+        }
+        $dataSearch = [
             'seachByCategory' => $request->seachByCategory,
             'findProductByName' => $request->findProductByName
         ];
-
+        if (isset($request->findProductByName)) {
+            $oldSearch = $request->findProductByName;
+        }
         $user = auth()->user();
         $count = 0;
-        $products = $this->storageRepository->getProductSale($data);
+        $products = $this->storageRepository->getProductSale($dataSearch);
 
         if ( isset($user) ) {
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.index', compact('products', 'user', 'count'));
+        return view('client.index', compact('products', 'user', 'count', 'oldSearch', 'data'));
     }
 
     // show index contact

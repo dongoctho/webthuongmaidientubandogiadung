@@ -8,6 +8,7 @@ use App\Repositories\Contracts\RepositoryInterface\OrderDetailRepositoryInterfac
 use App\Http\Requests\CreateStorageFormRequest;
 use App\Http\Requests\EditStorageFormRequest;
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class StorageController extends Controller
 {
@@ -26,40 +27,51 @@ class StorageController extends Controller
     }
 
     // show storage page
-    public function index()
+    public function index(Request $request)
     {
-        $check_storage = true;
-        $products = $this->productRepository->getAll();
+        $products = $this->productRepository->getProduct();
+        foreach ($products as $product) {
+            $data[] = $product->name . '.' . $product->id;
+        }
 
-        return view('admin.storage.add_storage', compact('products', 'check_storage'));
+        return view('admin.storage.add_storage', compact('products', 'data'));
     }
 
     // create storage to database
     public function create(CreateStorageFormRequest $request)
     {
-        $data = [
-            'code' => $request->code,
-            'quantity' => $request->quantity,
-            'description' => $request->description,
-            'product_id' => $request->product_id
-        ];
+        $msg = "";
+        $arrayProduct = explode(".", $request->product_id);
+        $product = $this->productRepository->findProduct($arrayProduct[1]);
+        if (isset($product)) {
+            $storageCheck = $this->storageRepository->findProduct($arrayProduct[1]); 
+            if (isset($storageCheck)) {
+                $msg = "Sản phẩm đã có trong kho";
+            } else {
+                $data = [
+                    'code' => $request->code,
+                    'quantity' => $request->quantity,
+                    'description' => $request->description,
+                    'product_id' => $product->id
+                ];
+                $this->storageRepository->create($data);
+                $msg = "Thành công";
+            }
+        } else {
+            $msg = "Sản phẩm không tồn tại";
+        }
 
-        $this->storageRepository->create($data);
-
-        return redirect()->route('list_storage')->with('msg', 'Created');
+        return redirect()->route('list_storage')->with('msg', $msg);
     }
 
     // show list storage
     public function list(Request $request)
     {
-        $check_storage = true;
         $key = "";
         $data = [
             'key' => $request->key
         ];
-
         $key = $request->key;
-
         $column = [
             'storages.quantity',
             'storages.id as id',
@@ -70,30 +82,30 @@ class StorageController extends Controller
         ];
         $storages = $this->storageRepository->getStorageByCondition($data, $column);
 
-        return view('admin.storage.list_storage', compact('storages', 'key', 'data', 'check_storage'));
+        return view('admin.storage.list_storage', compact('storages', 'key', 'data'));
     }
 
     // delete storage
     public function destroy(int $id, int $product_id)
     {
+        $msg = "";
         $order = $this->orderDetailRepository->findProduct($product_id);
         if (isset($order)) {
-            return redirect()->back()->with('msg','Không thể xóa vì sản phẩm đã được đặt');
+            $msg = "Không thể xóa vì sản phẩm đã được đặt";
         } else {
             $this->storageRepository->delete($id);
         }
 
-        return redirect()->back();
+        return redirect()->back()->with('msg', $msg);
     }
 
     // show information storage
     public function show(int $id)
     {
-        $check_storage = true;
         $products = $this->productRepository->getAll();
         $storages = $this->storageRepository->find($id);
 
-        return view('admin.storage.show_storage', compact('storages', 'products', 'check_storage'));
+        return view('admin.storage.show_storage', compact('storages', 'products'));
     }
 
     // update information storage

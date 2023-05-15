@@ -11,4 +11,6 @@ interface ProductRepositoryInterface extends BaseRepositoryInterface
     public function findProduct($product_id);
     public function getProductByConditionAdmin($condition, array $column = ['*']);
     public function getProductByCategory($category_id, array $column = ['*']);
+    public function getProduct();
+    public function findIdProduct($product_id);
 }

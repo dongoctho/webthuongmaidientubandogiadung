@@ -24,7 +24,7 @@ class CreateProductFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4', 'unique:products', 'regex:/(PD)[0-9]{2}/'],
+            'code' => ['required', 'min:4', 'unique:products,deleted_at,NULL', 'regex:/(PD)[0-9]{2}/'],
             'name' => ['required', 'unique:products'],
             'price' => ['required', 'numeric'],
             'description' => ['required'],

@@ -61,86 +61,89 @@ class OrderController extends Controller
     // index add order admin
     public function addOrderAdmin()
     {
-        $check_order = true;
-        $columnSelect = [
-            'storages.id as storage_id',
-            'products.id as product_id',
-            'products.price',
-            'products.name',
-            'products.image',
-        ];
-
-        $products = $this->productRepository->getProductByConditionAdmin($columnSelect);
+        $products = $this->productRepository->getProduct();
+        foreach ($products as $product) {
+            $data[] = $product->name . '.' . $product->id;
+        }
         $vouchers = $this->voucherRepository->getVoucherByConditionAdmin();
 
-        return view('admin.order.add_order', compact('products', 'vouchers', 'check_order'));
+        return view('admin.order.add_order', compact('products', 'vouchers', 'data'));
     }
 
     // add order admin
     public function createOrderAdmin(CreateOrderAdminFormRequest $request)
     {
+        $arrayProduct = explode('.', $request->product_id);
+        $msg = "";
         $sumPrice = 0;
         $priceHandle = 0;
-        $sumPriceVoucher = 0;
-        $product = $this->productRepository->findProduct($request->product_id);
         $user = auth()->user();
-
-
-        if ( $product->product_type == 0 ) {
-            $priceHandle = $product->price * (1 - ($product->discount / 100));
-        } else if ( $product->product_type == 1 ) {
-            $priceHandle = $product->price - $product->discount;
-        }
-
-        $sumPrice = $priceHandle * $request->quantity;
-
-        if (isset($request->voucher_id)) {
-            $voucher = $this->voucherRepository->findVoucher($request->voucher_id);
-
-            if ( $voucher->voucher_type == 0 ) {
-                $sumPriceVoucher = $sumPrice * (1 - ($voucher->discount / 100));
-            } else if ( $voucher->voucher_type == 1 ) {
-                $sumPriceVoucher = $sumPrice - $voucher->discount;
-                if ( $sumPriceVoucher < 0) {
-                    $sumPriceVoucher = 0;
-                }
-            }
-
-            $dataUser = [
-                'user_id' => $user->id,
-                'voucher_id' => $request->voucher_id,
-                'name' => $request->name,
-                'phone' => $request->phone,
-                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                'price' => $sumPriceVoucher,
-                'status' => 0
-            ];
+        $sumPriceVoucher = 0;
+        if (empty($arrayProduct[1])) {
+            $msg = "Sản phẩm không tồn tại";
         } else {
-            $sumPriceVoucher = $sumPrice;
-            $dataUser = [
-                'user_id' => $user->id,
-                'voucher_id' => null,
-                'name' => $request->name,
-                'phone' => $request->phone,
-                'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                'price' => $sumPriceVoucher,
-                'status' => 0
-            ];
+            $product = $this->productRepository->findProduct($arrayProduct[1]);
+            if (isset($product)) {
+                if ( $product->product_type == 0 ) {
+                    $priceHandle = $product->price * (1 - ($product->discount / 100));
+                } else if ( $product->product_type == 1 ) {
+                    $priceHandle = $product->price - $product->discount;
+                }
+        
+                $sumPrice = $priceHandle * $request->quantity;
+        
+                if (isset($request->voucher_id)) {
+                    $voucher = $this->voucherRepository->findVoucher($request->voucher_id);
+        
+                    if ( $voucher->voucher_type == 0 ) {
+                        $sumPriceVoucher = $sumPrice * (1 - ($voucher->discount / 100));
+                    } else if ( $voucher->voucher_type == 1 ) {
+                        $sumPriceVoucher = $sumPrice - $voucher->discount;
+                        if ( $sumPriceVoucher < 0) {
+                            $sumPriceVoucher = 0;
+                        }
+                    }
+        
+                    $dataUser = [
+                        'user_id' => $user->id,
+                        'voucher_id' => $request->voucher_id,
+                        'name' => $request->name,
+                        'phone' => $request->phone,
+                        'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                        'price' => $sumPriceVoucher,
+                        'status' => 0
+                    ];
+                } else {
+                    $sumPriceVoucher = $sumPrice;
+                    $dataUser = [
+                        'user_id' => $user->id,
+                        'voucher_id' => null,
+                        'name' => $request->name,
+                        'phone' => $request->phone,
+                        'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                        'price' => $sumPriceVoucher,
+                        'status' => 0
+                    ];
+                }
+        
+                $orderId = $this->orderRepository->create($dataUser);
+        
+                $data = [
+                    'order_id' => $orderId->id,
+                    'product_id' => $request->product_id,
+                    'price' => $priceHandle,
+                    'quantity' => $request->quantity,
+                    'image' => $product->image
+                ];
+        
+                $this->orderDetailRepository->create($data);
+                $msg = "Thành công";
+            } else {
+                $msg = "Sản phẩm không tồn tại";
+            }
         }
-
-        $orderId = $this->orderRepository->create($dataUser);
-
-        $data = [
-            'order_id' => $orderId->id,
-            'product_id' => $request->product_id,
-            'price' => $priceHandle,
-            'quantity' => $request->quantity,
-            'image' => $product->image
-        ];
-
-        $this->orderDetailRepository->create($data);
-
-        return redirect()->route('list_order');
+        
+        return redirect()->route('list_order')->with('msg', $msg);
     }
 
     // show order page

@@ -33,7 +33,7 @@ class CategoryController extends Controller
     {
         $this->categoryRepository->create($request->toArray());
 
-        return redirect()->route('list_category')->with('msg', 'Created');
+        return redirect()->route('list_category')->with('msg', 'Thành công');
     }
 
     // show list categories

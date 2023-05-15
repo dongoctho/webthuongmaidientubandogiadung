@@ -26,7 +26,7 @@ class CreateStorageFormRequest extends FormRequest
         return [
             'quantity' => ['required', 'numeric'],
             'description' => ['required'],
-            'product_id' => ['unique:storages']
+            'product_id' => ['unique:storages,deleted_at,NULL']
         ];
     }
 

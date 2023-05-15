@@ -21,6 +21,11 @@
                 </form>
                 <a href="{{route('add_order_admin')}}" class="btn btn-primary">Thêm Mới</a>
             </div>
+            @if (Session::has('msg'))
+            <div class="" style="display: flex; justify-content:center;">
+                <h5 style="color:#ff1500">{{Session::get('msg')}}</h5>
+            </div>
+            @endif
           <table  style="text-align: center" id="example1" class="table">
                 <thead>
                 <tr>

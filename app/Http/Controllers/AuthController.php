@@ -117,7 +117,7 @@ class AuthController extends Controller
 
         $this->userRepository->create($data);
 
-        return redirect()->route('login_page')->with('msg', 'Success');
+        return redirect()->route('login_page')->with('msg', 'Thành công');
     }
 
     // list account

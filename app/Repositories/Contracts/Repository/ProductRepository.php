@@ -13,10 +13,23 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return Product::class;
     }
 
+    public function getProduct()
+    {
+        return $this->model->whereNull('deleted_at')->get();
+    }
+
     public function findProduct($product_id)
     {
         return $this->model
         ->where('products.id', $product_id)
+        ->where('products.deleted_at', '=', null)
+        ->first();
+    }
+
+    public function findIdProduct($product_id)
+    {
+        return $this->model
+        ->where('products.name', '=', $product_id)
         ->where('products.deleted_at', '=', null)
         ->first();
     }

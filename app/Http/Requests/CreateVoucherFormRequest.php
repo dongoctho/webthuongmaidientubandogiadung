@@ -24,7 +24,7 @@ class CreateVoucherFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4', 'unique:vouchers', 'regex:/(VC)[0-9]{2}/'],
+            'code' => ['required', 'min:4', 'unique:vouchers,deleted_at,NULL', 'regex:/(VC)[0-9]{2}/'],
             'name' => ['required', 'unique:vouchers'],
             'discount' => ['required', 'numeric'],
             'quantity' => ['required', 'numeric']

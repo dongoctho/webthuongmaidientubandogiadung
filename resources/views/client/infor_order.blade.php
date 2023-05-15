@@ -37,14 +37,14 @@
             </a>
         </div>
         <div class="col-lg-4 text-left">
-                <div class="input-group">
+                <!-- <div class="input-group">
                     <input type="text" name="findProductByName" class="form-control" placeholder="Tìm Kiếm Sản Phẩm">
                         <div class="input-group-append" style="background-color:rgb(255, 255, 255);">
                             <span class="input-group-text bg-transparent text-primary">
                                 <button style="border:0; height:24px; background-color:rgb(255, 255, 255);" type="submit"><i class="fa fa-search"></i></button>
                             </span>
                         </div>
-                </div>
+                </div> -->
         </div>
         <div class="col-lg-1.5 text-left">
             <?php

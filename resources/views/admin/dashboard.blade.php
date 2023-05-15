@@ -13,6 +13,8 @@
   <link href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0VN5j6WlcXGAbSQ7KBsfevUmdd9q35w4bsw&usqp=CAU" rel="icon">
   <link href="{{asset('assetss/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com'" rel="preconnect">

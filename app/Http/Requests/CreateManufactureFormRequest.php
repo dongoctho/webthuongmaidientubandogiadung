@@ -24,7 +24,7 @@ class CreateManufactureFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['required', 'min:4', 'unique:manufactures', 'regex:/(MF)[0-9]{2}/'],
+            'code' => ['required', 'min:4', 'unique:manufactures,deleted_at,NULL', 'regex:/(MF)[0-9]{2}/'],
             'name' => ['required', 'unique:manufactures'],
             'description' => ['required']
         ];

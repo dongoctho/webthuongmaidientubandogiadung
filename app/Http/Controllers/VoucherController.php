@@ -24,10 +24,9 @@ class VoucherController extends Controller
     // show voucher page
     public function index()
     {
-        $check_voucher = true;
         $products = $this->productRepository->getAll();
 
-        return view('admin.voucher.add_voucher', compact('products', 'check_voucher'));
+        return view('admin.voucher.add_voucher', compact('products'));
     }
 
     // create voucher to  database
@@ -35,13 +34,12 @@ class VoucherController extends Controller
     {
         $this->voucherRepository->create($request->toArray());
 
-        return redirect()->route('list_voucher')->with('msg', 'Created');
+        return redirect()->route('list_voucher')->with('msg', 'Thành công');
     }
 
     // show list voucher
     public function list(Request $request)
     {
-        $check_voucher = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -50,7 +48,7 @@ class VoucherController extends Controller
 
         $vouchers = $this->voucherRepository->getVoucherByCondition($data);
 
-        return view('admin.voucher.list_voucher', compact('vouchers', 'key', 'data', 'check_voucher'));
+        return view('admin.voucher.list_voucher', compact('vouchers', 'key', 'data'));
     }
 
     // delete voucher
@@ -64,10 +62,9 @@ class VoucherController extends Controller
     // show information voucher
     public function show(int $id)
     {
-        $check_voucher = true;
         $vouchers = $this->voucherRepository->find($id);
 
-        return view('admin.voucher.show_voucher', compact('vouchers', 'check_voucher'));
+        return view('admin.voucher.show_voucher', compact('vouchers'));
     }
 
     // update information voucher

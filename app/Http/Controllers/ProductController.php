@@ -52,22 +52,29 @@ class ProductController extends Controller
     // show index client product
     public function indexProduct(Request $request)
     {
-        $data = [
+        $oldSearch = "";
+        $products = $this->productRepository->getProduct();
+        foreach ($products as $product) {
+            $data[] = $product->name;
+        }
+        $dataSearch = [
             'seachByPrice' => $request->seachByPrice,
             'seachByCategory' => $request->seachByCategory,
             'findProductByName' => $request->findProductByName
         ];
-
+        if (isset($request->findProductByName)) {
+            $oldSearch = $request->findProductByName;
+        }
         $user = auth()->user();
         $condition = $request->seachByPrice;
-        $products = $this->productRepository->getByCondition($data);
+        $products = $this->productRepository->getByCondition($dataSearch);
         $count = 0;
 
         if ( isset($user) ) {
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.product', compact('user', 'count', 'products', 'condition', 'data'));
+        return view('client.product', compact('user', 'count', 'products', 'condition', 'data', 'oldSearch'));
     }
 
     // show product detail client
@@ -93,11 +100,10 @@ class ProductController extends Controller
     // show add product page admin
     public function index()
     {
-        $check_product = true;
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.add_product', compact('manufactures', 'categories', 'check_product'));
+        return view('admin.product.add_product', compact('manufactures', 'categories'));
     }
 
     // create product to database admin
@@ -128,7 +134,6 @@ class ProductController extends Controller
     // show list product admin
     public function list(Request $request)
     {
-        $check_product = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -139,16 +144,17 @@ class ProductController extends Controller
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.list_product', compact('products', 'manufactures', 'categories', 'key', 'data', 'check_product'));
+        return view('admin.product.list_product', compact('products', 'manufactures', 'categories', 'key', 'data'));
     }
 
     // delete product admin
     public function destroy(int $id)
     {
         $order = $this->orderDetailRepository->findProduct($id);
-        $orderArray = $order->toArray();
-        if (isset($order)) {
-            return redirect()->back()->with('msg','Không thể xóa vì sản phẩm đã được đặt');
+        $storage = $this->storageRepository->findProduct($id);
+
+        if (isset($storage) || isset($order) ) {
+            return redirect()->back()->with('msg','Không thể xóa vì sản phẩm đã được đặt hoặc đang trong kho hàng');
         } else {
             $this->productRepository->delete($id);
         }
@@ -159,12 +165,11 @@ class ProductController extends Controller
     // show information product admin
     public function show(int $id)
     {
-        $check_product = true;
         $products = $this->productRepository->find($id);
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.show_product', compact('products', 'manufactures', 'categories', 'check_product'));
+        return view('admin.product.show_product', compact('products', 'manufactures', 'categories'));
     }
 
     // edit information product admin
