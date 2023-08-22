@@ -109,7 +109,7 @@ class ProductController extends Controller
     // create product to database admin
     public function create(CreateProductFormRequest $request)
     {
-        if ( $request -> has('image') ) {
+        if ($request->has('image')) {
             $image = $this->image_service->image($request->image);
         }
 

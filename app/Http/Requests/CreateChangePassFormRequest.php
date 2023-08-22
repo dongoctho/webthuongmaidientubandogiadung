@@ -25,8 +25,7 @@ class CreateChangePassFormRequest extends FormRequest
     {
         return [
             'password' => ['required', 'min:8'],
-            'repassword' => ['required'],
-            'oldpassword' => ['required']
+            'repassword' => ['required']
         ];
     }
 
@@ -34,7 +33,6 @@ class CreateChangePassFormRequest extends FormRequest
     {
         return [
             'password.required' => 'Không được bỏ trống ô này',
-            'oldpassword.required' => 'Không được bỏ trống ô này',
             'password.min' => 'Không được nhập nhỏ hơn 8 ký tự',
             'repassword.required' => 'Không được bỏ trống ô này',
         ];

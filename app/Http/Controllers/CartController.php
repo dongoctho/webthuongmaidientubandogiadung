@@ -148,12 +148,11 @@ class CartController extends Controller
         $sum = 0;
 
         foreach ($carts as $product) {
-            if ( $product->product_type == 0 ) {
+            if ($product->product_type == 0) {
                 $priceCart = $product->price * (1 - ($product->discount / 100));
-            } else if ( $product->product_type == 1 ) {
+            } elseif ($product->product_type == 1) {
                 $priceCart = $product->price - $product->discount;
             }
-
             $sum += $priceCart * $product->quantity;
         }
 

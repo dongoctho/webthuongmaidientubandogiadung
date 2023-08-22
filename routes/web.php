@@ -28,12 +28,14 @@ use Laravel\Socialite\Facades\Socialite;
 
 // login, register, logout
 Route::get('/login', [AuthController::class, 'index'])->name('login_page');
+Route::get('/forgot', [AuthController::class, 'indexForgot'])->name('index_forgot');
+Route::post('/forgot', [AuthController::class, 'forgotPassword'])->name('forgot_password');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 Route::get('/register',[AuthController::class, 'register_page'])->name('register_page');
 Route::post('/register',[AuthController::class, 'register'])->name('register');
-Route::get('/change-pass',[AuthController::class, 'change_pass_page'])->name('change_pass_page');
-Route::post('/change-pass',[AuthController::class, 'change_pass'])->name('change_pass');
+Route::get('/change-pass/{email}',[AuthController::class, 'change_pass_page'])->name('change_pass_page');
+Route::post('/change-pass/{email}',[AuthController::class, 'change_pass'])->name('change_pass');
 Route::get('/google',[AuthController::class, 'redirecToGoogle'])->name('login_google');
 Route::get('/google/callback',[AuthController::class, 'handleGoogleCallback'])->name('handle');
 

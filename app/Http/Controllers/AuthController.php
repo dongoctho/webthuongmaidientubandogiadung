@@ -15,6 +15,9 @@ use App\Constants\AuthConstant;
 use Illuminate\Support\Facades\Auth;
 use app\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendEmail;
+use Route;
 
 class AuthController extends Controller
 {
@@ -27,6 +30,42 @@ class AuthController extends Controller
     ) {
         $this->userRepository = $userRepositoryInterface;
         $this->image_service = $imageService;
+    }
+
+    public function indexForgot()
+    {
+        return view('admin.forgot_password');
+    }
+
+    public function change_pass_page()
+    {
+        return view('admin.change_password');
+    }
+
+    public function change_pass(CreateChangePassFormRequest $request, $email)
+    {
+        if ($request->password != $request->repassword) {
+            return redirect()->back()->with('msg', 'Mật khẩu nhập lại không đúng');
+        }
+        $password = Hash::make($request->password);
+        $findEmail = $this->userRepository->findEmail($email);
+        $this->userRepository->update($findEmail->id, ['password' => $password]);
+        return redirect()->route('login_page')->with('msg', 'Thành công! Hãy đăng nhập');
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $findEmail = $this->userRepository->findEmail($request->email);
+
+        if ($findEmail != null) {
+            $mailData = route('change_pass_page', ['email' => $request->email]);
+            Mail::to($request->email)->send(new SendEmail($mailData));
+
+            return redirect()->back()->with('msg', 'Thành công! Hãy kiểm tra địa chỉ email của bạn');
+        } else {
+            return redirect()->back()->with('msg', 'Địa chỉ Email không tồn tại');
+        }
+
     }
 
     public function redirecToGoogle()

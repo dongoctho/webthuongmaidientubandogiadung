@@ -30,4 +30,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         return $query->paginate(6);
     }
+
+    public function findEmail($email)
+    {
+        return $this->model->select(['*'])->where('users.email', '=', $email)->first();
+    }
 }

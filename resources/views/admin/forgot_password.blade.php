@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Đăng Nhập</title>
+    <title>Quên Mật Khẩu</title>
 
     <!-- Custom fonts for this template-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -43,7 +43,7 @@
                                 <div class="col-lg-6">
                                     <div class="p-5">
                                         <div class="text-center">
-                                            <h1 class="h4 text-gray-900 mb-4">Đăng Nhập!</h1>
+                                            <h1 class="h4 text-gray-900 mb-4">Quên Mật Khẩu!</h1>
                                         </div>
                                         <form action="" method="post">
                                             @csrf
@@ -52,34 +52,13 @@
                                                     class="form-control form-control-user"
                                                     id="exampleInputEmail" aria-describedby="emailHelp"
                                                     placeholder="Nhập địa chỉ email"
-                                                    value="{{old('email')}}"
                                                     >
                                                     @if ($errors->all())
                                                     <p style="color: red">{{$errors->first('email')}}</p>
                                                     @endif
                                             </div>
-                                            <div class="form-group">
-                                                <input type="password" name="password"
-                                                    class="form-control form-control-user"
-                                                    id="exampleInputPassword" placeholder="Nhập mật khẩu"
-                                                    >
-                                                    @if ($errors->all())
-                                                    <p style="color: red">{{$errors->first('password')}}</p>
-                                                    @endif
-                                            </div>
 
-                                            <input class="btn btn-primary btn-user btn-block" type="submit" value="Đăng nhập">
-                                            @if ($errors->all())
-                                                <script>
-                                                    swal({
-                                                        title: "Lỗi đăng nhập !",
-                                                        text: "Hãy thực hiện lại",
-                                                        icon: "warning",
-                                                        buttons: true,
-                                                        dangerMode: true,
-                                                        })
-                                                </script>
-                                            @endif
+                                            <input class="btn btn-primary btn-user btn-block" type="submit" value="Gửi yêu cầu">
                                             @if (Session::has('msg'))
                                                 <script>
                                                     swal({
@@ -88,17 +67,9 @@
                                                         })
                                                 </script>
                                             @endif
-                                            <hr>
-                                            <a href="{{route('login_google')}}" class="btn btn-google btn-user btn-block">
-                                                <i class="fab fa-google fa-fw"></i> Đăng nhập bằng google
-                                            </a>
                                         </form>
-                                        <hr>
                                         <div class="text-center">
-                                            <a class="small" href="{{route('index_forgot')}}">Quên mật khẩu ?</a>
-                                        </div>
-                                        <div class="text-center">
-                                            <a class="small" href="{{route('register_page')}}">Bạn chưa có tài khoản? Tạo tài khoản!</a>
+                                            <a class="small" href="{{route('login_page')}}">Bạn đã có tài khoản? Đăng nhập!</a>
                                         </div>
                                     </div>
                                 </div>
