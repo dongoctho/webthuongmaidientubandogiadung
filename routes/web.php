@@ -34,11 +34,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 Route::get('/register',[AuthController::class, 'register_page'])->name('register_page');
 Route::post('/register',[AuthController::class, 'register'])->name('register');
-Route::get('/change-pass/{email}',[AuthController::class, 'change_pass_page'])->name('change_pass_page');
-Route::post('/change-pass/{email}',[AuthController::class, 'change_pass'])->name('change_pass');
+Route::get('/change-pass/{email}/{token}',[AuthController::class, 'change_pass_page'])->name('change_pass_page');
+Route::post('/change-pass/{email}/{token}',[AuthController::class, 'change_pass'])->name('change_pass');
 Route::get('/google',[AuthController::class, 'redirecToGoogle'])->name('login_google');
 Route::get('/google/callback',[AuthController::class, 'handleGoogleCallback'])->name('handle');
-
 
 //client
 Route::get('',[IndexController::class, 'indexClient'])->name('client_index');

@@ -38,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
         => \App\Repositories\Contracts\Repository\StorageRepository::class,
         \App\Repositories\Contracts\RepositoryInterface\VoucherRepositoryInterface::class
         => \App\Repositories\Contracts\Repository\VoucherRepository::class,
+        \App\Repositories\Contracts\RepositoryInterface\PasswordResetRepositoryInterface::class
+        => \App\Repositories\Contracts\Repository\PasswordResetRepository::class,
     ];
 
     /**

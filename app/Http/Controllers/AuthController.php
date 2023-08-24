@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\RepositoryInterface\UserRepositoryInterface;
+use App\Repositories\Contracts\RepositoryInterface\PasswordResetRepositoryInterface;
 use App\Http\Requests\CreateLoginFormRequest;
 use App\Http\Requests\CreateRegisterFormRequest;
 use App\Http\Requests\CreateChangePassFormRequest;
@@ -17,19 +18,23 @@ use app\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
+use Illuminate\Support\Str;
 use Route;
 
 class AuthController extends Controller
 {
     protected $userRepository;
     protected $image_service;
+    protected $passwordResetRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepositoryInterface,
-        ImageService $imageService
+        ImageService $imageService,
+        PasswordResetRepositoryInterface $PasswordResetRepositoryInterface
     ) {
         $this->userRepository = $userRepositoryInterface;
         $this->image_service = $imageService;
+        $this->passwordResetRepository = $PasswordResetRepositoryInterface;
     }
 
     public function indexForgot()
@@ -42,23 +47,38 @@ class AuthController extends Controller
         return view('admin.change_password');
     }
 
-    public function change_pass(CreateChangePassFormRequest $request, $email)
+    public function change_pass(CreateChangePassFormRequest $request, $email, $token)
     {
-        if ($request->password != $request->repassword) {
-            return redirect()->back()->with('msg', 'Mật khẩu nhập lại không đúng');
+        $checkToken = $this->passwordResetRepository->findToken($token);
+        if (isset($checkToken)) {
+            if ($request->password != $request->repassword) {
+                return redirect()->back()->with('msg', 'Mật khẩu nhập lại không đúng');
+            }
+            $password = Hash::make($request->password);
+            $findEmail = $this->userRepository->findEmail($email);
+            $this->userRepository->update($findEmail->id, ['password' => $password]);
+
+            return redirect()->route('login_page')->with('msg', 'Thành công! Hãy đăng nhập');
         }
-        $password = Hash::make($request->password);
-        $findEmail = $this->userRepository->findEmail($email);
-        $this->userRepository->update($findEmail->id, ['password' => $password]);
-        return redirect()->route('login_page')->with('msg', 'Thành công! Hãy đăng nhập');
+
+        return redirect()->route('index_forgot')->with('msg', 'Đổi mật khẩu không thành công');
     }
 
     public function forgotPassword(Request $request)
     {
         $findEmail = $this->userRepository->findEmail($request->email);
+        $token = Str::random(60);
 
         if ($findEmail != null) {
-            $mailData = route('change_pass_page', ['email' => $request->email]);
+            $passwordResetCheck = $this->passwordResetRepository->findEmail($request->email);
+
+            if ($passwordResetCheck == null) {
+                $passwordReset = $this->passwordResetRepository->create(['email' => $request->email, 'token' => $token]);
+            } else {
+                $this->passwordResetRepository->UpdateToken($request->email, $token);
+                $passwordReset = $this->passwordResetRepository->findToken($token);
+            }
+            $mailData = route('change_pass_page', ['email' => $request->email, 'token' => $passwordReset->token]);
             Mail::to($request->email)->send(new SendEmail($mailData));
 
             return redirect()->back()->with('msg', 'Thành công! Hãy kiểm tra địa chỉ email của bạn');

@@ -273,7 +273,7 @@
                         <h4 class="font-weight-semi-bold m-0">Thanh Toán</h4>
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
-                        <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh Toán</button>
+                        <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh Toán Bằng Tiền Mặt</button>
                     </div>
                 </div>
             </div>
