@@ -17,7 +17,8 @@ use App\Repositories\Contracts\RepositoryInterface\OrderRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\OrderDetailRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\CartDetailRepositoryInterface;
 use App\Services\SumPriceService;
-
+use Stripe\StripeClient;
+use Stripe\PaymentIntent;
 class OrderController extends Controller
 {
     protected $userRepository;
@@ -58,6 +59,22 @@ class OrderController extends Controller
         $this->sum_price_service = $sumPriceService;
     }
 
+    public function indexPaymentOnline()
+    {
+        $stripe = new StripeClient(env('STRIPE_SECRET'));
+        $paymentIntent = $stripe->paymentIntents->create([
+            'amount' => 100000,
+            'currency' => 'usd',
+            'automatic_payment_methods' => [
+                'enabled' => true,
+            ],
+        ]);
+
+        return view('client.payment_online', [
+            'clientSecret' => $paymentIntent->client_secret,
+        ]);
+    }
+
     // index add order admin
     public function addOrderAdmin()
     {
@@ -89,12 +106,12 @@ class OrderController extends Controller
                 } else if ( $product->product_type == 1 ) {
                     $priceHandle = $product->price - $product->discount;
                 }
-        
+
                 $sumPrice = $priceHandle * $request->quantity;
-        
+
                 if (isset($request->voucher_id)) {
                     $voucher = $this->voucherRepository->findVoucher($request->voucher_id);
-        
+
                     if ( $voucher->voucher_type == 0 ) {
                         $sumPriceVoucher = $sumPrice * (1 - ($voucher->discount / 100));
                     } else if ( $voucher->voucher_type == 1 ) {
@@ -103,7 +120,7 @@ class OrderController extends Controller
                             $sumPriceVoucher = 0;
                         }
                     }
-        
+
                     $dataUser = [
                         'user_id' => $user->id,
                         'voucher_id' => $request->voucher_id,
@@ -125,9 +142,9 @@ class OrderController extends Controller
                         'status' => 0
                     ];
                 }
-        
+
                 $orderId = $this->orderRepository->create($dataUser);
-        
+
                 $data = [
                     'order_id' => $orderId->id,
                     'product_id' => $request->product_id,
@@ -135,14 +152,14 @@ class OrderController extends Controller
                     'quantity' => $request->quantity,
                     'image' => $product->image
                 ];
-        
+
                 $this->orderDetailRepository->create($data);
                 $msg = "Thành công";
             } else {
                 $msg = "Sản phẩm không tồn tại";
             }
         }
-        
+
         return redirect()->route('list_order')->with('msg', $msg);
     }
 
@@ -336,6 +353,7 @@ class OrderController extends Controller
     // add cartDetail to order
     public function addOrder(CreateOrderFormRequest $request)
     {
+        dd($request->all());
         $user = auth()->user();
         $priceHandle = 0;
         $productPrice = 0;

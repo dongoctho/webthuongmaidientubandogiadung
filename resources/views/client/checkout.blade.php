@@ -275,6 +275,10 @@
                     <div class="card-footer border-secondary bg-transparent">
                         <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh Toán Bằng Tiền Mặt</button>
                     </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        {{-- <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh toán online</button> --}}
+                        <a href="{{ route('payment_online_index') }}" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh toán online</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -338,6 +342,8 @@
 
     <!-- Template Javascript -->
     <script src="{{asset('js/main.js')}}"></script>
+
+    <script src="https://js.stripe.com/v3/"></script>
 
     <script>
         $(document).ready(function () {

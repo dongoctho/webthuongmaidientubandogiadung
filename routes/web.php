@@ -42,6 +42,8 @@ Route::get('/google/callback',[AuthController::class, 'handleGoogleCallback'])->
 //client
 Route::get('',[IndexController::class, 'indexClient'])->name('client_index');
 Route::get('/checkout',[OrderController::class, 'index'])->name('checkout_index');
+Route::get('/payment_online',[OrderController::class, 'indexPaymentOnline'])->name('payment_online_index');
+Route::get('/stripe',[OrderController::class, 'initializeCheckout'])->name('initializeCheckout');
 Route::post('/checkout/payment',[OrderController::class, 'addOrder'])->name('payment');
 Route::post('/checkout/infor/reorder/{id}',[OrderController::class, 'addReOrder']);
 Route::get('/checkout/infor',[OrderController::class, 'inforOrder'])->name('infor_order');
