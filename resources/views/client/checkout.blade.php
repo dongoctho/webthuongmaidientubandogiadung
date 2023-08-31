@@ -273,11 +273,10 @@
                         <h4 class="font-weight-semi-bold m-0">Thanh Toán</h4>
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
-                        <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh Toán Bằng Tiền Mặt</button>
+                        <button type="submit" name="action" value="offline" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh Toán Bằng Tiền Mặt</button>
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
-                        {{-- <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh toán online</button> --}}
-                        <a href="{{ route('payment_online_index') }}" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh toán online</a>
+                        <button type="submit" name="action" value="online" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh toán online</button>
                     </div>
                 </div>
             </div>

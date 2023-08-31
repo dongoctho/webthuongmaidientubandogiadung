@@ -59,20 +59,9 @@ class OrderController extends Controller
         $this->sum_price_service = $sumPriceService;
     }
 
-    public function indexPaymentOnline()
+    public function indexCheckoutOnline()
     {
-        $stripe = new StripeClient(env('STRIPE_SECRET'));
-        $paymentIntent = $stripe->paymentIntents->create([
-            'amount' => 100000,
-            'currency' => 'usd',
-            'automatic_payment_methods' => [
-                'enabled' => true,
-            ],
-        ]);
-
-        return view('client.payment_online', [
-            'clientSecret' => $paymentIntent->client_secret,
-        ]);
+        return view('client.payment_online');
     }
 
     // index add order admin
@@ -353,158 +342,246 @@ class OrderController extends Controller
     // add cartDetail to order
     public function addOrder(CreateOrderFormRequest $request)
     {
-        dd($request->all());
-        $user = auth()->user();
-        $priceHandle = 0;
-        $productPrice = 0;
-        $sumPrice = 0;
-        $voucher_id = explode("-", $request->voucher_id);
+        switch ($request->input('action')) {
+            case 'online':
+                $user = auth()->user();
+                $priceHandle = 0;
+                $productPrice = 0;
+                $sumPrice = 0;
+                $voucher_id = explode("-", $request->voucher_id);
 
-        if (isset($request->product_id)) {
-            $idUserCart = $this->cartRepository->findUser($user->id);
-            $cartDetail = $this->cartDetailRepository->findProduct($request->product_id, $idUserCart->id);
-
-            if ( $cartDetail->product_type == 0 ) {
-                $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
-            } else if ( $cartDetail->product_type == 1 ) {
-                $productPrice = $cartDetail->price - $cartDetail->discount;
-            }
-
-            $sumPrice = $productPrice * $cartDetail->quantity;
-
-
-            if ( $voucher_id['2'] == "" ) {
-                $priceHandle = $sumPrice;
-                $dataUser = [
-                    'user_id' => $user->id,
-                    'voucher_id' => null,
-                    'name' => $request->name,
-                    'phone' => $request->phone,
-                    'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                    'price' => $priceHandle,
-                    'status' => 0
+                $columnSelect = [
+                    'carts.id as cart_id',
+                    'products.price as price',
+                    'carts_detail.quantity',
+                    'carts_detail.image',
+                    'carts_detail.id as cart_detail_id',
+                    'products.name as product_name',
+                    'products.id as product_id',
+                    'products.sale as product_sale',
+                    'products.discount',
+                    'products.product_type'
                 ];
-            } else {
-                $voucher = $this->voucherRepository->find($voucher_id[2]);
-                if ( $voucher->voucher_type == 0 ) {
-                    $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
-                } else if ( $voucher->voucher_type == 1 ) {
-                    $priceHandle = $sumPrice - $voucher->discount;
-                    if ( $priceHandle < 0) {
-                        $priceHandle = 0;
+
+                $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect);
+                $voucher_id = explode("-", $request->voucher_id);
+                $idUserCart = $this->cartRepository->findUser($user->id);
+
+                foreach ($cartDetails as $cartDetail) {
+                    if ( $cartDetail->product_type == 0 ) {
+                        $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+                    } else if ( $cartDetail->product_type == 1 ) {
+                        $productPrice = $cartDetail->price - $cartDetail->discount;
                     }
+
+                    $sumPrice += $productPrice * $cartDetail->quantity;
                 }
 
-                $dataUser = [
-                    'user_id' => $user->id,
-                    'voucher_id' => $voucher->id,
-                    'name' => $request->name,
-                    'phone' => $request->phone,
-                    'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                    'price' => $priceHandle,
-                    'status' => 0
-                ];
-            }
+                $priceHandle = 0;
+                    if ( $voucher_id['2'] == "" ) {
 
-            $orderId = $this->orderRepository->create($dataUser);
+                        $priceHandle = $sumPrice;
+                        $dataUser = [
+                            'user_id' => $user->id,
+                            'voucher_id' => null,
+                            'name' => $request->name,
+                            'phone' => $request->phone,
+                            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                            'price' => $priceHandle,
+                            'status' => 0
+                        ];
+                    } else {
 
-            $data = [
-                'order_id' => $orderId->id,
-                'product_id' => $request->product_id,
-                'price' => $sumPrice,
-                'quantity' => $cartDetail->quantity,
-                'image' => $cartDetail->image
-            ];
-
-            $this->orderDetailRepository->create($data);
-
-            return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
-        } else {
-            $columnSelect = [
-                'carts.id as cart_id',
-                'products.price as price',
-                'carts_detail.quantity',
-                'carts_detail.image',
-                'carts_detail.id as cart_detail_id',
-                'products.name as product_name',
-                'products.id as product_id',
-                'products.sale as product_sale',
-                'products.discount',
-                'products.product_type'
-            ];
-
-            $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect);
-            $voucher_id = explode("-", $request->voucher_id);
-            $idUserCart = $this->cartRepository->findUser($user->id);
-
-            foreach ($cartDetails as $cartDetail) {
-                if ( $cartDetail->product_type == 0 ) {
-                    $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
-                } else if ( $cartDetail->product_type == 1 ) {
-                    $productPrice = $cartDetail->price - $cartDetail->discount;
-                }
-
-                $sumPrice += $productPrice * $cartDetail->quantity;
-            }
-
-
-            $priceHandle = 0;
-            if ( $voucher_id['2'] == "" ) {
-
-                $priceHandle = $sumPrice;
-                $dataUser = [
-                    'user_id' => $user->id,
-                    'voucher_id' => null,
-                    'name' => $request->name,
-                    'phone' => $request->phone,
-                    'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                    'price' => $priceHandle,
-                    'status' => 0
-                ];
-            } else {
-
-                $voucher = $this->voucherRepository->find($voucher_id[2]);
-                if ($voucher->voucher_type == 0) {
-                    $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
-                } else if ($voucher->voucher_type == 1) {
-                    $priceHandle = $sumPrice - $voucher->discount;
-                    if ($priceHandle < 0) {
-                        $priceHandle = 0;
+                        $voucher = $this->voucherRepository->find($voucher_id[2]);
+                        if ($voucher->voucher_type == 0) {
+                            $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
+                        } else if ($voucher->voucher_type == 1) {
+                            $priceHandle = $sumPrice - $voucher->discount;
+                            if ($priceHandle < 0) {
+                                $priceHandle = 0;
+                            }
+                        }
+                        $dataUser = [
+                            'user_id' => $user->id,
+                            'voucher_id' => $voucher->id,
+                            'name' => $request->name,
+                            'phone' => $request->phone,
+                            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                            'price' => $priceHandle,
+                            'status' => 0
+                        ];
                     }
+
+                $stripe = new StripeClient(env('STRIPE_SECRET'));
+                $paymentIntent = $stripe->paymentIntents->create([
+                    'amount' => $priceHandle,
+                    'currency' => 'vnd',
+                    'automatic_payment_methods' => [
+                        'enabled' => true,
+                    ],
+                ]);
+
+                return view('client.payment_online', [
+                    'clientSecret' => $paymentIntent->client_secret,
+                ]);
+
+                break;
+            case 'offline':
+                dd($request->all());
+                $user = auth()->user();
+                $priceHandle = 0;
+                $productPrice = 0;
+                $sumPrice = 0;
+                $voucher_id = explode("-", $request->voucher_id);
+
+                if (isset($request->product_id)) {
+                    $idUserCart = $this->cartRepository->findUser($user->id);
+                    $cartDetail = $this->cartDetailRepository->findProduct($request->product_id, $idUserCart->id);
+
+                    if ( $cartDetail->product_type == 0 ) {
+                        $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+                    } else if ( $cartDetail->product_type == 1 ) {
+                        $productPrice = $cartDetail->price - $cartDetail->discount;
+                    }
+
+                    $sumPrice = $productPrice * $cartDetail->quantity;
+
+
+                    if ( $voucher_id['2'] == "" ) {
+                        $priceHandle = $sumPrice;
+                        $dataUser = [
+                            'user_id' => $user->id,
+                            'voucher_id' => null,
+                            'name' => $request->name,
+                            'phone' => $request->phone,
+                            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                            'price' => $priceHandle,
+                            'status' => 0
+                        ];
+                    } else {
+                        $voucher = $this->voucherRepository->find($voucher_id[2]);
+                        if ( $voucher->voucher_type == 0 ) {
+                            $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
+                        } else if ( $voucher->voucher_type == 1 ) {
+                            $priceHandle = $sumPrice - $voucher->discount;
+                            if ( $priceHandle < 0) {
+                                $priceHandle = 0;
+                            }
+                        }
+
+                        $dataUser = [
+                            'user_id' => $user->id,
+                            'voucher_id' => $voucher->id,
+                            'name' => $request->name,
+                            'phone' => $request->phone,
+                            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                            'price' => $priceHandle,
+                            'status' => 0
+                        ];
+                    }
+
+                    $orderId = $this->orderRepository->create($dataUser);
+
+                    $data = [
+                        'order_id' => $orderId->id,
+                        'product_id' => $request->product_id,
+                        'price' => $sumPrice,
+                        'quantity' => $cartDetail->quantity,
+                        'image' => $cartDetail->image
+                    ];
+
+                    $this->orderDetailRepository->create($data);
+
+                    return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
+                } else {
+                    $columnSelect = [
+                        'carts.id as cart_id',
+                        'products.price as price',
+                        'carts_detail.quantity',
+                        'carts_detail.image',
+                        'carts_detail.id as cart_detail_id',
+                        'products.name as product_name',
+                        'products.id as product_id',
+                        'products.sale as product_sale',
+                        'products.discount',
+                        'products.product_type'
+                    ];
+
+                    $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect);
+                    $voucher_id = explode("-", $request->voucher_id);
+                    $idUserCart = $this->cartRepository->findUser($user->id);
+
+                    foreach ($cartDetails as $cartDetail) {
+                        if ( $cartDetail->product_type == 0 ) {
+                            $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+                        } else if ( $cartDetail->product_type == 1 ) {
+                            $productPrice = $cartDetail->price - $cartDetail->discount;
+                        }
+
+                        $sumPrice += $productPrice * $cartDetail->quantity;
+                    }
+
+
+                    $priceHandle = 0;
+                    if ( $voucher_id['2'] == "" ) {
+
+                        $priceHandle = $sumPrice;
+                        $dataUser = [
+                            'user_id' => $user->id,
+                            'voucher_id' => null,
+                            'name' => $request->name,
+                            'phone' => $request->phone,
+                            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                            'price' => $priceHandle,
+                            'status' => 0
+                        ];
+                    } else {
+
+                        $voucher = $this->voucherRepository->find($voucher_id[2]);
+                        if ($voucher->voucher_type == 0) {
+                            $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
+                        } else if ($voucher->voucher_type == 1) {
+                            $priceHandle = $sumPrice - $voucher->discount;
+                            if ($priceHandle < 0) {
+                                $priceHandle = 0;
+                            }
+                        }
+                        $dataUser = [
+                            'user_id' => $user->id,
+                            'voucher_id' => $voucher->id,
+                            'name' => $request->name,
+                            'phone' => $request->phone,
+                            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                            'price' => $priceHandle,
+                            'status' => 0
+                        ];
+                    }
+
+                    $orderId = $this->orderRepository->create($dataUser);
+
+                    foreach ( $cartDetails as $cartDetail ) {
+                        if ( $cartDetail->product_type == 0 ) {
+                            $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+                        } else if ( $cartDetail->product_type == 1 ) {
+                            $productPrice = $cartDetail->price - $cartDetail->discount;
+                        }
+                        $data = [
+                            'order_id' => $orderId->id,
+                            'product_id' => $cartDetail->product_id,
+                            'price' => $productPrice,
+                            'quantity' => $cartDetail->quantity,
+                            'image' => $cartDetail->image
+                        ];
+
+                        $this->orderDetailRepository->create($data);
+
+                    }
+
+                    return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
                 }
-                $dataUser = [
-                    'user_id' => $user->id,
-                    'voucher_id' => $voucher->id,
-                    'name' => $request->name,
-                    'phone' => $request->phone,
-                    'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                    'price' => $priceHandle,
-                    'status' => 0
-                ];
-            }
-
-            $orderId = $this->orderRepository->create($dataUser);
-
-            foreach ( $cartDetails as $cartDetail ) {
-                if ( $cartDetail->product_type == 0 ) {
-                    $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
-                } else if ( $cartDetail->product_type == 1 ) {
-                    $productPrice = $cartDetail->price - $cartDetail->discount;
-                }
-                $data = [
-                    'order_id' => $orderId->id,
-                    'product_id' => $cartDetail->product_id,
-                    'price' => $productPrice,
-                    'quantity' => $cartDetail->quantity,
-                    'image' => $cartDetail->image
-                ];
-
-                $this->orderDetailRepository->create($data);
-
-            }
-
-            return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
+                break;
         }
+
     }
 
     // show list order client
