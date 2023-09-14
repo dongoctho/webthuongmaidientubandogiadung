@@ -85,10 +85,11 @@
         elements,
         confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "{{ route('infor_order') }}",
+        return_url: "{{ route('addOderOnline', ['priceHandle' => $priceHandle, 'voucher_id' => $voucher_id, 'name' => $name, 'phone' => $phone, 'address' => $address, 'product_id' => $product_id]) }}",
         receipt_email: emailAddress,
         },
     });
+
 
     // This point will only be reached if there is an immediate error when
     // confirming the payment. Otherwise, your customer will be redirected to

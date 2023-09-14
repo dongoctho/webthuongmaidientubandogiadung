@@ -59,6 +59,131 @@ class OrderController extends Controller
         $this->sum_price_service = $sumPriceService;
     }
 
+    public function addOderOnline($priceHandle, $voucher_id, $name, $phone, $address, $product_id)
+    {
+        $user = auth()->user();
+        $productPrice = 0;
+        $sumPrice = 0;
+
+        if ( $product_id != 0 ) {
+            $idUserCart = $this->cartRepository->findUser($user->id);
+            $cartDetail = $this->cartDetailRepository->findProduct($product_id, $idUserCart->id);
+
+            if ( $cartDetail->product_type == 0 ) {
+                $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+            } else if ( $cartDetail->product_type == 1 ) {
+                $productPrice = $cartDetail->price - $cartDetail->discount;
+            }
+
+            $sumPrice = $productPrice * $cartDetail->quantity;
+
+            if ( $voucher_id == 0 ) {
+                $priceHandle = $sumPrice;
+                $dataUser = [
+                    'user_id' => $user->id,
+                    'voucher_id' => null,
+                    'name' => $name,
+                    'phone' => $phone,
+                    'address' => $address,
+                    'price' => $priceHandle,
+                    'status' => 0
+                ];
+            } else {
+                $voucher = $this->voucherRepository->find($voucher_id);
+                if ( $voucher->voucher_type == 0 ) {
+                    $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
+                } else if ( $voucher->voucher_type == 1 ) {
+                    $priceHandle = $sumPrice - $voucher->discount;
+                    if ( $priceHandle < 0) {
+                        $priceHandle = 0;
+                    }
+                }
+
+                $dataUser = [
+                    'user_id' => $user->id,
+                    'voucher_id' => $voucher->id,
+                    'name' => $name,
+                    'phone' => $phone,
+                    'address' => $address,
+                    'price' => $priceHandle,
+                    'status' => 0
+                ];
+            }
+
+            $orderId = $this->orderRepository->create($dataUser);
+
+            $data = [
+                'order_id' => $orderId->id,
+                'product_id' => $product_id,
+                'price' => $productPrice,
+                'quantity' => $cartDetail->quantity,
+                'image' => $cartDetail->image
+            ];
+
+            $this->orderDetailRepository->create($data);
+        } else {
+            $columnSelect = [
+                'carts.id as cart_id',
+                'products.price as price',
+                'carts_detail.quantity',
+                'carts_detail.image',
+                'carts_detail.id as cart_detail_id',
+                'products.name as product_name',
+                'products.id as product_id',
+                'products.sale as product_sale',
+                'products.discount',
+                'products.product_type'
+            ];
+
+            $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect);
+
+            if ($voucher_id == 0) {
+                $dataUser = [
+                    'user_id' => $user->id,
+                    'voucher_id' => null,
+                    'name' => $name,
+                    'phone' => $phone,
+                    'address' => $address,
+                    'price' => $priceHandle,
+                    'status' => 0
+                ];
+            } else {
+                $voucher = $this->voucherRepository->find($voucher_id);
+
+                $dataUser = [
+                    'user_id' => $user->id,
+                    'voucher_id' => $voucher->id,
+                    'name' => $name,
+                    'phone' => $phone,
+                    'address' => $address,
+                    'price' => $priceHandle,
+                    'status' => 0
+                ];
+            }
+
+            $orderId = $this->orderRepository->create($dataUser);
+
+            foreach ( $cartDetails as $cartDetail ) {
+                if ( $cartDetail->product_type == 0 ) {
+                    $productPrice = $cartDetail->price * (1 - ($cartDetail->discount / 100));
+                } else if ( $cartDetail->product_type == 1 ) {
+                    $productPrice = $cartDetail->price - $cartDetail->discount;
+                }
+                $data = [
+                    'order_id' => $orderId->id,
+                    'product_id' => $cartDetail->product_id,
+                    'price' => $productPrice,
+                    'quantity' => $cartDetail->quantity,
+                    'image' => $cartDetail->image
+                ];
+
+                $this->orderDetailRepository->create($data);
+            }
+        }
+
+        return redirect()->route('infor_order')->with('msg', 'Mua Hàng Thành Công');
+    }
+
     public function indexCheckoutOnline()
     {
         return view('client.payment_online');
@@ -348,7 +473,15 @@ class OrderController extends Controller
                 $priceHandle = 0;
                 $productPrice = 0;
                 $sumPrice = 0;
+                $voucher_id_check = 0;
+                $product_id = 0;
                 $voucher_id = explode("-", $request->voucher_id);
+                if ($voucher_id[2] != "") {
+                    $voucher_id_check = $voucher_id[2];
+                }
+                if (isset($request->product_id)) {
+                    $product_id = $request->product_id;
+                }
 
                 $columnSelect = [
                     'carts.id as cart_id',
@@ -364,7 +497,6 @@ class OrderController extends Controller
                 ];
 
                 $cartDetails = $this->cartDetailRepository->getDetailCart($user->id, $columnSelect);
-                $voucher_id = explode("-", $request->voucher_id);
                 $idUserCart = $this->cartRepository->findUser($user->id);
 
                 foreach ($cartDetails as $cartDetail) {
@@ -373,25 +505,13 @@ class OrderController extends Controller
                     } else if ( $cartDetail->product_type == 1 ) {
                         $productPrice = $cartDetail->price - $cartDetail->discount;
                     }
-
                     $sumPrice += $productPrice * $cartDetail->quantity;
                 }
 
                 $priceHandle = 0;
                     if ( $voucher_id['2'] == "" ) {
-
                         $priceHandle = $sumPrice;
-                        $dataUser = [
-                            'user_id' => $user->id,
-                            'voucher_id' => null,
-                            'name' => $request->name,
-                            'phone' => $request->phone,
-                            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                            'price' => $priceHandle,
-                            'status' => 0
-                        ];
                     } else {
-
                         $voucher = $this->voucherRepository->find($voucher_id[2]);
                         if ($voucher->voucher_type == 0) {
                             $priceHandle = $sumPrice * (1 - ($voucher->discount / 100));
@@ -401,15 +521,6 @@ class OrderController extends Controller
                                 $priceHandle = 0;
                             }
                         }
-                        $dataUser = [
-                            'user_id' => $user->id,
-                            'voucher_id' => $voucher->id,
-                            'name' => $request->name,
-                            'phone' => $request->phone,
-                            'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
-                            'price' => $priceHandle,
-                            'status' => 0
-                        ];
                     }
 
                 $stripe = new StripeClient(env('STRIPE_SECRET'));
@@ -423,11 +534,16 @@ class OrderController extends Controller
 
                 return view('client.payment_online', [
                     'clientSecret' => $paymentIntent->client_secret,
+                    'priceHandle' => $priceHandle,
+                    'voucher_id' => $voucher_id_check,
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'address' => $request->homenumber.'-'.$request->ward.'-'.$request->city.'-'.$request->country,
+                    'product_id' => $product_id
                 ]);
 
                 break;
             case 'offline':
-                dd($request->all());
                 $user = auth()->user();
                 $priceHandle = 0;
                 $productPrice = 0;
@@ -485,7 +601,7 @@ class OrderController extends Controller
                     $data = [
                         'order_id' => $orderId->id,
                         'product_id' => $request->product_id,
-                        'price' => $sumPrice,
+                        'price' => $productPrice,
                         'quantity' => $cartDetail->quantity,
                         'image' => $cartDetail->image
                     ];

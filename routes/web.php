@@ -12,8 +12,6 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
-use Laravel\Socialite\Facades\Socialite;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,6 +40,7 @@ Route::get('/google/callback',[AuthController::class, 'handleGoogleCallback'])->
 //client
 Route::get('',[IndexController::class, 'indexClient'])->name('client_index');
 Route::get('/checkout',[OrderController::class, 'index'])->name('checkout_index');
+Route::get('/checkout/infor/online/{priceHandle}/{voucher_id}/{name}/{phone}/{address}/{product_id}',[OrderController::class, 'addOderOnline'])->name('addOderOnline');
 Route::get('/checkout/payment_online',[OrderController::class, 'indexCheckoutOnline'])->name('initializeCheckout');
 Route::post('/checkout/payment',[OrderController::class, 'addOrder'])->name('payment');
 Route::post('/checkout/infor/reorder/{id}',[OrderController::class, 'addReOrder']);
