@@ -61,7 +61,7 @@ Route::post('/information/edit',[IndexController::class, 'editInfor']);
 
 //admin
 Route::prefix('admin')->middleware('CheckLogin')->group(function(){
-    Route::get('/dashboard',[DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     //User
     Route::prefix('user')->group(function(){

@@ -9,6 +9,11 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
 
+  <link rel="stylesheet" href="https://cdn.oesmith.co.uk/morris-0.4.3.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+  <script src="https://cdn.oesmith.co.uk/morris-0.4.3.min.js"></script>
+
   <!-- Favicons -->
   <link href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0VN5j6WlcXGAbSQ7KBsfevUmdd9q35w4bsw&usqp=CAU" rel="icon">
   <link href="{{asset('assetss/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
@@ -31,14 +36,6 @@
 
   <!-- Template Main CSS File -->
   <link href="{{asset('assetss/css/style.css')}}" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Updated: Mar 09 2023 with Bootstrap v5.2.3
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
@@ -67,6 +64,15 @@
   <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a
+        @if (isset($check_dashboard))
+            style="background-color: rgb(225, 225, 225)"
+        @endif
+        class="nav-link collapsed" href="{{route('dashboard')}}">
+            <i class="bi bi-bar-chart"></i><span>Thống kê</span>
+        </a>
+        </li><!-- End Components Nav -->
 
       <li class="nav-item">
         <a
@@ -74,7 +80,7 @@
             style="background-color: rgb(225, 225, 225)"
         @endif
         class="nav-link collapsed" href="{{route('list_category')}}">
-          <i class="bi bi-menu-button-wide"></i><span>Danh Mục</span>
+          <i class="bi bi-border-all"></i><span>Danh Mục</span>
         </a>
       </li><!-- End Components Nav -->
 
@@ -84,7 +90,7 @@
             style="background-color: rgb(225, 225, 225)"
         @endif
         class="nav-link collapsed" href="{{route('list_manufacture')}}">
-          <i class="bi bi-journal-text"></i><span>Nhà Sản Xuất</span>
+          <i class="bi bi-house-gear"></i><span>Nhà Sản Xuất</span>
         </a>
       </li><!-- End Forms Nav -->
 
@@ -104,7 +110,7 @@
             style="background-color: rgb(225, 225, 225)"
         @endif
         class="nav-link collapsed" href="{{route('list_storage')}}">
-          <i class="bi bi-bar-chart"></i><span>Kho Hàng</span>
+          <i class="bi bi-box-seam-fill"></i><span>Kho Hàng</span>
         </a>
       </li><!-- End Charts Nav -->
 
@@ -114,7 +120,7 @@
             style="background-color: rgb(225, 225, 225)"
         @endif
         class="nav-link collapsed" href="{{route('list_voucher')}}">
-          <i class="bi bi-gem"></i><span>Phiếu Giảm Giá</span>
+          <i class="bi bi-cash"></i><span>Phiếu Giảm Giá</span>
         </a>
       </li><!-- End Icons Nav -->
 
@@ -189,6 +195,7 @@
   @yield('list_cart_detail')
   @yield('list_user')
   @yield('add_user')
+  @yield('statistical')
   <!-- end yield -->
 
   </main><!-- End #main -->

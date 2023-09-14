@@ -15,6 +15,7 @@ class DashboardController extends Controller
     // show dashboard page
     public function dashboard()
     {
-        return redirect()->route('list_category');
+        $check_dashboard = true;
+        return view('admin.statistical', compact('check_dashboard'));
     }
 }
