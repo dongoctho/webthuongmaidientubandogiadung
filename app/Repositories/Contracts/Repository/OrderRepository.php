@@ -13,6 +13,18 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         return Order::class;
     }
 
+    public function sumSale($month)
+    {
+        $query = $this->model->newQuery();
+
+        $query->selectRaw("SUM(orders_detail.quantity) as sumSale")
+              ->leftjoin("orders_detail", "orders.id", "=", "orders_detail.order_id")
+              ->whereRaw("orders.status = 3")
+              ->whereRaw("DATE_FORMAT(orders.updated_at,'%m') = '" . $month . "'");
+
+        return $query->get();
+    }
+
     public function findUser($id){
         return $this->model->where('user_id', $id)->first();
     }
