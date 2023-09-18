@@ -7,11 +7,11 @@
     </div>
 
     <div class="add-bottom">
-        <div class="add-bottom-input" style="display: flex;">
-            <div style="width: 1000px">
+        <div class="add-bottom-input" style="display: flex; margin-top: 50px;">
+            <div style="width: 1000px; background-color:white;">
                 <canvas id="myChart1"></canvas>
             </div>
-            <div style="width: 500px; margin-left:200px">
+            <div style="width: 500px; margin-left:50px; background-color:white;">
                 <canvas id="myChart2"></canvas>
             </div>
 
@@ -25,17 +25,27 @@
                   type: 'pie',
                   data: {
                     labels: [
-                        'Red',
-                        'Blue',
-                        'Yellow'
+                        'Đang chờ xác nhận',
+                        'Đơn hàng đã đặt',
+                        'Đã giao cho ĐVVC',
+                        'Đã nhận được hàng',
+                        'Đơn hàng đặt không thành công'
                     ],
                     datasets: [{
                         label: 'My First Dataset',
-                        data: [300, 50, 100],
+                        data: [
+                            {{ $status0[0]['countStatus'] }},
+                            {{ $status1[0]['countStatus'] }},
+                            {{ $status2[0]['countStatus'] }},
+                            {{ $status3[0]['countStatus'] }},
+                            {{ $status4[0]['countStatus'] }},
+                        ],
                         backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                            'rgb(54, 162, 235)',
+                            'rgb(135, 162, 235)',
+                            'rgb(123, 12, 100)',
+                            'rgb(255, 110, 132)',
+                            'rgb(255, 230, 86)'
                         ],
                         hoverOffset: 4
                     }]
@@ -44,8 +54,10 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Danh sách sản phẩm bán chạy nhất',
-
+                            text: 'Thống kê trạng thái đơn hàng',
+                            font: {
+                                size: 20
+                            },
                         },
                     },
                   },
@@ -159,9 +171,19 @@
                         },
                         plugins: {
                             title: {
-                            display: true,
-                            text: 'Danh sách sản phẩm đã bán trong năm',
+                                font: {
+                                    size: 20
+                                },
+                                display: true,
+                                text: 'Biểu đồ sản phẩm đã bán trong năm',
                             },
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: 14
+                                    }
+                                }
+                            }
                         },
                     },
                 });

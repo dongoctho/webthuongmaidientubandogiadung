@@ -34,6 +34,12 @@ class DashboardController extends Controller
         $sumSale11 = $this->orderRepository->sumSale('11')->toArray();
         $sumSale12 = $this->orderRepository->sumSale('12')->toArray();
 
-        return view('admin.statistical', compact('check_dashboard','sumSale1','sumSale2','sumSale3','sumSale4','sumSale5','sumSale6','sumSale7','sumSale8','sumSale9','sumSale10','sumSale11','sumSale12'));
+        $status0 = $this->orderRepository->statusOrder("0")->toArray();
+        $status1 = $this->orderRepository->statusOrder("1")->toArray();
+        $status2 = $this->orderRepository->statusOrder("2")->toArray();
+        $status3 = $this->orderRepository->statusOrder("3")->toArray();
+        $status4 = $this->orderRepository->statusOrder("4")->toArray();
+
+        return view('admin.statistical', compact('check_dashboard','sumSale1','sumSale2','sumSale3','sumSale4','sumSale5','sumSale6','sumSale7','sumSale8','sumSale9','sumSale10','sumSale11','sumSale12', 'status0', 'status1', 'status2', 'status3', 'status4'));
     }
 }

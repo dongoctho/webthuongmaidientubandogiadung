@@ -13,6 +13,16 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         return Order::class;
     }
 
+    public function statusOrder($status)
+    {
+        $query = $this->model->newQuery();
+
+        $query->selectRaw("COUNT(orders.status) as countStatus")
+              ->whereRaw("orders.status = " . $status);
+
+        return $query->get();
+    }
+
     public function sumSale($month)
     {
         $query = $this->model->newQuery();
