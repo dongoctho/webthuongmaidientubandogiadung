@@ -13,6 +13,14 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return Product::class;
     }
 
+    public function countProduct()
+    {
+        $query = $this->model->newQuery();
+        $query->selectRaw("COUNT(id) as ");
+
+        return $query->get();
+    }
+
     public function getProduct()
     {
         return $this->model->whereNull('deleted_at')->get();
