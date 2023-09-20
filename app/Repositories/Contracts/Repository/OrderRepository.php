@@ -13,6 +13,14 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         return Order::class;
     }
 
+    public function sumPrice()
+    {
+        $query = $this->model->newQuery();
+        $query->selectRaw("SUM(orders.price) as sumPrice");
+
+        return $query->get();
+    }
+
     public function statusOrder($status)
     {
         $query = $this->model->newQuery();
@@ -72,7 +80,7 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
             ->whereNull('deleted_at')
             ->orderByDesc('id');
 
-        return $query->paginate(15);
+        return $query->paginate(8);
     }
 
 }

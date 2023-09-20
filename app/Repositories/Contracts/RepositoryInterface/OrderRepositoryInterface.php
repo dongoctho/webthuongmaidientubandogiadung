@@ -12,4 +12,5 @@ interface OrderRepositoryInterface extends BaseRepositoryInterface
     public function findOrder($id);
     public function sumSale($month);
     public function statusOrder($status);
+    public function sumPrice();
 }

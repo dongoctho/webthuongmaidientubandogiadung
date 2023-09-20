@@ -134,6 +134,7 @@ class ProductController extends Controller
     // show list product admin
     public function list(Request $request)
     {
+        $check_product = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -144,7 +145,7 @@ class ProductController extends Controller
         $manufactures = $this->manufactureRepository->getAll();
         $categories = $this->categoryRepository->getAll();
 
-        return view('admin.product.list_product', compact('products', 'manufactures', 'categories', 'key', 'data'));
+        return view('admin.product.list_product', compact('check_product','products', 'manufactures', 'categories', 'key', 'data'));
     }
 
     // delete product admin

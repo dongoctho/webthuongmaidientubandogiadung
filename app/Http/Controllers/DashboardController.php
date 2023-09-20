@@ -3,18 +3,26 @@
 namespace App\Http\Controllers;
 use App\Repositories\Contracts\RepositoryInterface\CategoryRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\OrderRepositoryInterface;
+use App\Repositories\Contracts\RepositoryInterface\ProductRepositoryInterface;
+use App\Repositories\Contracts\RepositoryInterface\UserRepositoryInterface;
 
 class DashboardController extends Controller
 {
     protected $categoryRepository;
     protected $orderRepository;
+    protected $productRepository;
+    protected $userRepository;
 
     public function __construct(
         CategoryRepositoryInterface $categoryRepositoryInterface,
-        OrderRepositoryInterface $orderRepositoryInterface
+        OrderRepositoryInterface $orderRepositoryInterface,
+        ProductRepositoryInterface $productRepositoryInterface,
+        UserRepositoryInterface $userRepositoryInterface
     ) {
         $this->categoryRepository = $categoryRepositoryInterface;
         $this->orderRepository = $orderRepositoryInterface;
+        $this->productRepository = $productRepositoryInterface;
+        $this->userRepository = $userRepositoryInterface;
     }
 
     // show dashboard page
@@ -40,6 +48,12 @@ class DashboardController extends Controller
         $status3 = $this->orderRepository->statusOrder("3")->toArray();
         $status4 = $this->orderRepository->statusOrder("4")->toArray();
 
-        return view('admin.statistical', compact('check_dashboard','sumSale1','sumSale2','sumSale3','sumSale4','sumSale5','sumSale6','sumSale7','sumSale8','sumSale9','sumSale10','sumSale11','sumSale12', 'status0', 'status1', 'status2', 'status3', 'status4'));
+        $countproduct = $this->productRepository->countProduct()->toArray();
+
+        $sumPrice = $this->orderRepository->sumPrice();
+
+        $newUser = $this->userRepository->newUser();
+
+        return view('admin.statistical', compact('newUser','sumPrice','countproduct','check_dashboard','sumSale1','sumSale2','sumSale3','sumSale4','sumSale5','sumSale6','sumSale7','sumSale8','sumSale9','sumSale10','sumSale11','sumSale12', 'status0', 'status1', 'status2', 'status3', 'status4'));
     }
 }

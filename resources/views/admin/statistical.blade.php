@@ -4,7 +4,7 @@
 
     <div class="category_top" style="margin: 50px 0 0 0;">
         <div class="statistical" style="display:flex; justify-content:space-around;">
-            <div class="statis-left" style="border-radius: 15px;display:flex; justify-content: space-around;color:white; background-image: linear-gradient(to right, rgb(219, 38, 38) , rgb(53, 81, 236)); width:300px;">
+            <div class="statis-left" style="border-radius: 15px;display:flex; justify-content: space-around;color:white; background-image: linear-gradient(to right, rgb(212, 117, 173) , rgb(71, 93, 221)); width:300px;">
                 <div class="icon" style="padding-top: 30px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-clipboard2-check-fill" viewBox="0 0 16 16">
                         <path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z"/>
@@ -12,11 +12,11 @@
                       </svg>
                 </div>
                 <div class="title" style="text-align:center; font-weight: bold; padding-top:15px">
-                    <p style="">1</p>
-                    <p style="margin-top:30px">Tổng số sản phẩm đang có</p>
+                    <p style="font-size: 30px">{{ $countproduct[0]['countProduct'] }}</p>
+                    <p style="">Tổng số sản phẩm hiện có</p>
                 </div>
             </div>
-            <div class="statis-center1" style="border-radius: 15px;display:flex; justify-content: space-around;color:white; background-image: linear-gradient(to right, rgb(53, 81, 236) , rgb(32, 196, 168)); width:300px;">
+            <div class="statis-center1" style="border-radius: 15px;display:flex; justify-content: space-around;color:white; background-image: linear-gradient(to right, rgb(71, 93, 221) , rgb(32, 196, 168)); width:300px;">
                 <div class="icon" style="padding-top: 30px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
@@ -26,11 +26,11 @@
                       </svg>
                 </div>
                 <div class="title" style="text-align:center; font-weight: bold; padding-top:15px">
-                    <p style="">1</p>
-                    <p style="margin-top:30px">Tổng số doanh thu</p>
+                    <p style="font-size: 30px">{{number_format($sumPrice[0]['sumPrice'])}} ₫</p>
+                    <p style="">Tổng số doanh thu</p>
                 </div>
             </div>
-            <div class="statis-center2" style="border-radius: 15px;display:flex; justify-content: space-around;color:white; background-image: linear-gradient(to right, rgb(32, 196, 168) , rgb(191, 47, 235)); width:300px;">
+            <div class="statis-center2" style="border-radius: 15px;display:flex; justify-content: space-around;color:white; background-image: linear-gradient(to right, rgb(32, 196, 168) , rgb(192, 110, 218)); width:300px;">
                 <div class="icon" style="padding-top: 30px">
                     <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-cart-plus" viewBox="0 0 16 16">
                         <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9V5.5z"/>
@@ -38,11 +38,11 @@
                       </svg>
                 </div>
                 <div class="title" style="text-align:center; font-weight: bold; padding-top:15px">
-                    <p style="">1</p>
-                    <p style="margin-top:30px">Tổng số đơn hàng mới</p>
+                    <p style="font-size: 30px">{{ $status0[0]['countStatus'] }}</p>
+                    <p style="">Tổng số đơn hàng mới</p>
                 </div>
             </div>
-            <div class="statis-right" style="border-radius: 15px;display:flex; justify-content: space-around;color:white; background-image: linear-gradient(to right, rgb(191, 47, 235) , rgb(212, 182, 46)); width:300px;">
+            <div class="statis-right" style="border-radius: 15px;display:flex; justify-content: space-around;color:white; background-image: linear-gradient(to right, rgb(192, 110, 218) , rgb(212, 182, 46)); width:300px;">
                 <div class="icon" style="padding-top: 30px">
                     <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
                         <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
@@ -50,14 +50,14 @@
                       </svg>
                 </div>
                 <div class="title" style="text-align:center; font-weight: bold; padding-top:15px">
-                    <p style="">1</p>
-                    <p style="margin-top:30px">Tổng số tài khoản khách hàng</p>
+                    <p style="font-size: 30px">{{ $newUser[0]['newUser'] }}</p>
+                    <p style="">Tổng số tài khoản khách hàng</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="add-bottom">
+    <div class="add-bottom" style="display: flex; justify-content:center">
         <div class="add-bottom-input" style="display: flex; margin-top: 50px;">
             <div style="width: 1000px; background-color:white;">
                 <canvas id="myChart1"></canvas>
@@ -83,7 +83,7 @@
                         'Đơn hàng đặt không thành công'
                     ],
                     datasets: [{
-                        label: 'My First Dataset',
+                        label: 'Số lượng',
                         data: [
                             {{ $status0[0]['countStatus'] }},
                             {{ $status1[0]['countStatus'] }},
@@ -226,7 +226,7 @@
                                     size: 20
                                 },
                                 display: true,
-                                text: 'Biểu đồ sản phẩm đã bán trong năm',
+                                text: 'Biểu đồ số sản phẩm đã bán trong năm',
                             },
                             legend: {
                                 labels: {

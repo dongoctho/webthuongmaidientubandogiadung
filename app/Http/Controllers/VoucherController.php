@@ -40,6 +40,7 @@ class VoucherController extends Controller
     // show list voucher
     public function list(Request $request)
     {
+        $check_voucher = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -48,7 +49,7 @@ class VoucherController extends Controller
 
         $vouchers = $this->voucherRepository->getVoucherByCondition($data);
 
-        return view('admin.voucher.list_voucher', compact('vouchers', 'key', 'data'));
+        return view('admin.voucher.list_voucher', compact('check_voucher', 'vouchers', 'key', 'data'));
     }
 
     // delete voucher

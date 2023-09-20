@@ -44,7 +44,7 @@ class StorageController extends Controller
         $arrayProduct = explode(".", $request->product_id);
         $product = $this->productRepository->findProduct($arrayProduct[1]);
         if (isset($product)) {
-            $storageCheck = $this->storageRepository->findProduct($arrayProduct[1]); 
+            $storageCheck = $this->storageRepository->findProduct($arrayProduct[1]);
             if (isset($storageCheck)) {
                 $msg = "Sản phẩm đã có trong kho";
             } else {
@@ -67,6 +67,7 @@ class StorageController extends Controller
     // show list storage
     public function list(Request $request)
     {
+        $check_storage = true;
         $key = "";
         $data = [
             'key' => $request->key
@@ -82,7 +83,7 @@ class StorageController extends Controller
         ];
         $storages = $this->storageRepository->getStorageByCondition($data, $column);
 
-        return view('admin.storage.list_storage', compact('storages', 'key', 'data'));
+        return view('admin.storage.list_storage', compact('check_storage','storages', 'key', 'data'));
     }
 
     // delete storage

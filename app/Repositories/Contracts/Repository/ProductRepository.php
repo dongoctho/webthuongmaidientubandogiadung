@@ -16,7 +16,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     public function countProduct()
     {
         $query = $this->model->newQuery();
-        $query->selectRaw("COUNT(id) as ");
+        $query->selectRaw("COUNT(id) as countProduct");
 
         return $query->get();
     }

@@ -13,6 +13,15 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return User::class;
     }
 
+    public function newUser()
+    {
+        $query = $this->model->newQuery();
+        $query->selectRaw("COUNT(users.id) as newUser")
+              ->where("users.role", "=", "2");
+
+        return $query->get();
+    }
+
     public function findUser($id){
         return $this->model->where('google_id', $id)->first();
     }
