@@ -61,19 +61,19 @@ input[type=submit] {
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
-  background-color: #fff; 
-  border-bottom: 1px solid #d4d4d4; 
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
 }
 
 /*when hovering an item:*/
 .autocomplete-items div:hover {
-  background-color: #e9e9e9; 
+  background-color: #e9e9e9;
 }
 
 /*when navigating through the items using the arrow keys:*/
 .autocomplete-active {
-  background-color: DodgerBlue !important; 
-  color: #ffffff; 
+  background-color: DodgerBlue !important;
+  color: #ffffff;
 }
 </style>
    <!-- Topbar Start -->
@@ -92,11 +92,11 @@ input[type=submit] {
                         @if ($oldSearch != "")
                             value="{{$oldSearch}}";
                         @endif
-                        style="height:40px;" 
-                        id="myInput" 
-                        type="text" 
-                        name="findProductByName" 
-                        class="form-control" 
+                        style="height:40px;"
+                        id="myInput"
+                        type="text"
+                        name="findProductByName"
+                        class="form-control"
                         placeholder="Tìm Kiếm Sản Phẩm">
                     </div>
                         <div class="input-group-append" style="background-color:rgb(255, 255, 255);">
@@ -213,6 +213,7 @@ input[type=submit] {
                         <h5 class="font-weight-semi-bold mb-4">Tìm Kiếm Theo Giá Sản Phẩm</h5>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox"
+                            style="border-radius: 100%"
                             class="custom-control-input"
                             id="price-1"
                             @if ($condition == 1)
