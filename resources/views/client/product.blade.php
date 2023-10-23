@@ -213,7 +213,6 @@ input[type=submit] {
                         <h5 class="font-weight-semi-bold mb-4">Tìm Kiếm Theo Giá Sản Phẩm</h5>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox"
-                            style="border-radius: 100%"
                             class="custom-control-input"
                             id="price-1"
                             @if ($condition == 1)
