@@ -60,19 +60,19 @@ input[type=submit] {
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
-  background-color: #fff; 
-  border-bottom: 1px solid #d4d4d4; 
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
 }
 
 /*when hovering an item:*/
 .autocomplete-items div:hover {
-  background-color: #e9e9e9; 
+  background-color: #e9e9e9;
 }
 
 /*when navigating through the items using the arrow keys:*/
 .autocomplete-active {
-  background-color: DodgerBlue !important; 
-  color: #ffffff; 
+  background-color: DodgerBlue !important;
+  color: #ffffff;
 }
 </style>
     <!-- Topbar Start -->
@@ -92,11 +92,11 @@ input[type=submit] {
                                 @if ($oldSearch != "")
                                     value="{{$oldSearch}}";
                                 @endif
-                                style="height:50px" 
-                                id="myInput" 
-                                type="text" 
-                                name="findProductByName" 
-                                class="form-control" 
+                                style="height:50px"
+                                id="myInput"
+                                type="text"
+                                name="findProductByName"
+                                class="form-control"
                                 placeholder="Tìm Kiếm Sản Phẩm">
                             </div>
                             <div class="input-group-append" style="background-color:rgb(255, 255, 255);">
@@ -272,7 +272,7 @@ input[type=submit] {
             </div>
             <div class="col-md-6 pb-4">
                 <div class="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
-                    <a href="{{route('show_product_index')}}"><img src="https://bucket.nhanh.vn/14f951-12134/art/artCT/20200810_25gc13HzjnCgLblb6Uwifk3n.jpg" alt=""></a>
+                    <a href="{{route('show_product_index')}}"><img src="https://logistics-solution.com/wp-content/uploads/2021/08/van-chuyen-do-gia-dung-tu-vn-di-cang-bangkok-thailand-bang-duong-bien-an-toan.jpg" alt=""></a>
                     <div class="position-relative" style="z-index: 1;">
                         <a href="{{route('show_product_index')}}"><h5 class="text-uppercase text-primary mb-3">Hoàn tiền 5% tất cả các mặt hàng</h5></a>
                         <a href="{{route('show_product_index')}}"><h1 class="mb-4 font-weight-semi-bold">Mẫu mã đa dạng</h1></a>
