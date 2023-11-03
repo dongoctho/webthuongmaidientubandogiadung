@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\RepositoryInterface\UserRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\PasswordResetRepositoryInterface;
+use App\Repositories\Contracts\RepositoryInterface\CartRepositoryInterface;
 use App\Http\Requests\CreateLoginFormRequest;
 use App\Http\Requests\CreateRegisterFormRequest;
 use App\Http\Requests\CreateChangePassFormRequest;
@@ -14,27 +15,46 @@ use Carbon\Carbon;
 use Laravel\Socialite\Facades\Socialite;
 use App\Constants\AuthConstant;
 use Illuminate\Support\Facades\Auth;
-use app\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
 use Illuminate\Support\Str;
-use Route;
 
 class AuthController extends Controller
 {
     protected $userRepository;
+    protected $cartRepository;
     protected $image_service;
     protected $passwordResetRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepositoryInterface,
         ImageService $imageService,
-        PasswordResetRepositoryInterface $PasswordResetRepositoryInterface
+        PasswordResetRepositoryInterface $PasswordResetRepositoryInterface,
+        CartRepositoryInterface $cartRepositoryInterface
     ) {
         $this->userRepository = $userRepositoryInterface;
         $this->image_service = $imageService;
         $this->passwordResetRepository = $PasswordResetRepositoryInterface;
+        $this->cartRepository = $cartRepositoryInterface;
+    }
+
+    public function changePassClient()
+    {
+        $user = auth()->user();
+        $count = $this->cartRepository->countProductInCart($user->id);
+
+        return view('client.change_password', compact('count', 'user'));
+    }
+
+    public function changePassClientConfirm(Request $request)
+    {
+        $user = auth()->user();
+        $oldPassword = password_hash($request->oldPassword, PASSWORD_DEFAULT);
+        $newPassword = Hash::make($request->newPassword);
+        $rePassword = Hash::make($request->rePassword);
+
+        dd($oldPassword, password_verify($request->oldPassword, $oldPassword));
     }
 
     public function indexForgot()
@@ -104,7 +124,6 @@ class AuthController extends Controller
                 Auth::login($userFind);
 
                 return redirect()->route('client_index');
-
             }else{
             $newUser = [
                 'name' => $user->name,

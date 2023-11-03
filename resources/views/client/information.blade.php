@@ -169,6 +169,7 @@
             <p style="color: red">{{$msg}}</p>
             @endif
             <a class="btn btn-primary btn-user btn-block" href="{{route('infor_index_edit')}}" type="submit">Cập Nhật Thông Tin Người Dùng</a>
+            <a style="margin-top: 20px" class="btn btn-primary btn-user btn-block" href="{{route('change_pass_client')}}" type="submit">Đổi Mật Khẩu</a>
     </div>
     <!-- Page Header End -->
 

@@ -19,6 +19,8 @@ use App\Repositories\Contracts\RepositoryInterface\CartDetailRepositoryInterface
 use App\Services\SumPriceService;
 use Stripe\StripeClient;
 use Stripe\PaymentIntent;
+use \PDF;
+
 class OrderController extends Controller
 {
     protected $userRepository;
@@ -57,6 +59,30 @@ class OrderController extends Controller
         $this->orderRepository = $orderRepositoryInterface;
         $this->orderDetailRepository = $orderDetailRepositoryInterface;
         $this->sum_price_service = $sumPriceService;
+    }
+
+    public function exportPDF($id)
+    {
+        $user = auth()->user();
+        $column = [
+            'orders_detail.order_id',
+            'orders_detail.id',
+            'orders_detail.order_id',
+            'orders_detail.product_id',
+            'orders_detail.price',
+            'orders_detail.quantity',
+            'orders_detail.image',
+            'products.name',
+            'products.discount',
+            'products.product_type',
+            'orders_detail.created_at'
+        ];
+        $data = $this->orderDetailRepository->getOrderDetail($user->id, $id, $column);
+
+        // return view('client.download_pdf')->with('data', $data);
+
+        $pdf = PDF::loadView('client.download_pdf', compact('data'));
+        return $pdf->download('ThongTinDonHang.pdf');
     }
 
     public function addOderOnline($priceHandle, $voucher_id, $name, $phone, $address, $product_id)

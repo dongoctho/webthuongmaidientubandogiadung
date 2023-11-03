@@ -58,6 +58,9 @@ Route::get('/product',[ProductController::class, 'indexProduct'])->name('show_pr
 Route::get('/information',[IndexController::class, 'information'])->name('infor_index');
 Route::get('/information/edit',[IndexController::class, 'editInformation'])->name('infor_index_edit');
 Route::post('/information/edit',[IndexController::class, 'editInfor']);
+Route::get('/information/change_password',[AuthController::class, 'changePassClient'])->name('change_pass_client');
+Route::post('/information/change_password',[AuthController::class, 'changePassClientConfirm']);
+route::get('/checkout/infor/exportPDF/{id}',[OrderController::class, 'exportPDF'])->name('export_pdf');
 
 //admin
 Route::prefix('admin')->middleware('CheckLogin')->group(function(){
