@@ -65,6 +65,7 @@ route::get('/checkout/infor/exportPDF/{id}',[OrderController::class, 'exportPDF'
 //admin
 Route::prefix('admin')->middleware('CheckLogin')->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/statistical_day', [DashboardController::class, 'saleDay'])->name('saleDay');
 
     //User
     Route::prefix('user')->group(function(){

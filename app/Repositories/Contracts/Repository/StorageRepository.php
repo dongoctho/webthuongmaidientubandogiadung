@@ -30,18 +30,6 @@ class StorageRepository extends BaseRepository implements StorageRepositoryInter
         return $query->paginate(6);
     }
 
-    public function updateProductId($id, $attributes = [])
-    {
-        $result = $this->model->where('product_id', $id)->first();
-        if($result){
-            $result->update($attributes);
-
-            return $result;
-        }
-
-        return false;
-    }
-
     public function findProduct($product_id)
     {
         return $this->model

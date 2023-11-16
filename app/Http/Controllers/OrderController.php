@@ -891,8 +891,8 @@ class OrderController extends Controller
             } else {
                 foreach ($order_details as $order_detail) {
                     $storage = $this->storageRepository->findProduct($order_detail->product_id);
-                    $this->storageRepository->updateProductId($order_detail->product_id, ['quantity' => $storage->quantity - $order_detail->quantity]);
                     $this->productRepository->update($order_detail->product_id, ['sale' => $order_detail->sale + $order_detail->quantity]);
+                    $this->storageRepository->update($storage->id, ['quantity' => $storage->quantity - $order_detail->quantity]);
                 }
 
                 if (isset($voucher)) {

@@ -115,99 +115,20 @@
                 });
 
 
-                const labels = ['01', '02', '03', '04', '05', '06', '07','08', '09', '10', '11', '12'];
+                const labels = ['Hôm nay'];
                 const data = {
                     labels: labels,
                     datasets: [{
-                        type: 'line',
-                        label: 'Biểu đồ đường',
-                        data: [
-                            {{ $sumSale1[0]['sumSale'] }},
-                            {{ $sumSale2[0]['sumSale'] }},
-                            {{ $sumSale3[0]['sumSale'] }},
-                            {{ $sumSale4[0]['sumSale'] }},
-                            {{ $sumSale5[0]['sumSale'] }},
-                            {{ $sumSale6[0]['sumSale'] }},
-                            {{ $sumSale7[0]['sumSale'] }},
-                            {{ $sumSale8[0]['sumSale'] }},
-                            {{ $sumSale9[0]['sumSale'] }},
-                            {{ $sumSale10[0]['sumSale'] }},
-                            {{ $sumSale11[0]['sumSale'] }},
-                            {{ $sumSale12[0]['sumSale'] }}
-                        ],
-                        backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 99, 132, 0.2)'
-                        ],
-                        borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 99, 132)'
-                        ],
-                        borderWidth: 1
-                    }, {
                         type: 'bar',
                         label: 'Biểu đồ cột',
                         data: [
-                            {{ $sumSale1[0]['sumSale'] }},
-                            {{ $sumSale2[0]['sumSale'] }},
-                            {{ $sumSale3[0]['sumSale'] }},
-                            {{ $sumSale4[0]['sumSale'] }},
-                            {{ $sumSale5[0]['sumSale'] }},
-                            {{ $sumSale6[0]['sumSale'] }},
-                            {{ $sumSale7[0]['sumSale'] }},
-                            {{ $sumSale8[0]['sumSale'] }},
-                            {{ $sumSale9[0]['sumSale'] }},
-                            {{ $sumSale10[0]['sumSale'] }},
-                            {{ $sumSale11[0]['sumSale'] }},
-                            {{ $sumSale12[0]['sumSale'] }}
+                            {{ $sumsaleday[0]['sumSale'] }}
                         ],
                         backgroundColor: [
                         'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(153, 102, 255, 0.2)'
                         ],
                         borderColor: [
                         'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)',
-                        'rgb(153, 102, 255)'
                         ],
                         borderWidth: 1
                     }]
@@ -226,7 +147,7 @@
                                     size: 20
                                 },
                                 display: true,
-                                text: 'Biểu đồ số sản phẩm đã bán trong năm',
+                                text: 'Biểu đồ số đơn hàng mới trong ngày',
                             },
                             legend: {
                                 labels: {
@@ -243,7 +164,7 @@
     </div>
     <div class="" style="display: flex; justify-content:center; margin-top:30px">
         <div class="" style="border: 1px solid rgb(35, 117, 193); padding: 20px 50px 20px 50px; border-radius: 15px; background-color:rgb(12, 73, 130)">
-            <a href="{{route('saleDay')}}" style="font-size: larger; font-weight:bolder; color:white">Xem thống kê ngày hôm nay</a>
+            <a href="{{route('dashboard')}}" style="font-size: larger; font-weight:bolder; color:white">Trở về</a>
         </div>
     </div>
 </div>

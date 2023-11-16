@@ -5,6 +5,7 @@ namespace App\Repositories\Contracts\Repository;
 use App\Models\Order;
 use App\Repositories\Contracts\RepositoryInterface\OrderRepositoryInterface;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 
 class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 {
@@ -31,14 +32,36 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         return $query->get();
     }
 
-    public function sumSale($month)
+    public function statusOrderDay($status, $yes)
+    {
+        $query = $this->model->newQuery();
+
+        $query->selectRaw("COUNT(orders.id) as countStatus")
+              ->whereRaw("orders.status = " . $status)
+              ->whereRaw("DATE_FORMAT(orders.created_at, '%Y-%m-%d') > '" . $yes . "'");
+
+        return $query->get();
+    }
+
+    public function sumSale($month, $year)
     {
         $query = $this->model->newQuery();
 
         $query->selectRaw("SUM(orders_detail.quantity) as sumSale")
               ->leftjoin("orders_detail", "orders.id", "=", "orders_detail.order_id")
               ->whereRaw("orders.status = 3")
-              ->whereRaw("DATE_FORMAT(orders.updated_at,'%m') = '" . $month . "'");
+              ->whereRaw("DATE_FORMAT(orders.updated_at,'%m') = '" . $month . "'")
+              ->whereRaw("DATE_FORMAT(orders.updated_at,'%Y') = '" . $year . "'");
+
+        return $query->get();
+    }
+
+    public function sumSaleDay($yes)
+    {
+        $query = $this->model->newQuery();
+
+        $query->selectRaw("count(orders.id) as sumSale")
+              ->whereRaw("DATE_FORMAT(orders.created_at, '%Y-%m-%d') > '" . $yes . "'");
 
         return $query->get();
     }
