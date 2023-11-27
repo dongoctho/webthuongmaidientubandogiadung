@@ -316,7 +316,7 @@ input[type=submit] {
                     @endforeach
                 </div>
                 <div class="col-12 pb-1" style="display: flex;  justify-content: center">
-                    {!! $products->appends($data)->links() !!}
+                    {!! $products->appends($dataSearch)->links() !!}
                 </div>
             </div>
             <!-- Shop Product End -->

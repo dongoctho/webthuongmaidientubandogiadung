@@ -47,7 +47,8 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         $query = $this->model->newQuery();
         $query->select($column)->where('products.deleted_at', '=', null)
                                ->where('storages.quantity', '>', '0')
-                               ->join('storages', 'products.id', '=', 'storages.product_id');
+                               ->whereNull('storages.deleted_at')
+                               ->leftjoin('storages', 'products.id', '=', 'storages.product_id');
 
         if (isset($condition['seachByPrice'])) {
             if ($condition['seachByPrice'] == 1) {

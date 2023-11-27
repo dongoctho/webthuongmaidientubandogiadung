@@ -17,7 +17,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         $query = $this->model->newQuery();
         $query->selectRaw("COUNT(users.id) as newUser")
-              ->where("users.role", "=", "2");
+              ->where("users.role", "=", "1");
 
         return $query->get();
     }

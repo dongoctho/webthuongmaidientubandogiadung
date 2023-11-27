@@ -74,7 +74,7 @@ class ProductController extends Controller
             $count = $this->cartRepository->countProductInCart($user->id);
         }
 
-        return view('client.product', compact('user', 'count', 'products', 'condition', 'data', 'oldSearch'));
+        return view('client.product', compact('user', 'count', 'products', 'condition', 'data', 'oldSearch', 'dataSearch'));
     }
 
     // show product detail client

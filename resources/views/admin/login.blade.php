@@ -1,127 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-
+  <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Đăng Nhập</title>
-
-    <!-- Custom fonts for this template-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://cdn-icons-png.flaticon.com/512/6681/6681204.png" rel="icon">
 
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('styleLogin/fonts/icomoon/style.css')}}">
 
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('styleLogin/css/owl.carousel.min.css')}}">
 
-</head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ asset('styleLogin/css/bootstrap.min.css')}}">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="{{ asset('styleLogin/css/style.css')}}">
+
+    <title>Đăng nhập</title>
+  </head>
+  <body>
 
 
-<body class="bg-gradient-primary">
+  <div class="d-lg-flex half">
+    <div class="bg order-1 order-md-2" style="background-image: url('{{asset("styleLogin/images/bg_1.jpg")}}');"></div>
+    <div class="contents order-2 order-md-1">
 
-    <div class="container">
-
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
-
-            <div class="col-xl-10 col-lg-12 col-md-9">
-
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                            <div class="row">
-                                <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                                <div class="col-lg-6">
-                                    <div class="p-5">
-                                        <div class="text-center">
-                                            <h1 class="h4 text-gray-900 mb-4">Đăng Nhập!</h1>
-                                        </div>
-                                        <form action="" method="post">
-                                            @csrf
-                                            <div class="form-group">
-                                                <input name="email"
-                                                    class="form-control form-control-user"
-                                                    id="exampleInputEmail" aria-describedby="emailHelp"
-                                                    placeholder="Nhập địa chỉ email"
-                                                    value="{{old('email')}}"
-                                                    >
-                                                    @if ($errors->all())
-                                                    <p style="color: red">{{$errors->first('email')}}</p>
-                                                    @endif
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="password" name="password"
-                                                    class="form-control form-control-user"
-                                                    id="exampleInputPassword" placeholder="Nhập mật khẩu"
-                                                    >
-                                                    @if ($errors->all())
-                                                    <p style="color: red">{{$errors->first('password')}}</p>
-                                                    @endif
-                                            </div>
-
-                                            <input class="btn btn-primary btn-user btn-block" type="submit" value="Đăng nhập">
-                                            @if ($errors->all())
-                                                <script>
-                                                    swal({
-                                                        title: "Lỗi đăng nhập !",
-                                                        text: "Hãy thực hiện lại",
-                                                        icon: "warning",
-                                                        buttons: true,
-                                                        dangerMode: true,
-                                                        })
-                                                </script>
-                                            @endif
-                                            @if (Session::has('msg'))
-                                                <script>
-                                                    swal({
-                                                        title: "{{Session::get('msg')}}",
-                                                        buttons: true,
-                                                        })
-                                                </script>
-                                            @endif
-                                            <hr>
-                                            <a href="{{route('login_google')}}" class="btn btn-google btn-user btn-block">
-                                                <i class="fab fa-google fa-fw"></i> Đăng nhập bằng google
-                                            </a>
-                                        </form>
-                                        <hr>
-                                        <div class="text-center">
-                                            <a class="small" href="{{route('index_forgot')}}">Quên mật khẩu ?</a>
-                                        </div>
-                                        <div class="text-center">
-                                            <a class="small" href="{{route('register_page')}}">Bạn chưa có tài khoản? Tạo tài khoản!</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-7">
+            <h3>Đăng nhập vào <strong style="color: rgb(255, 0, 98);">Shop đồ gia dụng</strong></h3>
+            <p class="mb-4">Xin hãy đăng nhập.</p>
+            <form action="" method="post">
+                @csrf
+              <div class="form-group first">
+                <label for="username">Tên đăng nhập</label>
+                <input name="email"
+                class="form-control form-control-user"
+                id="exampleInputEmail" aria-describedby="emailHelp"
+                placeholder="Nhập địa chỉ email"
+                value="{{old('email')}}"
+                >
+                @if ($errors->all())
+                <p style="color: red">{{$errors->first('email')}}</p>
+                @endif
             </div>
+              <div class="form-group last mb-3">
+                <label for="password">Mật khẩu</label>
+                <input type="password" name="password"
+                class="form-control form-control-user"
+                id="exampleInputPassword" placeholder="Nhập mật khẩu"
+                >
+                @if ($errors->all())
+                <p style="color: red">{{$errors->first('password')}}</p>
+                @endif
+              </div>
 
+              <div class="d-flex mb-5 align-items-center">
+                <label class="control control--checkbox mb-0"><span class="caption">Remember me</span>
+                  <input type="checkbox" checked="checked"/>
+                  <div class="control__indicator"></div>
+                </label>
+                <span class="ml-auto"><a style="font-size: larger" href="{{route('index_forgot')}}" class="forgot-pass">Quên mật khẩu</a></span>
+              </div>
+
+              <input type="submit" value="Đăng nhập" class="btn btn-block btn-primary">
+              <hr>
+            </form>
+            <a style="font-size: larger" href="{{route('login_google')}}" class="btn btn-google btn-user btn-block">
+                <i class="fab fa-google fa-fw"></i> Đăng nhập bằng google
+            </a>
+            <div class="text-center">
+                <a style="font-size: larger" class="small" href="{{route('register_page')}}">Bạn chưa có tài khoản? Tạo tài khoản!</a>
+            </div>
+          </div>
         </div>
-
+      </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @if ($errors->all())
+    <script>
+        swal({
+            title: "Lỗi đăng nhập !",
+            text: "Hãy thực hiện lại",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+    </script>
+@endif
+@if (Session::has('msg'))
+    <script>
+        swal({
+            title: "{{Session::get('msg')}}",
+            buttons: true,
+            })
+    </script>
+@endif
+  </div>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
 
-</body>
-
+    <script src="{{ asset('styleLogin/js/jquery-3.3.1.min.js')}}"></script>
+    <script src="{{ asset('styleLogin/js/popper.min.js')}}"></script>
+    <script src="{{ asset('styleLogin/js/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('styleLogin/js/main.js')}}"></script>
+  </body>
 </html>
