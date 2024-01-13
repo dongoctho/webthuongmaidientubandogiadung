@@ -55,27 +55,6 @@
         .addEventListener("submit", handleSubmit);
 
     let emailAddress = '';
-    // Fetches a payment intent and captures the client secret
-    // async function initialize() {
-    //     // const { clientSecret } = await fetch("{{route('initializeCheckout')}}", {
-    //     //     method: "POST",
-    //     //     headers: { "Content-Type": "application/json" },
-    //     //     body: JSON.stringify({ items }),
-    //     // }).then((r) => r.json());
-
-    //     // elements = stripe.elements('{{$clientSecret}}');
-    //     elements = stripe.elements('pi_3NiwmqIW7Pk2Gqcq2dHKJNad_secret_scEN8Kfpd3YFBzFQ6NPtXewl0');
-
-    //     const linkAuthenticationElement = elements.create("linkAuthentication");
-    //     linkAuthenticationElement.mount("#link-authentication-element");
-
-    //     const paymentElementOptions = {
-    //         layout: "tabs",
-    //     };
-
-    //     const paymentElement = elements.create("payment", paymentElementOptions);
-    //     paymentElement.mount("#payment-element");
-    // }
 
     async function handleSubmit(e) {
     e.preventDefault();

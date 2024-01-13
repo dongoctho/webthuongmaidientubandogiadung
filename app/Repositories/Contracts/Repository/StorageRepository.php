@@ -19,6 +19,7 @@ class StorageRepository extends BaseRepository implements StorageRepositoryInter
         $query->select($column)
             ->where('storages.deleted_at', '=', null)
             ->where('storages.quantity', '>', '0')
+            ->orderByDesc('id')
             ->join('products', 'storages.product_id', '=', 'products.id')->get();
 
         if (isset($condition['key'])) {
@@ -33,15 +34,16 @@ class StorageRepository extends BaseRepository implements StorageRepositoryInter
     public function findProduct($product_id)
     {
         return $this->model
+        ->select('id', 'product_id', 'quantity')
         ->where('product_id', $product_id)
-        ->where('storages.deleted_at', '=', null)
-        ->first();
+        ->where('storages.deleted_at', '=', null)->get();
     }
 
     public function getProductSale($condition, array $column = ['*'])
     {
         $query = $this->model->newQuery();
-        $query->select($column)->where('storages.deleted_at', '=', null)
+        $query->select($column)->distinct()
+                               ->where('storages.deleted_at', '=', null)
                                ->join('products', 'products.id', '=', 'storages.product_id')
                                ->where('products.sale', '>', 0)
                                ->where('storages.quantity', '>', '0')

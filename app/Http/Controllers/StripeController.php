@@ -8,6 +8,7 @@ class StripeController extends Controller
 {
     public function initializeCheckout()
     {
+        dd(123);
         require_once '../vendor/autoload.php';
         require_once '../secrets.php';
 

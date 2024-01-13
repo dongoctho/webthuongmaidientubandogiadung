@@ -51,7 +51,7 @@
                 </div>
                 <div class="title" style="text-align:center; font-weight: bold; padding-top:15px">
                     <p style="font-size: 30px">{{ $newUser[0]['newUser'] }}</p>
-                    <p style="">Tổng số tài khoản khách hàng</p>
+                    <p style="">Tổng số tài khoản mới</p>
                 </div>
             </div>
         </div>
@@ -119,8 +119,8 @@
                 const data = {
                     labels: labels,
                     datasets: [{
-                        type: 'bar',
-                        label: 'Biểu đồ cột',
+                        type: 'doughnut',
+                        label: 'Biểu đồ',
                         data: [
                             {{ $sumsaleday[0]['sumSale'] }}
                         ],

@@ -37,7 +37,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                   ->get();
         }
 
-        return $query->paginate(6);
+        return $query->paginate(10);
     }
 
     public function findEmail($email)

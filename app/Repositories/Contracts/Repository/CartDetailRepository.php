@@ -16,6 +16,7 @@ class CartDetailRepository extends BaseRepository implements CartDetailRepositor
     public function findProduct($product_id, $cart_id)
     {
         return $this->model
+        ->select('product_id', 'carts_detail.id', 'carts_detail.quantity', 'carts_detail.image', 'products.price', 'products.discount', 'products.product_type')
         ->where('carts_detail.product_id', $product_id)
         ->where('carts_detail.cart_id', $cart_id)
         ->where('carts_detail.deleted_at', '=', null)

@@ -19,7 +19,10 @@
                   value="{{$key}}">
                   <button type="submit" style="height: 40px; background-color:white; padding-right: 15px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-top: solid 1px gray;border-right: solid 1px gray;border-bottom: solid 1px gray;border-left: 0;" title="Search"><i class="bi bi-search"></i></button>
                 </form>
-                <a href="{{route('add_storage')}}" class="btn btn-primary">Thêm Mới</a>
+                <div class="">
+                    <a href="{{route('list_storage_detail')}}" class="btn btn-primary">Danh Sách Nhập Kho</a>
+                    <a href="{{route('add_storage')}}" class="btn btn-primary">Nhập Kho</a>
+                </div>
             </div>
             @if (Session::has('msg'))
             <div class="" style="display: flex; justify-content:center;">

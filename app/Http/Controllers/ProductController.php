@@ -85,7 +85,7 @@ class ProductController extends Controller
         ];
         $user = auth()->user();
         $product_detail = $this->productRepository->find($id);
-        $storages = $this->storageRepository->findProduct($id);
+        $storages = $this->storageRepository->findProduct($id)->first();
         $manufacture = $this->manufactureRepository->find($product_detail->manufacture_id);
         $products = $this->productRepository->getProductByCategory($product_detail->category_id, $column);
         $count = 0;

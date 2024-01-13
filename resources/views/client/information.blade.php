@@ -165,11 +165,18 @@
                     <p>Ngày Tạo: {{Auth::user()->created_at }}</p>
                 </div>
             </div>
-            @if (isset($msg))
-            <p style="color: red">{{$msg}}</p>
+            @if (Session::has('msg'))
+                <script>
+                    swal({
+                        title: "{{Session::get('msg')}}",
+                        buttons: true,
+                        })
+                </script>
             @endif
             <a class="btn btn-primary btn-user btn-block" href="{{route('infor_index_edit')}}" type="submit">Cập Nhật Thông Tin Người Dùng</a>
+            @if ($user->google_id == null)
             <a style="margin-top: 20px" class="btn btn-primary btn-user btn-block" href="{{route('change_pass_client')}}" type="submit">Đổi Mật Khẩu</a>
+            @endif
     </div>
     <!-- Page Header End -->
 

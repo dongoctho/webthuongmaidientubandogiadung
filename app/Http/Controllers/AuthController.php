@@ -50,11 +50,20 @@ class AuthController extends Controller
     public function changePassClientConfirm(Request $request)
     {
         $user = auth()->user();
-        $oldPassword = password_hash($request->oldPassword, PASSWORD_DEFAULT);
         $newPassword = Hash::make($request->newPassword);
-        $rePassword = Hash::make($request->rePassword);
 
-        dd($oldPassword, password_verify($request->oldPassword, $oldPassword));
+        if ( password_verify($request->oldPassword, $user->password) == true ) {
+            if ($request->newPassword === $request->rePassword) {
+                $this->userRepository->update($user->id, ['password' => $newPassword]);
+
+                return redirect()->route('infor_index')->with('msg', 'Đổi mật khẩu thành công');
+            } else {
+                return redirect()->route('change_pass_client')->with('msg', 'Nhập lại mật khẩu không đúng');
+            }
+        } else {
+            return redirect()->route('change_pass_client')->with('msg', 'Mật khẩu cũ không đúng');
+        }
+
     }
 
     public function indexForgot()

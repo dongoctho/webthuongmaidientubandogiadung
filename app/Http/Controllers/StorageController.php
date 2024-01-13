@@ -3,27 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\RepositoryInterface\StorageRepositoryInterface;
+use App\Repositories\Contracts\RepositoryInterface\StorageDetailRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\ProductRepositoryInterface;
 use App\Repositories\Contracts\RepositoryInterface\OrderDetailRepositoryInterface;
 use App\Http\Requests\CreateStorageFormRequest;
 use App\Http\Requests\EditStorageFormRequest;
+use App\Http\Requests\EditStorageDetailFormRequest;
 use Illuminate\Http\Request;
-use App\Models\Product;
 
 class StorageController extends Controller
 {
     protected $storageRepository;
     protected $productRepository;
     protected $orderDetailRepository;
+    protected $storageDetailRepository;
 
     public function __construct(
         StorageRepositoryInterface $storageRepositoryInterface,
         ProductRepositoryInterface $productRepositoryInterface,
-        OrderDetailRepositoryInterface $orderDetailRepositoryInterface
+        OrderDetailRepositoryInterface $orderDetailRepositoryInterface,
+        StorageDetailRepositoryInterface $storageDetailRepositoryInterface
     ) {
         $this->storageRepository = $storageRepositoryInterface;
         $this->productRepository = $productRepositoryInterface;
         $this->orderDetailRepository = $orderDetailRepositoryInterface;
+        $this->storageDetailRepository = $storageDetailRepositoryInterface;
     }
 
     // show storage page
@@ -44,17 +48,40 @@ class StorageController extends Controller
         $arrayProduct = explode(".", $request->product_id);
         $product = $this->productRepository->findProduct($arrayProduct[1]);
         if (isset($product)) {
-            $storageCheck = $this->storageRepository->findProduct($arrayProduct[1]);
+            $storageCheck = $this->storageRepository->findProduct($arrayProduct[1])->toArray();
+
             if (isset($storageCheck)) {
-                $msg = "Sản phẩm đã có trong kho";
+                $storageDetail = $this->storageDetailRepository->findStorage($storageCheck[0]['id'])->toArray();
+                $count_number = count($storageDetail);
+
+                $data = [
+                    'quantity' => $storageCheck[0]['quantity'] + $request->quantity
+                ];
+                $storage = $this->storageRepository->update($storageCheck[0]['id'], $data);
+                $data_detail = [
+                    'storage_id' => $storageCheck[0]['id'],
+                    'price' => $request->price,
+                    'number' => $count_number + 1,
+                    'quantity' => $request->quantity
+                ];
+                $this->storageDetailRepository->create($data_detail);
+                $msg = "Thành công";
             } else {
                 $data = [
                     'code' => $request->code,
                     'quantity' => $request->quantity,
                     'description' => $request->description,
-                    'product_id' => $product->id
+                    'product_id' => $product->id,
+
                 ];
-                $this->storageRepository->create($data);
+                $storage = $this->storageRepository->create($data);
+                $data_detail = [
+                    'storage_id' => $storage->id,
+                    'price' => $request->price,
+                    'number' => 1,
+                    'quantity' => $request->quantity
+                ];
+                $this->storageDetailRepository->create($data_detail);
                 $msg = "Thành công";
             }
         } else {
@@ -86,6 +113,21 @@ class StorageController extends Controller
         return view('admin.storage.list_storage', compact('check_storage','storages', 'key', 'data'));
     }
 
+    // show list storage detail
+    public function listStorageDetail(Request $request)
+    {
+        $check_storage = true;
+        $key = "";
+        $data = [
+            'key' => $request->key
+        ];
+        $key = $request->key;
+        $column = ['*'];
+        $storageDetails = $this->storageDetailRepository->getStorageDetailByCondition($data, $column);
+
+        return view('admin.storage.storage_detail', compact('check_storage','storageDetails', 'key', 'data'));
+    }
+
     // delete storage
     public function destroy(int $id, int $product_id)
     {
@@ -107,6 +149,27 @@ class StorageController extends Controller
         $storages = $this->storageRepository->find($id);
 
         return view('admin.storage.show_storage', compact('storages', 'products'));
+    }
+
+    public function show_storage_detail(int $id)
+    {
+        $storageDetails = $this->storageDetailRepository->find($id);
+
+        return view('admin.storage.show_storage_detail', compact('storageDetails'));
+    }
+
+    // update information storage
+    public function update_storage_detail(int $id, EditStorageDetailFormRequest $request)
+    {
+        $data = [
+            'quantity' => $request->quantity,
+            'price' => $request->price,
+            'number' => $request->number
+        ];
+
+        $this->storageDetailRepository->update($id, $data);
+
+        return redirect()->route('list_storage_detail');
     }
 
     // update information storage

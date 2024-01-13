@@ -20,6 +20,7 @@ use App\Services\SumPriceService;
 use Stripe\StripeClient;
 use Stripe\PaymentIntent;
 use \PDF;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -78,10 +79,13 @@ class OrderController extends Controller
             'orders_detail.created_at'
         ];
         $data = $this->orderDetailRepository->getOrderDetail($user->id, $id, $column);
+        $order = $this->orderRepository->findOrder($id);
+        $yesterday = Carbon::yesterday('Asia/Ho_Chi_Minh')->toDateString();
+        $time = Carbon::now('Asia/Ho_Chi_Minh');
 
-        // return view('client.download_pdf')->with('data', $data);
+        // return view('client.download_pdf', compact('data', 'time', 'order', 'user'));
 
-        $pdf = PDF::loadView('client.download_pdf', compact('data'));
+        $pdf = PDF::loadView('client.download_pdf', compact('data', 'time', 'order', 'user'));
         return $pdf->download('ThongTinDonHang.pdf');
     }
 
@@ -320,6 +324,11 @@ class OrderController extends Controller
 
         if (isset($params['productId'])){
             $product = $this->productRepository->find($params['productId']);
+            $storage = $this->storageRepository->findProduct($product->id)->first();
+
+            if ( $request->quantity > $storage->quantity ){
+                return redirect()->back()->with('msg', 'Số lượng nhập không được vượt quá hàng trong kho');
+            }
 
             if ( $product->product_type == 0 ) {
                 $priceHandle = $product->price * (1 - ($product->discount / 100));
@@ -551,8 +560,8 @@ class OrderController extends Controller
 
                 $stripe = new StripeClient(env('STRIPE_SECRET'));
                 $paymentIntent = $stripe->paymentIntents->create([
-                    'amount' => $priceHandle,
-                    'currency' => 'vnd',
+                    'amount' => round($priceHandle/2000),
+                    'currency' => 'usd',
                     'automatic_payment_methods' => [
                         'enabled' => true,
                     ],
@@ -842,7 +851,6 @@ class OrderController extends Controller
 
             $sumPrice += $priceHandle * $product->quantity;
         }
-
 
         if ( isset($user) ) {
             $count = $this->cartRepository->countProductInCart($user->id);

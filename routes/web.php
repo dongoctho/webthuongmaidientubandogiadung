@@ -127,8 +127,11 @@ Route::prefix('admin')->middleware('CheckLogin')->group(function(){
         Route::get('/create', [StorageController::class, 'index'])->name('add_storage');
         Route::post('/create', [StorageController::class, 'create']);
         Route::get('/list', [StorageController::class, 'list'])->name('list_storage');
+        Route::get('/list/storage_detail', [StorageController::class, 'listStorageDetail'])->name('list_storage_detail');
         Route::get('/edit/{id}', [StorageController::class, 'show'])->name('show_storage');
+        Route::get('/edit_storage_detail/{id}', [StorageController::class, 'show_storage_detail'])->name('show_storage_detail');
         Route::post('/edit/{id}', [StorageController::class, 'update']);
+        Route::post('/edit_storage_detail/{id}', [StorageController::class, 'update_storage_detail']);
         Route::get('/delete/{id}/{product_id}', [StorageController::class, 'destroy'])->name('delete_storage');
     });
 

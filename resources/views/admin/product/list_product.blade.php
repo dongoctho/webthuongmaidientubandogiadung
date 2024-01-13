@@ -1,6 +1,23 @@
 @extends('admin.dashboard')
 @section('list_product')
+<style>
+    .expandable-cell .content {
+ max-height: 160px; /* Đặt chiều cao tối đa để thu gọn */
+ max-width: 250px; /* Đặt chiều cao tối đa để thu gọn */
+ overflow: hidden;
+ transition: max-height 0.3s ease;
+}
 
+/* CSS cho nút "Xem thêm" */
+.toggle-button {
+ display: block;
+ margin-top: 10px;
+ cursor: pointer;
+ border: 0px;
+ background-color: inherit;
+ color: blue;
+}
+</style>
     <div class="card1">
 
         <div class="category_top" style="display:flex; justify-content: center; margin: 50px 0 20px 0">
@@ -62,7 +79,12 @@
                             {{$product->manufacture->name}}
                         @endif
                         </td>
-                    <td class="description">{{$product->description}}</td>
+                    <td class="expandable-cell">
+                        <div class="content">
+                            <p>{{$product->description}}</p>
+                        </div>
+                        <button class="toggle-button" onclick="toggleContent(this)">Xem thêm</button>
+                    </td>
                     <td>{{$product->sale}}</td>
                     <td>{{($product->product_type == 0 ? $product->discount .'%' : number_format($product->discount) . ' VND')}}</td>
                     <td>
@@ -91,6 +113,17 @@
             {!! $products->appends($data)->links() !!}
         </div>
     </div>
-
+    <script>
+        function toggleContent(button) {
+          var content = button.previousElementSibling; // Lấy phần tử content trước button
+          if (content.style.maxHeight) {
+            content.style.maxHeight = null; // Mở rộng nội dung
+            button.textContent = "Xem thêm";
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px"; // Thu gọn nội dung
+            button.textContent = "Thu gọn";
+          }
+        }
+        </script>
 
 @endsection

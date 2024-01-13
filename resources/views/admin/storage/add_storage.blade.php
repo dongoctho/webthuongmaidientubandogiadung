@@ -35,19 +35,19 @@ input[type=submit] {
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
-  background-color: #fff; 
-  border-bottom: 1px solid #d4d4d4; 
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
 }
 
 /*when hovering an item:*/
 .autocomplete-items div:hover {
-  background-color: #e9e9e9; 
+  background-color: #e9e9e9;
 }
 
 /*when navigating through the items using the arrow keys:*/
 .autocomplete-active {
-  background-color: DodgerBlue !important; 
-  color: #ffffff; 
+  background-color: DodgerBlue !important;
+  color: #ffffff;
 }
 </style>
 
@@ -112,6 +112,20 @@ input[type=submit] {
                                 <div class="">
                                     @if ($errors->all())
                                     <span style="color: red">{{$errors->first('product_id')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div style="width: 500px; margin-top:30px;  margin-left: 70px" class="flex-nowrap" style="display: flex; flex-direction:column;">
+                                <div class="">
+                                    <p>Nhập Đơn Giá</p>
+                                </div>
+                                <input style="height:50px" type="text" name="price" value="{{old('price')}}" class="form-control"
+                                placeholder="Nhập Đơn Giá" aria-label="Username" aria-describedby="addon-wrapping">
+                                <div class="">
+                                    @if ($errors->all())
+                                    <span style="color: red">{{$errors->first('price')}}</span>
                                     @endif
                                 </div>
                             </div>

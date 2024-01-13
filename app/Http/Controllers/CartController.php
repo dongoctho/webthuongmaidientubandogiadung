@@ -47,7 +47,7 @@ class CartController extends Controller
         $user = auth()->user();
         $product = $this->productRepository->find($id);
         $idUserCart = $this->cartRepository->findUser($user->id);
-        $storage = $this->storageRepository->findProduct($product->id);
+        $storage = $this->storageRepository->findProduct($product->id)->first();
 
         if ( $request->quantity > $storage->quantity ){
             return redirect()->back()->with('msg', 'Số lượng nhập không được vượt quá hàng trong kho');
@@ -59,10 +59,10 @@ class CartController extends Controller
         }
 
         if ( isset($idUserCart) ) {
+
             $cartDetail = $this->cartDetailRepository->findProduct($id, $idUserCart->id);
 
             if ( $cartDetail == null ) {
-
                 $data = [
                     'cart_id' => $idUserCart->id,
                     'product_id' => $id,
@@ -78,11 +78,9 @@ class CartController extends Controller
                 if ( $request->quantity + $cartDetail->quantity > $storage->quantity ) {
                     return redirect()->back()->with('msg', 'Số lượng nhập không được vượt quá hàng trong kho');
                 }
-
                 $dataCart = [
                     'quantity' => $request->quantity + $cartDetail->quantity,
                 ];
-
                 $this->cartDetailRepository->update($cartDetail->id, $dataCart);
 
                 return redirect()->back();

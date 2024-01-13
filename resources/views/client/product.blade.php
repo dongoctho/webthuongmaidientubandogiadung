@@ -287,13 +287,15 @@ input[type=submit] {
             <div class="col-lg-9 col-md-12">
                 <div class="row pb-3 list">
                     @foreach ($products as $product)
-                    <div class="col-lg-4 col-md-6 col-sm-12 pb-1 item">
+                    <div class="col-lg-3 col-md-6 col-sm-12 pb-1 item">
                         <div class="card product-item border-0 mb-4">
                             <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
                                 <a href="{{route('product_detail', ['id'=>$product->product_id])}}"><img class="img-fluid w-100" src="{{asset('uploads/'.$product->image)}}" alt=""></a>
                             </div>
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                <a href="{{route('product_detail', ['id'=>$product->product_id])}}"><h6 class="text-truncate mb-3">{{$product->name}}</h6></a>
+                                <a href="{{route('product_detail', ['id'=>$product->product_id])}}"><h5 class="text-truncate mb-3">{{$product->name}} - {{$product->code}}</h5></a>
+                                <a href="{{route('product_detail', ['id'=>$product->product_id])}}"><h6 style="color:#6e6e6e;" class="text-truncate mb-3">Nhà sản xuất: {{$product->manufacture->name}}</h6></a>
+                                <a href="{{route('product_detail', ['id'=>$product->product_id])}}"><h6 style="color:#6e6e6e;" class="text-truncate mb-3">Số lượng tồn kho: {{$product->quantity}}</h6></a>
                                 <div class="d-flex justify-content-center">
                                     @if ($product->discount == 0)
                                     <h5 class="font-weight-semi-bold" style=" color: red;">₫{{number_format($product->price, 0, ",", ".")}}</h5>

@@ -148,28 +148,24 @@
                     <div class="" style="margin-top: 20px">
                         <p>Nhập mật khẩu cũ</p>
                         <input type="password" class="form-control form-control-user" name="oldPassword" id="exampleFirstName">
-                        @if ($errors->all())
-                        <p style="color: red">{{$errors->first('oldPassword')}}</p>
-                        @endif
                     </div>
                     <div class="" style="margin-top: 20px">
                         <p>Nhập mật khẩu mới</p>
                         <input type="password" class="form-control form-control-user" name="newPassword" id="exampleLastName">
-                        @if ($errors->all())
-                        <p style="color: red">{{$errors->first('newPassword')}}</p>
-                        @endif
                     </div>
                     <div class="" style="margin-top: 20px">
                         <p>Nhập lại mật khẩu</p>
                         <input type="password" class="form-control form-control-user" name="rePassword" id="exampleFirstName">
-                        @if ($errors->all())
-                        <p style="color: red">{{$errors->first('rePassword')}}</p>
-                        @endif
                     </div>
                 </div>
             </div>
-            @if (isset($msg))
-            <p style="color: red">{{$msg}}</p>
+            @if (Session::has('msg'))
+                <script>
+                    swal({
+                        title: "{{Session::get('msg')}}",
+                        buttons: true,
+                        })
+                </script>
             @endif
             <input style="margin-top: 20px" class="btn btn-primary btn-user btn-block" type="submit" value="Xác nhận đổi mật khẩu">
         </form>
